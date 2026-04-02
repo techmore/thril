@@ -26,6 +26,8 @@ npm run build
 
 This repo includes `.github/workflows/deploy.yml` to publish the built site to GitHub Pages on pushes to `main`.
 
+In the repository settings, make sure `Settings > Pages > Source` is set to `GitHub Actions`. If Pages is still set to deploy from the branch, GitHub will serve the raw repo `index.html` instead of the built Vite output.
+
 Expected project URL:
 
 ```text
