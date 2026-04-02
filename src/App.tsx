@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BadgeCheck,
   Cable,
+  Cloud,
   ExternalLink,
   Globe,
   MonitorSmartphone,
@@ -11,14 +12,19 @@ import {
   Printer,
   Server,
   ShieldCheck,
+  Boxes,
   Workflow,
 } from 'lucide-react'
 
 import {
+  cloudInitExample,
+  cloudInitGuidance,
   cockpitChecklist,
   commandBlocks,
   consistencyChecklist,
   diagnosticsIdeas,
+  incusGuidance,
+  longTermPlatform,
   printerSteps,
   quickStartSteps,
   realityChecks,
@@ -584,6 +590,94 @@ function App() {
                 </p>
               </div>
             </div>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Server className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Long term
+                </p>
+                <CardTitle>Should this eventually move to Rocky Linux?</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {longTermPlatform.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Boxes className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Incus addendum
+                </p>
+                <CardTitle>Where Incus helps and where it does not</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {incusGuidance.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Cloud className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Cloud-init addendum
+                </p>
+                <CardTitle>Useful if you expect more stations later</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {cloudInitGuidance.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Cable className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Starter template
+                </p>
+                <CardTitle>Baseline cloud-init example</CardTitle>
+              </div>
+            </div>
+            <pre className="overflow-x-auto rounded-[1.5rem] border border-[var(--line)] bg-[var(--night)] p-5 text-sm leading-7 text-[var(--night-ink)]">
+              <code>{cloudInitExample}</code>
+            </pre>
           </Card>
         </section>
 

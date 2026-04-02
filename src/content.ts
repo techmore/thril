@@ -221,6 +221,74 @@ export const reprintGuidance = [
   'If reprints are currently happening because the label sometimes never arrives, prefer fixing the transport and queue first. If reprints are happening because users genuinely need duplicates or recovery, fix the product workflow.',
 ]
 
+export const longTermPlatform = [
+  'Short term: stay on Ubuntu 24.04.4 LTS for the XM-F025 until the touch controller, graphics, sleep behavior, printer path, and recovery workflow are proven stable.',
+  'Long term: Rocky Linux 9 can make sense if you want a slower-moving appliance-style station. Rocky’s official release notes show Rocky 9 has general support through May 31, 2027 and security support through May 31, 2032.',
+  'Important tradeoff: fewer disruptive platform changes does not mean fewer security updates. It means the base platform changes more conservatively. That can be good for a fixed station, but only if the XM-F025 hardware is already known to work well on Rocky.',
+  'My recommendation is to stabilize on Ubuntu first, document the exact hardware IDs and settings, then test Rocky 9 on one spare or cloned unit. If touch, graphics, suspend, networking, and printing all behave correctly, Rocky becomes a reasonable long-term appliance candidate.',
+]
+
+export const incusGuidance = [
+  'Do not put Incus on the production XM-F025 station just to run printing. That adds a management layer to the box that is supposed to stay boring and predictable.',
+  'Do use Incus on an admin or lab host if you want to test Ubuntu vs Rocky images, validate cloud-init, reproduce CUPS configuration, or host a small diagnostics service away from the printer station.',
+  'Incus profiles plus cloud-init are especially useful if you expect to deploy several similar stations later. They let you standardize package sets, users, SSH keys, Cockpit, and baseline configs before hardware-specific steps.',
+  'If you do use Incus for Rocky testing, prefer a VM over a container when you care about desktop, kernel, or hardware-behavior parity.',
+]
+
+export const cloudInitGuidance = [
+  'A cloud-init addendum is worth having if you expect to deploy multiple XM-F025 stations or rebuild one quickly after disk failure.',
+  'Use cloud-init for repeatable first-boot tasks: create the admin user, install Cockpit and CUPS, enable services, set timezone, write a baseline diagnostics script, and drop a first-pass printer setup note on the machine.',
+  'Treat cloud-init as the common baseline, not the whole hardware solution. Touch calibration, exact Zebra queue settings, and real label validation still need hands-on confirmation.',
+  'For bare-metal style deployments, the usual pattern is to deliver cloud-init through a NoCloud seed or an imaging workflow rather than relying on a cloud provider.',
+]
+
+export const cloudInitExample = `#cloud-config
+hostname: thril-station
+timezone: America/New_York
+package_update: true
+package_upgrade: true
+
+packages:
+  - cups
+  - cockpit
+  - curl
+  - jq
+  - netcat-openbsd
+
+users:
+  - default
+  - name: thril
+    gecos: THRIL Admin
+    groups: [adm, sudo, lpadmin]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ssh-ed25519 REPLACE_ME
+
+write_files:
+  - path: /usr/local/bin/thril-healthcheck
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -eu
+      PRINTER_IP="\${1:-192.168.1.50}"
+      echo "== host =="
+      hostnamectl --static || true
+      echo "== cups =="
+      systemctl is-active cups || true
+      lpstat -t || true
+      echo "== network printer =="
+      ping -c 1 "$PRINTER_IP" || true
+      nc -vz "$PRINTER_IP" 9100 || true
+
+runcmd:
+  - systemctl enable --now cups
+  - systemctl enable --now cockpit.socket
+  - usermod -aG lpadmin thril
+  - [bash, -lc, 'echo "Use socket://PRINTER-IP:9100 for the Zebra raw queue if the app emits ZPL." > /etc/motd']
+`
+
 export const commandBlocks = [
   {
     title: 'Touch detection and mapping',
@@ -253,6 +321,19 @@ sudo ss -ltnp | grep 9090`,
 nc -vz 192.168.1.50 9100
 lpstat -W not-completed
 tail -f /var/log/cups/error_log`,
+  },
+  {
+    title: 'Incus lab examples',
+    code: `# Launch a cloud-init capable Ubuntu VM for testing
+incus launch images:ubuntu/24.04/cloud thril-ubuntu-test --vm
+
+# Launch a cloud-init capable Rocky VM for testing
+incus launch images:rockylinux/9/cloud thril-rocky-test --vm
+
+# Apply cloud-init before first boot when using init
+incus init images:ubuntu/24.04/cloud thril-seeded --vm
+incus config set thril-seeded cloud-init.user-data - < station-cloud-init.yaml
+incus start thril-seeded`,
   },
 ]
 
@@ -291,6 +372,11 @@ export const references = [
     title: 'Ubuntu cockpit add-ons',
     href: 'https://packages.ubuntu.com/source/noble/cockpit',
     detail: 'Ubuntu source package listing showing network, updates, PCP, storage, and sosreport modules.',
+  },
+  {
+    title: 'Rocky Linux release notes',
+    href: 'https://docs.rockylinux.org/release_notes/',
+    detail: 'Official Rocky release/support timeline used for the long-term platform recommendation.',
   },
   {
     title: 'Ubuntu wine package',
@@ -391,5 +477,25 @@ export const references = [
     title: 'GitHub Pages docs',
     href: 'https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site',
     detail: 'Pages setup basics and publishing behavior.',
+  },
+  {
+    title: 'Incus cloud-init guide',
+    href: 'https://linuxcontainers.org/incus/docs/main/cloud-init/',
+    detail: 'Official guidance for using cloud-init with Incus instances.',
+  },
+  {
+    title: 'Incus profiles',
+    href: 'https://linuxcontainers.org/incus/docs/main/profiles/',
+    detail: 'Official profile model for repeatable Incus instance configuration.',
+  },
+  {
+    title: 'Incus initialization and preseed',
+    href: 'https://linuxcontainers.org/incus/docs/main/howto/initialize/',
+    detail: 'Documents Incus preseed automation for reproducible lab hosts.',
+  },
+  {
+    title: 'cloud-init examples library',
+    href: 'https://cloudinit.readthedocs.io/en/stable/reference/examples_library.html',
+    detail: 'Official cloud-init examples for packages, users, files, and first-boot commands.',
   },
 ]
