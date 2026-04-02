@@ -21,6 +21,37 @@ export const setupHighlights = [
   },
 ]
 
+export const quickStartSteps = [
+  {
+    title: '1. Standardize the box',
+    body: 'Use one dedicated Ubuntu 24.04.4 LTS workstation or mini PC for this setup. Avoid sharing the printer with ad hoc desktops if you want repeatable behavior.',
+  },
+  {
+    title: '2. Wire the touchscreen correctly',
+    body: 'Treat video and touch as two separate connections: HDMI/DP for the panel image and USB for the touch controller.',
+  },
+  {
+    title: '3. Put the Zebra on wired Ethernet',
+    body: 'Give the ZT410 a reserved IP or static IP before you do anything else with CUPS. Do not let the printer address float if this is a production station.',
+  },
+  {
+    title: '4. Create one print path',
+    body: 'For ZPL output, create a single raw queue over `socket://printer-ip:9100`. Do not alternate between serial, USB, and LAN for the same workflow.',
+  },
+  {
+    title: '5. Test a real label',
+    body: 'Verify media type, print mode, darkness, speed, and stock calibration using the exact labels you will run in production.',
+  },
+  {
+    title: '6. Fix reprints in the app, not at the printer',
+    body: 'Archive each sent label payload so operators can intentionally reprint from the application or backend instead of relying on the printer panel.',
+  },
+  {
+    title: '7. Use Cockpit for ops',
+    body: 'Use Cockpit to watch logs, network identity, services, and system health from a browser, but keep it on your private network or VPN.',
+  },
+]
+
 export const recommendation = [
   'Use Ubuntu Desktop 24.04.4 LTS on a dedicated x86 box with automatic security updates enabled.',
   'Connect the XM-F025 with both video and its USB touch cable, then verify the touch controller appears in `lsusb`, `libinput list-devices`, or `xinput list`.',
@@ -125,6 +156,33 @@ export const printerSteps = [
   },
 ]
 
+export const transportComparison = [
+  {
+    point: 'What CUPS says',
+    ip: 'CUPS says AppSocket / JetDirect is the simplest and fastest network printing protocol and uses the `socket` backend over port 9100.',
+    serial:
+      'CUPS treats serial as a dedicated backend with configurable baud and other options, which means more communication variables to keep aligned.',
+  },
+  {
+    point: 'What Zebra says',
+    ip: 'ZT410 supports internal 10/100 Ethernet and Zebra notes that this enables Webview and Alert features, which helps management and diagnostics.',
+    serial:
+      'Zebra says the baud rate, data bits, parity, and flow control must match the host, requires a null-modem cable or adapter, and limits cable length to 50 ft / 15.24 m.',
+  },
+  {
+    point: 'Operational stability',
+    ip: 'With a reserved IP, one queue, and one protocol, you can test reachability with `ping`, `nc`, and CUPS logs without touching cabling.',
+    serial:
+      'Serial failures are often ambiguous because cable type, adapter quality, handshake mode, and host settings can all break communication in similar ways.',
+  },
+  {
+    point: 'Best fit for Zebra labels',
+    ip: 'If your app already emits ZPL, raw `socket://printer-ip:9100` removes extra conversion layers and is usually the cleanest path.',
+    serial:
+      'Serial can still work, but it is best reserved for a legacy application that truly cannot use the printer over LAN or USB.',
+  },
+]
+
 export const consistencyChecklist = [
   'Keep one printer, one IP, one queue, and one protocol. Do not alternate between LAN, USB, and serial on the same production workflow.',
   'Calibrate the media whenever stock changes, especially if gaps, black marks, or label dimensions differ.',
@@ -153,6 +211,13 @@ export const diagnosticsIdeas = [
   'The highest-value checks are printer reachability, CUPS queue status, recent CUPS errors, the last successful label or reprint, touch device presence, disk usage, and network identity.',
   'The cleanest version is either a small standalone dashboard that reads local JSON/status files or a custom Cockpit package that surfaces the same checks inside Cockpit.',
   'Cockpit’s package system and `cockpit.file()` API make it possible to build a thin local diagnostics UI without replacing your normal Linux tooling.',
+]
+
+export const reprintGuidance = [
+  'Yes, moving to a stable wired IP queue can reduce the number of “please hit reprint again” incidents if those incidents are really delivery failures caused by serial mismatches, flaky adapters, or host-side queue confusion.',
+  'No, transport alone does not create a proper reprint workflow. If operators regularly need a second copy, a recovery copy, or a later replay, the application should store the original ZPL or rendered label and offer an intentional reprint action.',
+  'Zebra does have a printer-side Reprint Mode. In the ZT400 user guide, Zebra says that when Reprint Mode is enabled, pressing the printer’s DOWN ARROW reprints the last label. That is useful as an emergency operator shortcut, but it is not a substitute for auditable app-side reprints.',
+  'If reprints are currently happening because the label sometimes never arrives, prefer fixing the transport and queue first. If reprints are happening because users genuinely need duplicates or recovery, fix the product workflow.',
 ]
 
 export const commandBlocks = [
@@ -242,6 +307,26 @@ export const references = [
     detail: 'Discontinuation and support information for the ZT410.',
   },
   {
+    title: 'ZT410 tech specs',
+    href: 'https://www.zebra.com/content/dam/zebra_dam/en/tech-specs/zt410-tech-specs-en-us.pdf',
+    detail: 'Lists Ethernet and RS-232 communication capabilities for the ZT410.',
+  },
+  {
+    title: 'ZT400 print settings',
+    href: 'https://docs.zebra.com/us/en/printers/industrial/zt400-series-industrial-printer-user-guide/configuration/c-zt4x0-ug-changing-printer-settings/c-zt4x0-ug-changing-printer-settings-through-the-user-menus/r-zt4x0-ug-print-settings.html',
+    detail: 'Documents print speed, print mode, and Reprint Mode on the ZT400 series.',
+  },
+  {
+    title: 'ZT400 RS-232 interface requirements',
+    href: 'https://docs.zebra.com/us/en/printers/industrial/zt400-series-industrial-printer-user-guide/c-zt4x1-specs/r-zt4x0-ug-communication-interface-specifications/c-zt4x0-ug-standard-connections/r-zt4x1-rs-232-c-serial-data-interface.html',
+    detail: 'Zebra notes matching serial settings, null-modem requirements, and cable-length limits.',
+  },
+  {
+    title: 'ZT400 communication issues',
+    href: 'https://docs.zebra.com/us/en/printers/industrial/zt400-series-industrial-printer-user-guide/c-zt4x0-ug-diagnostics-and-troubleshooting/c-zt4x0-ug-alerts-and-error-states/c-zt4x1-troubleshooting/r-zt4x0-ug-communication-issues.html',
+    detail: 'Troubleshooting guidance that calls out serial port and flow-control mismatches.',
+  },
+  {
     title: 'ZT411 product page',
     href: 'https://www.zebra.com/us/en/products/printers/industrial/zt400-series/zt411.html',
     detail: 'Official replacement platform for ZT410.',
@@ -259,7 +344,7 @@ export const references = [
   {
     title: 'CUPS backend manual',
     href: 'https://www.cups.org/doc/man-backend.html',
-    detail: 'Serial backend behavior and URI notes.',
+    detail: 'Backend classifications, including serial devices with configurable baud and options.',
   },
   {
     title: 'CUPS admin guide',

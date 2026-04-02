@@ -20,10 +20,13 @@ import {
   consistencyChecklist,
   diagnosticsIdeas,
   printerSteps,
+  quickStartSteps,
   realityChecks,
+  reprintGuidance,
   recommendation,
   references,
   setupHighlights,
+  transportComparison,
   ubuntuSteps,
   wineVerdict,
 } from '@/content'
@@ -51,15 +54,17 @@ function App() {
                   THRIL setup playbook
                 </p>
                 <h1 className="max-w-4xl font-serif text-5xl leading-[0.95] tracking-[-0.05em] text-[var(--ink)] sm:text-6xl lg:text-7xl">
-                  Ubuntu + XM-F025 + Zebra ZT410, with the PacKit reality check
-                  built in.
+                  Ubuntu + XM-F025 + Zebra ZT410, written as a real setup guide
+                  instead of a pile of notes.
                 </h1>
                 <p className="max-w-3xl text-base leading-8 text-[var(--muted)] sm:text-lg">
-                  This guide is designed to be the practical, stable path for a
-                  touchscreen workstation or kiosk that needs to print Zebra labels
-                  reliably. It includes Ubuntu bring-up, touch mapping, Zebra queue
-                  recommendations, reprint strategy, and a clear answer on where
-                  PacKit fits and where it does not.
+                  This guide is for the exact station you described: Ubuntu on a
+                  touchscreen workstation, a Zebra ZT410 that needs to behave
+                  predictably, and a team deciding whether IP printing, serial,
+                  Wine, or PacKit will actually improve things. The short answer is:
+                  use wired IP printing for the Zebra, keep PacKit out of the Linux
+                  runtime, and solve reprints intentionally instead of on the front
+                  panel.
                 </p>
               </div>
 
@@ -103,6 +108,33 @@ function App() {
               <CardDescription>{item.note}</CardDescription>
             </Card>
           ))}
+        </section>
+
+        <section>
+          <Card>
+            <div className="mb-6 flex items-center gap-3">
+              <Workflow className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Start here
+                </p>
+                <CardTitle>Use this order and the setup becomes much simpler</CardTitle>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {quickStartSteps.map((step) => (
+                <div
+                  key={step.title}
+                  className="rounded-[1.5rem] border border-[var(--line)] bg-white/75 p-5"
+                >
+                  <h3 className="mb-3 text-lg font-semibold text-[var(--ink)]">
+                    {step.title}
+                  </h3>
+                  <p className="leading-7 text-[var(--muted)]">{step.body}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </section>
 
         <section id="stable-setup" className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
@@ -180,6 +212,81 @@ function App() {
               </CardDescription>
             </Card>
           </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Printer className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Printer decision
+                </p>
+                <CardTitle>Why wired IP beats serial for this station</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {transportComparison.map((row) => (
+                <div
+                  key={row.point}
+                  className="rounded-[1.5rem] border border-[var(--line)] bg-white/70 p-5"
+                >
+                  <h3 className="mb-4 text-lg font-semibold text-[var(--ink)]">
+                    {row.point}
+                  </h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="rounded-[1.25rem] border border-[rgba(163,72,18,0.18)] bg-[rgba(163,72,18,0.06)] p-4">
+                      <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+                        Wired IP / LAN
+                      </p>
+                      <p className="leading-7 text-[var(--ink)]">{row.ip}</p>
+                    </div>
+                    <div className="rounded-[1.25rem] border border-[var(--line)] bg-[rgba(23,32,51,0.03)] p-4">
+                      <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                        Serial
+                      </p>
+                      <p className="leading-7 text-[var(--ink)]">{row.serial}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <BadgeCheck className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Bottom line
+                </p>
+                <CardTitle>Recommendation for this exact printer problem</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="rounded-[1.35rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="leading-8 text-[var(--ink)]">
+                  If the application can talk to the Zebra over the network, use one
+                  raw queue over `socket://printer-ip:9100` and stop switching
+                  transports. That removes the serial matching problem entirely.
+                </p>
+              </div>
+              <div className="rounded-[1.35rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="leading-8 text-[var(--ink)]">
+                  Keep serial only for a true legacy requirement. It is not the
+                  transport I would choose for a station that is already showing
+                  connection and consistency problems.
+                </p>
+              </div>
+              <div className="rounded-[1.35rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="leading-8 text-[var(--ink)]">
+                  If your labels are ZPL already, LAN plus a raw queue is the most
+                  direct path. If your app only emits PDFs or images, Zebra’s Linux
+                  CUPS package is the next thing to test.
+                </p>
+              </div>
+            </div>
+          </Card>
         </section>
 
         <section className="grid gap-4 lg:grid-cols-3">
@@ -406,6 +513,73 @@ function App() {
               driver/firmware choices around current Zebra support. That reduces the
               risk tied to the ZT410’s support sunset.
             </CardDescription>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Printer className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Reprints
+                </p>
+                <CardTitle>Will IP printing reduce the need to press reprint?</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {reprintGuidance.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Activity className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Best workflow fix
+                </p>
+                <CardTitle>What to change if operators reprint a lot today</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  If the first print often fails
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Move to one wired IP path, reserve the printer IP, and standardize
+                  on one queue. This usually lowers transport-related misses.
+                </p>
+              </div>
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  If users need another copy on purpose
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Add “Reprint last label”, “Reprint shipment”, or “Print N copies”
+                  to the application and back it with stored label payloads.
+                </p>
+              </div>
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  If the team uses the printer panel today
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Zebra Reprint Mode can be a stopgap for the last label only, but it
+                  is a fallback convenience, not the main workflow I would design
+                  around.
+                </p>
+              </div>
+            </div>
           </Card>
         </section>
 
