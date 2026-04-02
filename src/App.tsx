@@ -84,10 +84,10 @@ function App() {
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
                 One-paragraph answer
               </p>
-              <p className="text-lg leading-8 text-[var(--ink)]">
-                The most stable setup is Ubuntu Desktop 24.04.4 LTS on a dedicated
-                x86 box, XM-F025 connected with both video and USB touch, and the
-                Zebra on wired Ethernet using a single CUPS queue over raw
+                <p className="text-lg leading-8 text-[var(--ink)]">
+                The most stable setup is Ubuntu Desktop 24.04.4 LTS on the XM-F025
+                itself if that is your integrated workstation, and the Zebra on
+                wired Ethernet using a single CUPS queue over raw
                 `socket://...:9100` if your app emits ZPL. PacKit should stay on a
                 Windows admin workstation for packaging and deployment workflows,
                 not in the Ubuntu print path.
@@ -170,9 +170,10 @@ function App() {
                 <CardTitle>Touchscreen strategy</CardTitle>
               </div>
               <CardDescription>
-                Keep the problem simple: one display, one touch device, one output
-                mapping. If a mixed-monitor layout causes touch drift, move the box
-                to GNOME on Xorg and map explicitly with `xinput`.
+                Keep the problem simple: one station, one touch device, one known
+                display mapping. If the XM-F025 is an integrated unit and touch
+                drift appears, move the box to GNOME on Xorg and map explicitly
+                with `xinput`.
               </CardDescription>
             </Card>
 
@@ -493,25 +494,28 @@ function App() {
         <section className="grid gap-4 md:grid-cols-2">
           <Card className="h-full bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,247,237,0.9))]">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-              If you keep the ZT410
+              Current hardware plan
             </p>
             <CardTitle className="mb-3">Most stable supported-by-you setup</CardTitle>
             <CardDescription className="text-base">
-              Ubuntu 24.04.4 LTS, Zebra on wired Ethernet, raw ZPL queue, archived
-              label payloads, and zero dependence on PacKit in the Ubuntu runtime.
-              This is the path with the fewest moving pieces.
+              Ubuntu 24.04.4 LTS on the XM-F025 if it is the workstation, Zebra
+              ZT410 on wired Ethernet, raw ZPL queue, archived label payloads, and
+              zero dependence on PacKit in the Ubuntu runtime. This is the path
+              with the fewest moving pieces while keeping the hardware you already
+              have.
             </CardDescription>
           </Card>
 
           <Card className="h-full bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(239,246,255,0.92))]">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-              If you can upgrade hardware
+              Reality check
             </p>
-            <CardTitle className="mb-3">Better long-term path</CardTitle>
+            <CardTitle className="mb-3">What matters more than replacing hardware</CardTitle>
             <CardDescription className="text-base">
-              Move to a ZT411, keep the same LAN-first architecture, and revisit
-              driver/firmware choices around current Zebra support. That reduces the
-              risk tied to the ZT410’s support sunset.
+              For this project, the bigger win is a stable LAN-first architecture,
+              one queue, one label format path, and app-side reprints. Those
+              changes are more important than swapping the printer or adding
+              another computer.
             </CardDescription>
           </Card>
         </section>

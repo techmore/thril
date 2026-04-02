@@ -24,11 +24,11 @@ export const setupHighlights = [
 export const quickStartSteps = [
   {
     title: '1. Standardize the box',
-    body: 'Use one dedicated Ubuntu 24.04.4 LTS workstation or mini PC for this setup. Avoid sharing the printer with ad hoc desktops if you want repeatable behavior.',
+    body: 'Use one dedicated Ubuntu 24.04.4 LTS workstation for this setup. If the XM-F025 is your all-in-one computer and touch device, let it be the dedicated station instead of adding another PC.',
   },
   {
     title: '2. Wire the touchscreen correctly',
-    body: 'Treat video and touch as two separate connections: HDMI/DP for the panel image and USB for the touch controller.',
+    body: 'If your XM-F025 is an integrated panel PC, focus on Linux display and touch detection first. If your specific unit exposes separate video or USB touch connections, treat those as separate paths and verify both.',
   },
   {
     title: '3. Put the Zebra on wired Ethernet',
@@ -53,8 +53,8 @@ export const quickStartSteps = [
 ]
 
 export const recommendation = [
-  'Use Ubuntu Desktop 24.04.4 LTS on a dedicated x86 box with automatic security updates enabled.',
-  'Connect the XM-F025 with both video and its USB touch cable, then verify the touch controller appears in `lsusb`, `libinput list-devices`, or `xinput list`.',
+  'Use Ubuntu Desktop 24.04.4 LTS on the XM-F025 itself if it is your integrated workstation, with automatic security updates enabled.',
+  'Verify that the XM-F025 touch controller appears in `lsusb`, `libinput list-devices`, or `xinput list`. If your specific unit uses separate touch or video cabling, verify each path independently.',
   'If touch maps to the wrong display, sign into GNOME on Xorg and bind the touch device to the correct output with `xinput map-to-output`.',
   'Put the Zebra ZT410 on wired Ethernet, give it a DHCP reservation or fixed IP, and print to a single CUPS queue over `socket://printer-ip:9100` when your app emits ZPL.',
   'Use Cockpit for browser-based management, logs, services, and metrics, but keep it behind your LAN or VPN instead of exposing port 9090 publicly.',
@@ -69,11 +69,11 @@ export const realityChecks = [
   },
   {
     title: 'ZT410 is now a legacy printer',
-    body: 'Zebra lists the ZT410 as discontinued and, for North America, service/support ended on September 1, 2025. That makes stability work even more important and also strengthens the case for a future ZT411 migration.',
+    body: 'Zebra lists the ZT410 as discontinued and, for North America, service/support ended on September 1, 2025. That makes stability work even more important, but this guide assumes you are keeping the ZT410 and focuses on getting the most reliable setup from the hardware you already own.',
   },
   {
-    title: 'The touchscreen support risk is controller-specific',
-    body: 'I could not find public XM-F025 Linux documentation, so the guide assumes the panel exposes a standard USB HID touchscreen. In practice, Linux compatibility usually depends on the touch controller chipset more than the monitor label.',
+    title: 'XM-F025 support is probably controller-specific',
+    body: 'I could not find public XM-F025 Linux documentation, so the guide assumes the unit is an integrated panel PC or touchscreen device that exposes a standard Linux-visible touch controller. In practice, compatibility usually depends more on the touch controller chipset than on the product label.',
   },
 ]
 
@@ -90,7 +90,8 @@ export const ubuntuSteps = [
   {
     title: '2. Confirm the display and touch device separately',
     bullets: [
-      'Video can work while touch is absent. Make sure the monitor’s USB touch cable is connected directly or through a powered hub.',
+      'If the XM-F025 is an integrated panel PC, the screen can work while touch is absent because the display and touch paths still show up separately inside Linux.',
+      'If your specific unit uses an external touch cable or internal USB bridge, make sure that path is connected correctly and not hidden behind a flaky hub.',
       'Use `lsusb`, `sudo dmesg | grep -i -E "hid|touch|input"`, and `libinput list-devices` to confirm Linux actually sees the touch controller.',
       'If nothing appears, the issue is usually cable, power, USB hub quality, or a controller-specific driver gap.',
     ],
@@ -109,7 +110,7 @@ export const ubuntuSteps = [
     bullets: [
       'If Xorg mapping solves the problem, add the command to a startup script or kiosk session wrapper.',
       'If you need rotation or offset correction, prefer a udev rule so the calibration applies on device attach instead of only after login.',
-      'Keep the monitor on a single known output name if possible to avoid remapping churn after cabling changes.',
+      'Keep the display topology as fixed as possible so output naming does not drift after cabling or firmware changes.',
     ],
   },
 ]
@@ -189,7 +190,7 @@ export const consistencyChecklist = [
   'Lock print speed and darkness to a tested baseline before blaming the host for intermittent quality issues.',
   'Archive each label payload or generated PDF in the application so reprints are deterministic and auditable.',
   'Use `lpstat -t`, `lpinfo -v`, and `/var/log/cups/error_log` for host-side troubleshooting before swapping cables blindly.',
-  'If reliability is business-critical and budget allows, plan a ZT411 replacement path because the ZT410 is already past North American support.',
+  'Document the exact ZT410 firmware, stock, darkness, speed, print mode, and queue settings so you can restore the same behavior after maintenance or failure.',
 ]
 
 export const wineVerdict = [
