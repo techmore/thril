@@ -1,0 +1,309 @@
+export const setupHighlights = [
+  {
+    title: 'OS baseline',
+    value: 'Ubuntu Desktop 24.04.4 LTS',
+    note: 'Current stable LTS point release as of April 2, 2026.',
+  },
+  {
+    title: 'Display path',
+    value: 'HDMI/DP for video + separate USB for touch',
+    note: 'Most touch panels only expose input over USB, even when video is fine.',
+  },
+  {
+    title: 'Printer path',
+    value: 'Wired LAN + static DHCP reservation + raw ZPL queue',
+    note: 'This is the most predictable path for a Zebra label printer on Ubuntu.',
+  },
+  {
+    title: 'PacKit',
+    value: 'Keep it on Windows only',
+    note: 'PacKit is a Windows desktop packaging/deployment tool, not an Ubuntu print service.',
+  },
+]
+
+export const recommendation = [
+  'Use Ubuntu Desktop 24.04.4 LTS on a dedicated x86 box with automatic security updates enabled.',
+  'Connect the XM-F025 with both video and its USB touch cable, then verify the touch controller appears in `lsusb`, `libinput list-devices`, or `xinput list`.',
+  'If touch maps to the wrong display, sign into GNOME on Xorg and bind the touch device to the correct output with `xinput map-to-output`.',
+  'Put the Zebra ZT410 on wired Ethernet, give it a DHCP reservation or fixed IP, and print to a single CUPS queue over `socket://printer-ip:9100` when your app emits ZPL.',
+  'Use Cockpit for browser-based management, logs, services, and metrics, but keep it behind your LAN or VPN instead of exposing port 9090 publicly.',
+  'Store label payloads in the application or backend and reprint by resubmitting the archived job instead of relying on panel-side “last label” behavior.',
+  'If you still need PacKit, use it from a Windows admin workstation for Windows packaging and deployment only.',
+]
+
+export const realityChecks = [
+  {
+    title: 'PacKit is not the Linux print layer',
+    body: 'PacKit’s official docs describe it as a Windows desktop application for packaging, deployment, Intune, MECM, WinGet, and PSADT workflows. That means it should not be the foundation of an Ubuntu kiosk plus Zebra print pipeline.',
+  },
+  {
+    title: 'ZT410 is now a legacy printer',
+    body: 'Zebra lists the ZT410 as discontinued and, for North America, service/support ended on September 1, 2025. That makes stability work even more important and also strengthens the case for a future ZT411 migration.',
+  },
+  {
+    title: 'The touchscreen support risk is controller-specific',
+    body: 'I could not find public XM-F025 Linux documentation, so the guide assumes the panel exposes a standard USB HID touchscreen. In practice, Linux compatibility usually depends on the touch controller chipset more than the monitor label.',
+  },
+]
+
+export const ubuntuSteps = [
+  {
+    title: '1. Install the base system',
+    bullets: [
+      'Install Ubuntu Desktop 24.04.4 LTS.',
+      'Use a minimal software selection if this box is dedicated to kiosk or line-of-business use.',
+      'Apply updates immediately: `sudo apt update && sudo apt full-upgrade -y`.',
+      'If the box is dedicated to touch use, disable screen lock and unwanted sleep states.',
+    ],
+  },
+  {
+    title: '2. Confirm the display and touch device separately',
+    bullets: [
+      'Video can work while touch is absent. Make sure the monitor’s USB touch cable is connected directly or through a powered hub.',
+      'Use `lsusb`, `sudo dmesg | grep -i -E "hid|touch|input"`, and `libinput list-devices` to confirm Linux actually sees the touch controller.',
+      'If nothing appears, the issue is usually cable, power, USB hub quality, or a controller-specific driver gap.',
+    ],
+  },
+  {
+    title: '3. Map touch to the correct screen',
+    bullets: [
+      'For mixed-display setups, Xorg is still the simplest path because `xinput map-to-output` is well understood and scriptable.',
+      'Find the display name with `xrandr --listmonitors` and the touch device name with `xinput list`.',
+      'Bind them with `xinput map-to-output "YOUR TOUCH DEVICE" HDMI-1`.',
+      'If the panel is rotated or offset, persist a calibration matrix with a udev rule using `LIBINPUT_CALIBRATION_MATRIX`.',
+    ],
+  },
+  {
+    title: '4. Make it persistent',
+    bullets: [
+      'If Xorg mapping solves the problem, add the command to a startup script or kiosk session wrapper.',
+      'If you need rotation or offset correction, prefer a udev rule so the calibration applies on device attach instead of only after login.',
+      'Keep the monitor on a single known output name if possible to avoid remapping churn after cabling changes.',
+    ],
+  },
+]
+
+export const printerSteps = [
+  {
+    title: 'Recommended connection order',
+    bullets: [
+      'Best: wired Ethernet with a reserved IP and one CUPS queue.',
+      'Second best: direct USB to a single Ubuntu host.',
+      'Last resort: serial, only when a legacy application absolutely requires it.',
+    ],
+  },
+  {
+    title: 'Why LAN is the most stable',
+    bullets: [
+      'It avoids baud, parity, and handshaking mismatches.',
+      'It is easier to monitor, easier to re-address, and easier to recover without unplugging cables.',
+      'CUPS explicitly supports AppSocket / JetDirect over port 9100, which is also the simplest and fastest backend in its network-printing docs.',
+    ],
+  },
+  {
+    title: 'When raw ZPL is the right queue',
+    bullets: [
+      'If your application emits ZPL already, use a raw queue and send the label as-is.',
+      'Example: `sudo lpadmin -p zebra-zt410 -E -v socket://192.168.1.50:9100 -m raw`.',
+      'This removes conversion layers and is usually the lowest-friction path for Zebra consistency.',
+    ],
+  },
+  {
+    title: 'When to use the Zebra CUPS package',
+    bullets: [
+      'If the application prints PDFs, images, or generic documents instead of ZPL, install Zebra’s official Linux CUPS package and use the correct model/PPD.',
+      'After installing, verify media size, darkness, speed, and stock type on both the printer and the queue defaults.',
+    ],
+  },
+  {
+    title: 'Serial guidance if you cannot avoid it',
+    bullets: [
+      'Serial is the hardest path to keep stable because both ends must agree on baud, data bits, parity, stop bits, and flow control.',
+      'Use one known-good USB-to-serial adapter model and one pinned cable standard instead of mixing adapters and null-modem assumptions.',
+      'If you move to serial, treat the printer settings label as your source of truth and document every port setting in the site checklist.',
+    ],
+  },
+]
+
+export const consistencyChecklist = [
+  'Keep one printer, one IP, one queue, and one protocol. Do not alternate between LAN, USB, and serial on the same production workflow.',
+  'Calibrate the media whenever stock changes, especially if gaps, black marks, or label dimensions differ.',
+  'Lock print speed and darkness to a tested baseline before blaming the host for intermittent quality issues.',
+  'Archive each label payload or generated PDF in the application so reprints are deterministic and auditable.',
+  'Use `lpstat -t`, `lpinfo -v`, and `/var/log/cups/error_log` for host-side troubleshooting before swapping cables blindly.',
+  'If reliability is business-critical and budget allows, plan a ZT411 replacement path because the ZT410 is already past North American support.',
+]
+
+export const wineVerdict = [
+  'Do not start by installing Zebra Windows printer drivers inside Wine. Wine’s current `ntprint.dll` documentation still shows most printer-driver installation exports as stubs, including `PSetupInstallPrinterDriver`.',
+  'If the real blocker is a Windows-only label application, first make native Ubuntu printing work, then test that Windows app under Wine against the already working Linux queue.',
+  'Do not run PacKit under Wine as part of the production print path. PacKit is still positioned by its vendor as a Windows desktop deployment tool, so Wine adds complexity without improving Zebra reliability.',
+  'If you must test Wine, isolate it in a dedicated `WINEPREFIX`, document the exact app version, and only promote it after repeated print and reprint soak tests.',
+]
+
+export const cockpitChecklist = [
+  'Install Cockpit and use it as the management plane for networking, services, logs, updates, and system health.',
+  'On Ubuntu 24.04, useful add-ons include `cockpit-networkmanager`, `cockpit-packagekit`, `cockpit-pcp`, `cockpit-sosreport`, and `cockpit-storaged` when they match your support policy.',
+  'Use Cockpit to verify that the printer host kept its expected IP, the `cups` service is healthy, and the system has not drifted after package updates or reboots.',
+  'Keep Cockpit on your local operations network, behind VPN, Tailscale, or a jump host. Do not publish `:9090` directly to the public internet.',
+]
+
+export const diagnosticsIdeas = [
+  'A small web diagnostics page is feasible and a good fit for a second phase.',
+  'The highest-value checks are printer reachability, CUPS queue status, recent CUPS errors, the last successful label or reprint, touch device presence, disk usage, and network identity.',
+  'The cleanest version is either a small standalone dashboard that reads local JSON/status files or a custom Cockpit package that surfaces the same checks inside Cockpit.',
+  'Cockpit’s package system and `cockpit.file()` API make it possible to build a thin local diagnostics UI without replacing your normal Linux tooling.',
+]
+
+export const commandBlocks = [
+  {
+    title: 'Touch detection and mapping',
+    code: `lsusb
+sudo dmesg | grep -i -E "hid|touch|input"
+libinput list-devices
+xrandr --listmonitors
+xinput list
+xinput map-to-output "YOUR TOUCH DEVICE" HDMI-1`,
+  },
+  {
+    title: 'Basic Ubuntu print setup',
+    code: `sudo apt update
+sudo apt install -y cups
+sudo systemctl enable --now cups
+lpinfo -v
+sudo lpadmin -p zebra-zt410 -E -v socket://192.168.1.50:9100 -m raw
+lpstat -t`,
+  },
+  {
+    title: 'Cockpit setup',
+    code: `sudo apt update
+sudo apt install -y cockpit
+sudo systemctl enable --now cockpit.socket
+sudo ss -ltnp | grep 9090`,
+  },
+  {
+    title: 'Useful troubleshooting',
+    code: `ping 192.168.1.50
+nc -vz 192.168.1.50 9100
+lpstat -W not-completed
+tail -f /var/log/cups/error_log`,
+  },
+]
+
+export const references = [
+  {
+    title: 'Ubuntu 24.04.4 release images',
+    href: 'https://releases.ubuntu.com/noble/',
+    detail: 'Current Ubuntu 24.04.4 LTS downloads.',
+  },
+  {
+    title: 'PacKit homepage',
+    href: 'https://www.getpackit.com/',
+    detail: 'Describes PacKit as a Windows-based tool.',
+  },
+  {
+    title: 'PacKit docs: What is PacKit?',
+    href: 'https://www.getpackit.com/docs/using-packit/what-is-packit/',
+    detail: 'Official product positioning and workflow scope.',
+  },
+  {
+    title: 'Cockpit project home',
+    href: 'https://cockpit-project.org/',
+    detail: 'Overview of Cockpit capabilities, supported systems, and access model.',
+  },
+  {
+    title: 'Cockpit deployment guide',
+    href: 'https://cockpit-project.org/guide/latest/',
+    detail: 'Official guide, package model, and API references.',
+  },
+  {
+    title: 'Ubuntu cockpit package',
+    href: 'https://packages.ubuntu.com/noble/admin/cockpit',
+    detail: 'Ubuntu 24.04 package details for Cockpit.',
+  },
+  {
+    title: 'Ubuntu cockpit add-ons',
+    href: 'https://packages.ubuntu.com/source/noble/cockpit',
+    detail: 'Ubuntu source package listing showing network, updates, PCP, storage, and sosreport modules.',
+  },
+  {
+    title: 'Ubuntu wine package',
+    href: 'https://packages.ubuntu.com/noble/wine',
+    detail: 'Ubuntu 24.04 Wine package information.',
+  },
+  {
+    title: 'Wine ntprint API status',
+    href: 'https://source.winehq.org/WineAPI/ntprint.html',
+    detail: 'Shows printer-driver related APIs with many unimplemented stubs.',
+  },
+  {
+    title: 'ZT410 support page',
+    href: 'https://www.zebra.com/us/en/support-downloads/printers/industrial/zt410.html',
+    detail: 'Discontinuation and support information for the ZT410.',
+  },
+  {
+    title: 'ZT411 product page',
+    href: 'https://www.zebra.com/us/en/products/printers/industrial/zt400-series/zt411.html',
+    detail: 'Official replacement platform for ZT410.',
+  },
+  {
+    title: 'Zebra Linux CUPS installation guide',
+    href: 'https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/software/ZSN108111-v4_CUPS_Installation.pdf',
+    detail: 'Official Zebra driver installation instructions for Linux/CUPS.',
+  },
+  {
+    title: 'CUPS network printing guide',
+    href: 'https://www.cups.org/doc/network.html',
+    detail: 'AppSocket / JetDirect backend details and URI formats.',
+  },
+  {
+    title: 'CUPS backend manual',
+    href: 'https://www.cups.org/doc/man-backend.html',
+    detail: 'Serial backend behavior and URI notes.',
+  },
+  {
+    title: 'CUPS admin guide',
+    href: 'https://www.cups.org/doc/admin.html',
+    detail: 'Queue administration and device URI usage.',
+  },
+  {
+    title: 'ZPL programming guide',
+    href: 'https://cpws.zebra.com/cpws/docs/zpl/zpl_manual.pdf',
+    detail: 'ZPL and SGD programming reference.',
+  },
+  {
+    title: 'Zebra developer ZPL overview',
+    href: 'https://developer.zebra.com/products/printers/zpl',
+    detail: 'Developer-oriented ZPL overview and examples.',
+  },
+  {
+    title: 'xinput manual',
+    href: 'https://manpages.ubuntu.com/manpages/focal/en/man1/xinput.1.html',
+    detail: 'Documents `map-to-output` for X11-based mapping.',
+  },
+  {
+    title: 'libinput calibration documentation',
+    href: 'https://wayland.freedesktop.org/libinput/doc/latest/configuration.html',
+    detail: 'Modern input-stack calibration guidance.',
+  },
+  {
+    title: 'libinput udev calibration matrix',
+    href: 'https://wayland.freedesktop.org/libinput/doc/1.11.3/udev_config.html',
+    detail: 'Persistent `LIBINPUT_CALIBRATION_MATRIX` examples.',
+  },
+  {
+    title: 'shadcn/ui for Vite',
+    href: 'https://ui.shadcn.com/docs/installation/vite',
+    detail: 'Official Vite installation path for shadcn/ui.',
+  },
+  {
+    title: 'Vite static deploy guide',
+    href: 'https://vite.dev/guide/static-deploy.html',
+    detail: 'GitHub Pages workflow and base-path guidance.',
+  },
+  {
+    title: 'GitHub Pages docs',
+    href: 'https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site',
+    detail: 'Pages setup basics and publishing behavior.',
+  },
+]
