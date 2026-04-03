@@ -22,10 +22,14 @@ import {
   cockpitChecklist,
   commandBlocks,
   consistencyChecklist,
+  defaultPrinterDrift,
   diagnosticsIdeas,
+  guardRailRecommendation,
+  loggingStrategy,
   incusGuidance,
   longTermPlatform,
   printerSteps,
+  provenTopology,
   quickStartSteps,
   realityChecks,
   reprintGuidance,
@@ -114,6 +118,31 @@ function App() {
               <CardDescription>{item.note}</CardDescription>
             </Card>
           ))}
+        </section>
+
+        <section>
+          <Card>
+            <div className="mb-6 flex items-center gap-3">
+              <Cable className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Proven topology
+                </p>
+                <CardTitle>The wiring and addressing that is working now</CardTitle>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {provenTopology.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/75 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </section>
 
         <section>
@@ -587,6 +616,151 @@ function App() {
                   Zebra Reprint Mode can be a stopgap for the last label only, but it
                   is a fallback convenience, not the main workflow I would design
                   around.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Printer className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Default printer drift
+                </p>
+                <CardTitle>Why the station may wake up on PDF instead</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {defaultPrinterDrift.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Server className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Recommended fix
+                </p>
+                <CardTitle>Use a guard script plus timer, not a blind cron hack</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {guardRailRecommendation.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+              <div className="rounded-[1.3rem] border border-[var(--line)] bg-[rgba(23,32,51,0.03)] p-4 text-sm leading-7 text-[var(--muted)]">
+                <p className="mb-2 font-semibold text-[var(--ink)]">Repo samples</p>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="/Users/seandolbec/Projects/thril/scripts/thril-printer-guard.sh"
+                    className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--ink)] transition hover:-translate-y-0.5"
+                  >
+                    `scripts/thril-printer-guard.sh`
+                  </a>
+                  <a
+                    href="/Users/seandolbec/Projects/thril/ops/systemd/thril-printer-guard.service"
+                    className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--ink)] transition hover:-translate-y-0.5"
+                  >
+                    `thril-printer-guard.service`
+                  </a>
+                  <a
+                    href="/Users/seandolbec/Projects/thril/ops/systemd/thril-printer-guard.timer"
+                    className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--ink)] transition hover:-translate-y-0.5"
+                  >
+                    `thril-printer-guard.timer`
+                  </a>
+                  <a
+                    href="/Users/seandolbec/Projects/thril/ops/examples/thril-printer-guard.env"
+                    className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--ink)] transition hover:-translate-y-0.5"
+                  >
+                    `thril-printer-guard.env`
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Activity className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Logging
+                </p>
+                <CardTitle>What to log so the next flip leaves evidence</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {loggingStrategy.map((item) => (
+                <div
+                  key={item}
+                  className="flex gap-3 rounded-[1.3rem] border border-[var(--line)] bg-white/70 p-4"
+                >
+                  <BadgeCheck className="mt-1 size-4 shrink-0 text-[var(--accent)]" />
+                  <p className="leading-7 text-[var(--ink)]">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="h-full">
+            <div className="mb-6 flex items-center gap-3">
+              <Workflow className="size-5 text-[var(--accent)]" />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
+                  Practical next step
+                </p>
+                <CardTitle>How I would deploy this on the station</CardTitle>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  1. Keep the known-good queue
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Keep the Zebra on `192.168.0.100:9100` with one queue and one
+                  default destination.
+                </p>
+              </div>
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  2. Install the guard
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Put the sample script in `/usr/local/bin`, add the env file, and
+                  enable the included timer so it checks the default on boot and
+                  every few minutes.
+                </p>
+              </div>
+              <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 p-5">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+                  3. Review journal plus guard log
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Use `journalctl -u thril-printer-guard.service` and
+                  `/var/log/thril-printer-guard.log` to see when the setting changed
+                  and when the station repaired it.
                 </p>
               </div>
             </div>

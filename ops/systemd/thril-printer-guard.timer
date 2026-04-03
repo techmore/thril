@@ -1,0 +1,11 @@
+[Unit]
+Description=Run THRIL printer default guard on boot and every 5 minutes
+
+[Timer]
+OnBootSec=45s
+OnUnitActiveSec=5min
+Persistent=true
+Unit=thril-printer-guard.service
+
+[Install]
+WantedBy=timers.target

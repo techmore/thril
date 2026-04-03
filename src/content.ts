@@ -21,6 +21,13 @@ export const setupHighlights = [
   },
 ]
 
+export const provenTopology = [
+  'XM-F025 station: `192.168.0.10` on the dedicated Ethernet link to the printer.',
+  'Zebra ZT410: `192.168.0.100` on that same dedicated Ethernet link.',
+  'XM-F025 Wi-Fi: separate `10.x.x.x` network for your normal upstream connectivity.',
+  'This split is valid because the printer subnet and Wi-Fi subnet do not overlap, which keeps the Zebra path simple while preserving normal network access on Wi-Fi.',
+]
+
 export const quickStartSteps = [
   {
     title: '1. Standardize the box',
@@ -221,6 +228,28 @@ export const reprintGuidance = [
   'If reprints are currently happening because the label sometimes never arrives, prefer fixing the transport and queue first. If reprints are happening because users genuinely need duplicates or recovery, fix the product workflow.',
 ]
 
+export const defaultPrinterDrift = [
+  'If the station comes up pointing at “Print to PDF”, first check whether CUPS itself lost the default or whether the application/desktop is ignoring CUPS and remembering a last-used destination.',
+  'The official CUPS default precedence is: `LPDEST` or `PRINTER` environment variable first, then the user default from `~/.cups/lpoptions`, then the system default set with `lpadmin -d`.',
+  'That means a user-level `~/.cups/lpoptions` change can override the server default even when the queue still exists and CUPS itself looks healthy.',
+  'If `lpstat -d` still says the Zebra is default but the application opens on PDF, that strongly suggests an app or desktop print-dialog preference rather than a broken CUPS server default.',
+  'If `lpstat -d` shows something else, or no system default, then the drift is happening at the CUPS/default-printer level and can be corrected automatically.',
+]
+
+export const guardRailRecommendation = [
+  'Use a systemd timer instead of cron on Ubuntu. It integrates better with boot ordering, networking, service logs, and recovery after downtime.',
+  'Run a small root-owned guard script at boot and every few minutes to verify the Zebra queue exists, is enabled, is accepting jobs, and is still the system default.',
+  'If your application runs as a dedicated user, the same guard should also set that user’s `~/.cups/lpoptions` default to the Zebra so user-level drift is corrected too.',
+  'Log every detected change, along with snapshots of `lpstat`, `lpoptions`, environment defaults, and the relevant CUPS config files, so the next drift leaves evidence.',
+]
+
+export const loggingStrategy = [
+  'CUPS already has the logs you need, but the useful ones are usually `access_log`, `page_log`, and snapshots of defaults rather than only `dmesg`.',
+  'For drift analysis, collect these on every guard run: `lpstat -d`, `lpstat -t`, root `/etc/cups/lpoptions`, the application user’s `~/.cups/lpoptions`, and any `LPDEST` or `PRINTER` environment overrides you explicitly set.',
+  'Use `cupsctl --debug-logging` only for a short diagnostic window. It is helpful when jobs fail, but it is not the best signal for “why did my default printer change overnight?”.',
+  'Keep your own guard log in addition to CUPS logs. That gives you a timeline of when the default flipped, when the queue was unreachable, and when the script repaired the settings.',
+]
+
 export const longTermPlatform = [
   'Short term: stay on Ubuntu 24.04.4 LTS for the XM-F025 until the touch controller, graphics, sleep behavior, printer path, and recovery workflow are proven stable.',
   'Long term: Rocky Linux 9 can make sense if you want a slower-moving appliance-style station. Rocky’s official release notes show Rocky 9 has general support through May 31, 2027 and security support through May 31, 2032.',
@@ -305,7 +334,8 @@ xinput map-to-output "YOUR TOUCH DEVICE" HDMI-1`,
 sudo apt install -y cups
 sudo systemctl enable --now cups
 lpinfo -v
-sudo lpadmin -p zebra-zt410 -E -v socket://192.168.1.50:9100 -m raw
+sudo lpadmin -p zebra-zt410 -E -v socket://192.168.0.100:9100 -m raw
+sudo lpadmin -d zebra-zt410
 lpstat -t`,
   },
   {
@@ -317,8 +347,13 @@ sudo ss -ltnp | grep 9090`,
   },
   {
     title: 'Useful troubleshooting',
-    code: `ping 192.168.1.50
-nc -vz 192.168.1.50 9100
+    code: `ping 192.168.0.100
+nc -vz 192.168.0.100 9100
+lpstat -d
+lpoptions
+sudo cat /etc/cups/lpoptions
+cat ~/.cups/lpoptions
+env | grep -E '^(LPDEST|PRINTER)='
 lpstat -W not-completed
 tail -f /var/log/cups/error_log`,
   },
@@ -334,6 +369,30 @@ incus launch images:rockylinux/9/cloud thril-rocky-test --vm
 incus init images:ubuntu/24.04/cloud thril-seeded --vm
 incus config set thril-seeded cloud-init.user-data - < station-cloud-init.yaml
 incus start thril-seeded`,
+  },
+  {
+    title: 'One-time default printer repair',
+    code: `sudo cupsenable zebra-zt410
+sudo cupsaccept zebra-zt410
+sudo lpadmin -d zebra-zt410
+sudo lpoptions -d zebra-zt410
+
+# Replace thril with your real app user if needed
+sudo -u thril lpoptions -d zebra-zt410
+
+lpstat -d
+lpstat -p zebra-zt410`,
+  },
+  {
+    title: 'Install the printer guard',
+    code: `sudo install -m 0755 scripts/thril-printer-guard.sh /usr/local/bin/thril-printer-guard.sh
+sudo install -m 0644 ops/examples/thril-printer-guard.env /etc/default/thril-printer-guard
+sudo install -m 0644 ops/systemd/thril-printer-guard.service /etc/systemd/system/thril-printer-guard.service
+sudo install -m 0644 ops/systemd/thril-printer-guard.timer /etc/systemd/system/thril-printer-guard.timer
+sudo systemctl daemon-reload
+sudo systemctl enable --now thril-printer-guard.timer
+sudo systemctl start thril-printer-guard.service
+journalctl -u thril-printer-guard.service -n 50 --no-pager`,
   },
 ]
 
@@ -437,6 +496,36 @@ export const references = [
     title: 'CUPS admin guide',
     href: 'https://www.cups.org/doc/admin.html',
     detail: 'Queue administration and device URI usage.',
+  },
+  {
+    title: 'CUPS lpoptions manpage',
+    href: 'https://www.cups.org/doc/man-lpoptions.html',
+    detail: 'Documents per-user vs system-wide defaults and `~/.cups/lpoptions`.',
+  },
+  {
+    title: 'CUPS lpadmin manpage',
+    href: 'https://www.cups.org/doc/man-lpadmin.html',
+    detail: 'Documents setting the server default printer with `lpadmin -d`.',
+  },
+  {
+    title: 'CUPS lp manpage',
+    href: 'https://www.cups.org/doc/man-lp.html',
+    detail: 'Documents default-destination precedence, including environment variables and lpoptions.',
+  },
+  {
+    title: 'CUPS cupsctl manpage',
+    href: 'https://www.cups.org/doc/man-cupsctl.html',
+    detail: 'Documents debug logging and cupsd.conf control.',
+  },
+  {
+    title: 'CUPS log files manpage',
+    href: 'https://www.cups.org/doc/man-cupsd-logs.html',
+    detail: 'Explains `access_log`, `error_log`, and `page_log`.',
+  },
+  {
+    title: 'CUPS cupsd.conf manpage',
+    href: 'https://www.cups.org/doc/man-cupsd.conf.html',
+    detail: 'Documents job-history and job-file preservation options.',
   },
   {
     title: 'ZPL programming guide',
