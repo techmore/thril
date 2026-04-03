@@ -458,6 +458,11 @@ export const references = [
     detail: 'Lists Ethernet and RS-232 communication capabilities for the ZT410.',
   },
   {
+    title: 'ZT400 full user guide PDF',
+    href: 'https://www.zebra.com/content/dam/support-dam/en/documentation/unrestricted/guide/product/zt400-ug-en.pdf',
+    detail: 'Full Zebra ZT400 series user guide PDF, useful as the primary manual reference.',
+  },
+  {
     title: 'ZT400 print settings',
     href: 'https://docs.zebra.com/us/en/printers/industrial/zt400-series-industrial-printer-user-guide/configuration/c-zt4x0-ug-changing-printer-settings/c-zt4x0-ug-changing-printer-settings-through-the-user-menus/r-zt4x0-ug-print-settings.html',
     detail: 'Documents print speed, print mode, and Reprint Mode on the ZT400 series.',
