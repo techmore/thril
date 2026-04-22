@@ -1,0 +1,32 @@
+#cloud-config
+autoinstall:
+  version: 1
+  identity:
+    hostname: thrill-kiosk
+    username: thril
+    password: "$6$S4fN8FPM6lpMRS1c$IPGBk3abe2NbCo8KYRGzPP4u0IpVflDv8CXPEUK22Y4KB8ak812iry3p7sbIFwf5aOW3CbvRyfEUuFqUvhNTN."
+  keyboard:
+    layout: us
+  locale: en_US.UTF-8
+  storage:
+    layout:
+      name: direct
+  packages:
+    - ubuntu-desktop-minimal
+    - cups
+    - cockpit
+  updates: security
+  shutdown: reboot
+  late-commands:
+    - mkdir -p /target/tmp/thrill
+    - wget -O /target/tmp/thrill/setup.sh https://techmore.github.io/thril/autoinstall/current/payload/setup.sh
+    - wget -O /target/tmp/thrill/install-bundled-apps.sh https://techmore.github.io/thril/autoinstall/current/payload/install-bundled-apps.sh
+    - wget -O /target/tmp/thrill/install-chromium.sh https://techmore.github.io/thril/autoinstall/current/payload/install-chromium.sh
+    - wget -O /target/tmp/thrill/setup-zebra-printer.sh https://techmore.github.io/thril/autoinstall/current/payload/setup-zebra-printer.sh
+    - wget -O /target/tmp/thrill/tty1-ip-display.sh https://techmore.github.io/thril/autoinstall/current/payload/tty1-ip-display.sh
+    - wget -O /target/tmp/thrill/packit-kiosk.sh https://techmore.github.io/thril/autoinstall/current/payload/packit-kiosk.sh
+    - wget -O /target/tmp/thrill/packit.desktop https://techmore.github.io/thril/autoinstall/current/payload/packit.desktop
+    - wget -O /target/tmp/thrill/serial_scale.json https://techmore.github.io/thril/autoinstall/current/payload/serial_scale.json
+    - wget -O /target/tmp/thrill/thrill.env https://techmore.github.io/thril/autoinstall/current/payload/thrill.env
+    - wget -O /target/tmp/thrill/bundled-packages.txt https://techmore.github.io/thril/autoinstall/current/payload/bundled-packages.txt
+    - curtin in-target --target=/target -- sh -c 'bash -x /tmp/thrill/setup.sh > /var/log/thrill-setup.log 2>&1 || true'

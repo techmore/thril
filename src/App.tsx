@@ -6,6 +6,7 @@ import {
   Boxes,
   Cable,
   Cloud,
+  Download,
   ExternalLink,
   MonitorSmartphone,
   Package,
@@ -101,6 +102,10 @@ function App() {
                 <ButtonLink href="#troubleshooting" variant="secondary">
                   Go to troubleshooting
                 </ButtonLink>
+                <ButtonLink href="/thril/admin/ubuntu-22.04-desktop.html" variant="secondary">
+                  Desktop 22.04 one-liner
+                  <Download className="ml-2 size-4" />
+                </ButtonLink>
               </div>
             </div>
 
@@ -173,6 +178,17 @@ function App() {
                 </p>
                 <p className="leading-7 text-[var(--ink)]">
                   Manuals, vendor pages, CUPS docs, and official source material.
+                </p>
+              </a>
+              <a
+                href="/thril/admin/ubuntu-22.04-desktop.html"
+                className="rounded-[1.4rem] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(255,247,237,0.95),rgba(255,255,255,0.9))] p-5 transition hover:-translate-y-0.5"
+              >
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+                  Fast fallback
+                </p>
+                <p className="leading-7 text-[var(--ink)]">
+                  Stock Ubuntu 22.04 Desktop plus one hosted shell command for lazy admins.
                 </p>
               </a>
             </div>

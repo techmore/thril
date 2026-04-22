@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Packit
+Comment=Launch Packit Kiosk Application
+Exec=/usr/local/bin/packit-kiosk.sh
+Type=Application
+Terminal=false
+Icon=chromium-browser
+Categories=Application;Network;
+StartupNotify=false

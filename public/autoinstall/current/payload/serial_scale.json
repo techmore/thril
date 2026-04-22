@@ -1,0 +1,24 @@
+{
+  "SerialAllowUsbDevicesForUrls": [
+    {
+      "urls": ["https://packit.thril-usa.com"],
+      "devices": [
+        {
+          "vendor_id": 1659,
+          "product_id": 9123
+        }
+      ]
+    }
+  ],
+  "WebUsbAllowDevicesForUrls": [
+    {
+      "urls": ["https://packit.thril-usa.com"],
+      "devices": [
+        {
+          "vendor_id": 1659,
+          "product_id": 9123
+        }
+      ]
+    }
+  ]
+}
