@@ -1,0 +1,191 @@
+
+<style>
+.phase-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 16px 20px; margin-bottom: 12px; }
+.phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.phase-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 13px; flex-shrink: 0; }
+.phase-title { font-weight: 500; font-size: 15px; color: var(--color-text-primary); }
+.phase-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 1px; }
+.tasks { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 10px; }
+.task { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; color: var(--color-text-secondary); display: flex; align-items: flex-start; gap: 6px; }
+.task i { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.connector { display: flex; justify-content: flex-start; padding-left: 28px; margin: -4px 0 4px; }
+.connector i { font-size: 18px; color: var(--color-text-secondary); opacity: 0.4; }
+.tip { border-left: 2px solid; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 8px 12px; font-size: 12px; margin-top: 10px; }
+.resources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.resource-pill { border: 0.5px solid var(--color-border-secondary); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.resource-pill:hover { background: var(--color-background-secondary); }
+.timeline-bar { display: flex; gap: 0; margin: 20px 0 8px; border-radius: var(--border-radius-md); overflow: hidden; height: 8px; }
+.tl-seg { height: 100%; }
+.tl-label { display: flex; gap: 0; font-size: 11px; color: var(--color-text-secondary); }
+.tl-lbl { text-align: center; }
+</style>
+
+<h2 class="sr-only">ISO 9001 Implementation Roadmap — six phases from gap analysis through certification</h2>
+
+<div style="padding: 0 0 1rem;">
+
+  <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 16px;">Typical timeline: <strong style="color:var(--color-text-primary)">9–18 months</strong> for first-time certification. Smaller orgs can do it in 6–9 months.</p>
+
+  <div class="timeline-bar">
+    <div class="tl-seg" style="width:12%;background:#003049"></div>
+    <div class="tl-seg" style="width:15%;background:#669BBC"></div>
+    <div class="tl-seg" style="width:30%;background:#669BBC"></div>
+    <div class="tl-seg" style="width:18%;background:#003049"></div>
+    <div class="tl-seg" style="width:13%;background:#C1121F"></div>
+    <div class="tl-seg" style="width:12%;background:#780000"></div>
+  </div>
+  <div class="tl-label" style="margin-bottom:20px;">
+    <div class="tl-lbl" style="width:12%">Phase 1</div>
+    <div class="tl-lbl" style="width:15%">Phase 2</div>
+    <div class="tl-lbl" style="width:30%">Phase 3</div>
+    <div class="tl-lbl" style="width:18%">Phase 4</div>
+    <div class="tl-lbl" style="width:13%">Phase 5</div>
+    <div class="tl-lbl" style="width:12%">Phase 6</div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#E8EDF0;color:#003049;">1</div>
+      <div>
+        <div class="phase-title">Gap analysis <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Weeks 1–4</span></div>
+        <div class="phase-sub">Where are you now vs. what ISO 9001:2015 requires?</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-clipboard-check" aria-hidden="true"></i>Download free ISO 9001:2015 gap checklist (BSI or ASQ)</div>
+      <div class="task"><i class="ti ti-building" aria-hidden="true"></i>Define your organization's scope — which sites, products, services</div>
+      <div class="task"><i class="ti ti-users" aria-hidden="true"></i>Interview dept. heads on current processes &amp; documentation</div>
+      <div class="task"><i class="ti ti-flag" aria-hidden="true"></i>Rate each of the 10 ISO clauses: Compliant / Partial / Gap</div>
+    </div>
+    <div class="tip" style="border-color:#003049;background:#E8EDF0;color:#003049;">
+      <strong>Key output:</strong> A scored gap report ranking your biggest risk areas. This drives your whole implementation plan.
+    </div>
+  </div>
+
+  <div class="connector"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <!-- Phase 2 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#EBF2F7;color:#669BBC;">2</div>
+      <div>
+        <div class="phase-title">Planning &amp; leadership buy-in <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Weeks 4–8</span></div>
+        <div class="phase-sub">ISO 9001 requires top management commitment — this is non-negotiable</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-calendar" aria-hidden="true"></i>Build a project plan with milestones, owners, target audit date</div>
+      <div class="task"><i class="ti ti-crown" aria-hidden="true"></i>Appoint a QMS Management Representative (could be you)</div>
+      <div class="task"><i class="ti ti-target" aria-hidden="true"></i>Define quality policy and measurable quality objectives</div>
+      <div class="task"><i class="ti ti-certificate" aria-hidden="true"></i>Select a certification body (registrar) and get a quote</div>
+    </div>
+    <div class="tip" style="border-color:#669BBC;background:#EBF2F7;color:#669BBC;">
+      <strong>Free resource:</strong> ISO's free "Moving from ISO 9001:2008 to ISO 9001:2015" transition guide explains all clause changes clearly — great onboarding doc for leadership.
+    </div>
+  </div>
+
+  <div class="connector"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <!-- Phase 3 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#EBF2F7;color:#669BBC;">3</div>
+      <div>
+        <div class="phase-title">QMS documentation &amp; process design <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Months 2–7</span></div>
+        <div class="phase-sub">The bulk of the work — build your documented system</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-file-text" aria-hidden="true"></i>Write the Quality Manual (scope, policy, process overview)</div>
+      <div class="task"><i class="ti ti-git-branch" aria-hidden="true"></i>Document core process procedures (SOPs) for each major function</div>
+      <div class="task"><i class="ti ti-forms" aria-hidden="true"></i>Create mandatory records: NCR forms, corrective action, audit logs</div>
+      <div class="task"><i class="ti ti-adjustments" aria-hidden="true"></i>Build a risk register (Clause 6.1 — risk-based thinking)</div>
+      <div class="task"><i class="ti ti-truck" aria-hidden="true"></i>Establish supplier/vendor evaluation procedure</div>
+      <div class="task"><i class="ti ti-chart-line" aria-hidden="true"></i>Define KPIs for each quality objective</div>
+    </div>
+    <div class="tip" style="border-color:#669BBC;background:#EBF2F7;color:#669BBC;">
+      <strong>Key output:</strong> A document control system (even a simple SharePoint or Google Drive folder structure works) with version-controlled docs, a process map, and completed mandatory records.
+    </div>
+  </div>
+
+  <div class="connector"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <!-- Phase 4 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#E8EDF0;color:#003049;">4</div>
+      <div>
+        <div class="phase-title">Implementation &amp; training <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Months 5–9</span></div>
+        <div class="phase-sub">Put the documented system into actual daily practice</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-school" aria-hidden="true"></i>Train all staff on QMS procedures relevant to their role</div>
+      <div class="task"><i class="ti ti-rotate" aria-hidden="true"></i>Run processes under the new QMS for at least 3 months</div>
+      <div class="task"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Log nonconformances (NCRs) and corrective actions as they occur</div>
+      <div class="task"><i class="ti ti-device-analytics" aria-hidden="true"></i>Collect KPI data against your quality objectives</div>
+    </div>
+    <div class="tip" style="border-color:#003049;background:#E8EDF0;color:#003049;">
+      <strong>Note:</strong> Auditors look for evidence the system is actually running — NCR records, meeting minutes, corrective actions closed out. Start collecting this from day one of implementation.
+    </div>
+  </div>
+
+  <div class="connector"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <!-- Phase 5 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#FDE8EA;color:#C1121F;">5</div>
+      <div>
+        <div class="phase-title">Internal audit &amp; management review <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Month 8–10</span></div>
+        <div class="phase-sub">Required by the standard before the external audit</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-search" aria-hidden="true"></i>Conduct internal audit across all clauses and processes</div>
+      <div class="task"><i class="ti ti-file-report" aria-hidden="true"></i>Write internal audit report with findings</div>
+      <div class="task"><i class="ti ti-users" aria-hidden="true"></i>Hold formal Management Review meeting — document minutes</div>
+      <div class="task"><i class="ti ti-tool" aria-hidden="true"></i>Close all major nonconformances before Stage 2 audit</div>
+    </div>
+    <div class="tip" style="border-color:#C1121F;background:#FDE8EA;color:#C1121F;">
+      <strong>Tip:</strong> Your internal auditor cannot audit their own work. Train a second person or hire a freelance auditor ($500–1,500) for objectivity and to simulate the real audit experience.
+    </div>
+  </div>
+
+  <div class="connector"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <!-- Phase 6 -->
+  <div class="phase-card">
+    <div class="phase-header">
+      <div class="phase-num" style="background:#F0E0E0;color:#780000;">6</div>
+      <div>
+        <div class="phase-title">Certification audit <span style="font-weight:400;font-size:13px;color:var(--color-text-secondary)">— Months 10–12+</span></div>
+        <div class="phase-sub">Two-stage external audit by your chosen registrar</div>
+      </div>
+    </div>
+    <div class="tasks">
+      <div class="task"><i class="ti ti-file-check" aria-hidden="true"></i><strong>Stage 1:</strong> Document review — auditor checks your QMS docs are compliant</div>
+      <div class="task"><i class="ti ti-building-factory" aria-hidden="true"></i><strong>Stage 2:</strong> On-site audit — evidence that the system is actually running</div>
+      <div class="task"><i class="ti ti-alert-circle" aria-hidden="true"></i>Respond to any findings within agreed timeframe</div>
+      <div class="task"><i class="ti ti-rosette" aria-hidden="true"></i>Receive certificate (valid 3 years, annual surveillance audits)</div>
+    </div>
+    <div class="tip" style="border-color:#780000;background:#F0E0E0;color:#780000;">
+      <strong>After certification:</strong> You'll have annual surveillance audits in years 1 and 2, then a full recertification audit in year 3. Keep your NCR log and KPIs running continuously.
+    </div>
+  </div>
+
+  <!-- Resources section -->
+  <div style="margin-top:24px;padding-top:20px;border-top:0.5px solid var(--color-border-tertiary);">
+    <p style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin:0 0 10px;">Free materials to start with</p>
+    <div class="resources">
+      <div class="resource-pill" onclick="sendPrompt('Tell me more about the ISO 9001 standard clauses 1 through 10')"><i class="ti ti-file-description" style="font-size:13px" aria-hidden="true"></i>ISO 9001:2015 clause breakdown</div>
+      <div class="resource-pill" onclick="sendPrompt('Give me a gap analysis checklist template for ISO 9001')"><i class="ti ti-clipboard-list" style="font-size:13px" aria-hidden="true"></i>Gap analysis checklist</div>
+      <div class="resource-pill" onclick="sendPrompt('Give me a quality policy template for ISO 9001')"><i class="ti ti-file-plus" style="font-size:13px" aria-hidden="true"></i>Quality policy template</div>
+      <div class="resource-pill" onclick="sendPrompt('Give me an internal audit checklist for ISO 9001')"><i class="ti ti-checklist" style="font-size:13px" aria-hidden="true"></i>Internal audit checklist</div>
+      <div class="resource-pill" onclick="sendPrompt('Explain the mandatory documents required for ISO 9001:2015 certification')"><i class="ti ti-list" style="font-size:13px" aria-hidden="true"></i>Mandatory documents list</div>
+      <div class="resource-pill" onclick="sendPrompt('Explain how to write a corrective action report for ISO 9001')"><i class="ti ti-tool" style="font-size:13px" aria-hidden="true"></i>Corrective action (CAR) guide</div>
+    </div>
+  </div>
+
+</div>

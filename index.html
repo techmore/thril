@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thril — QMS Wiki for ISO 9001:2015</title>
+  <meta name="description" content="Thril is a wiki-like documentation platform for ISO 9001:2015 compliance — gap analysis, audit checklists, templates, and your entire QMS in one place.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --molten-lava: #780000;
+      --flag-red: #C1121F;
+      --papaya-whip: #FDF0D5;
+      --deep-space-blue: #003049;
+      --steel-blue: #669BBC;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f8f6f2;
+      --color-bg-card: #ffffff;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #5a5a5a;
+      --color-border: #e5e0d8;
+      --sidebar-width: 240px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 68px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--deep-space-blue); padding: 12px 0;
+      position: sticky; top: 0; z-index: 100; height: 56px;
+    }
+    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--papaya-whip); letter-spacing: -0.5px; }
+    .logo span { color: var(--flag-red); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      color: rgba(253,240,213,.7); font-size: 13px; font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--papaya-whip); }
+
+    /* ── Layout: sidebar + main ── */
+    .page-wrap { display: flex; max-width: 1360px; margin: 0 auto; padding: 0 24px; gap: 32px; }
+    .sidebar {
+      width: var(--sidebar-width); flex-shrink: 0;
+      position: sticky; top: 80px; align-self: start;
+      max-height: calc(100vh - 96px); overflow-y: auto;
+      padding: 16px 0; display: none;
+    }
+    .sidebar.visible { display: block; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 6px;
+      font-size: 13px; color: #5a5a5a; transition: all .15s;
+    }
+    .sidebar nav a:hover, .sidebar nav a.active {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+    }
+    .sidebar nav a i { font-size: 16px; width: 20px; color: var(--steel-blue); }
+    .sidebar .toc-group { margin-bottom: 16px; }
+    .sidebar .toc-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+      color: #999; padding: 0 12px; margin-bottom: 6px;
+    }
+    .main-content { flex: 1; min-width: 0; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--deep-space-blue) 0%, #4a1a1a 50%, var(--molten-lava) 100%);
+      color: var(--papaya-whip); padding: 64px 0 56px; position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(102,155,188,.12), transparent 70%);
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: clamp(32px,5vw,52px); font-weight: 800; line-height: 1.1; margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--steel-blue); }
+    .hero p { font-size: 16px; max-width: 560px; opacity: .85; margin-bottom: 24px; }
+    .dash-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 12px; margin-top: 28px; max-width: 700px;
+    }
+    .dash-card {
+      background: rgba(255,255,255,.08); border-radius: 10px; padding: 16px;
+      text-align: center; backdrop-filter: blur(4px);
+    }
+    .dash-card strong { font-size: 28px; display: block; font-weight: 700; color: var(--steel-blue); }
+    .dash-card span { font-size: 12px; opacity: .75; }
+    .btn-primary {
+      background: var(--flag-red); color: #fff; padding: 11px 28px;
+      border-radius: 8px; font-weight: 600; font-size: 14px;
+      transition: transform .2s, box-shadow .2s; display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(193,18,31,.4); }
+    .btn-outline {
+      border: 2px solid var(--papaya-whip); color: var(--papaya-whip);
+      padding: 9px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      transition: background .2s; display: inline-block;
+    }
+    .btn-outline:hover { background: rgba(253,240,213,.1); }
+
+    /* ── Sections ── */
+    section { padding: 56px 0; border-bottom: 1px solid var(--color-border); }
+    section:last-of-type { border-bottom: none; }
+    .section-label {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 1.8px;
+      font-weight: 600; color: var(--flag-red); margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(24px,3vw,32px); font-weight: 700; margin-bottom: 8px;
+      color: var(--deep-space-blue);
+    }
+    .section-sub {
+      font-size: 15px; color: var(--color-text-secondary); margin-bottom: 32px; max-width: 680px;
+    }
+    section.bg-soft { background: var(--color-bg-soft); }
+
+    /* ── Clause accordion ── */
+    .clause { margin-bottom: 8px; border: 1px solid var(--color-border); border-radius: 10px; overflow: hidden; }
+    .clause-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; background: #fff;
+      transition: background .15s; user-select: none;
+    }
+    .clause-header:hover { background: var(--papaya-whip); }
+    .clause-header h4 { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .clause-header h4 .pill {
+      font-size: 11px; background: var(--deep-space-blue); color: var(--papaya-whip);
+      padding: 2px 10px; border-radius: 20px; font-weight: 500;
+    }
+    .clause-header .chevron { transition: transform .2s; font-size: 18px; color: #999; }
+    .clause.open .clause-header .chevron { transform: rotate(180deg); }
+    .clause-body {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease;
+      background: var(--color-bg-soft);
+    }
+    .clause.open .clause-body { max-height: 800px; }
+    .clause-body-inner { padding: 16px 18px 20px; font-size: 14px; color: #444; }
+    .clause-body-inner ul { margin: 8px 0 0 18px; }
+    .clause-body-inner li { margin-bottom: 4px; }
+    .clause-body-inner .req-badge {
+      display: inline-block; font-size: 11px; padding: 2px 10px;
+      border-radius: 20px; margin-right: 6px; margin-bottom: 4px;
+    }
+    .req-badge.mand { background: #fde8ea; color: #C1121F; }
+    .req-badge.rec { background: #e8edf0; color: #003049; }
+
+    /* ── Gap analysis table ── */
+    .gap-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+    .gap-table th {
+      text-align: left; padding: 10px 12px; background: var(--deep-space-blue);
+      color: var(--papaya-whip); font-weight: 600; font-size: 12px;
+    }
+    .gap-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+    .gap-table tr:hover td { background: var(--papaya-whip); }
+    .gap-table .score { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .score-gap { background: #fde8ea; color: #C1121F; }
+    .score-partial { background: #fff3d6; color: #b8860b; }
+    .score-compliant { background: #e1f5ee; color: #1d7a5a; }
+
+    /* ── Audit checklist ── */
+    .audit-section { margin-bottom: 24px; }
+    .audit-section h4 {
+      font-size: 15px; font-weight: 600; color: var(--molten-lava);
+      margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid var(--papaya-whip);
+    }
+    .audit-item {
+      display: grid; grid-template-columns: 1fr 90px 90px;
+      gap: 8px; padding: 8px 0; border-bottom: 1px solid #f0ece4;
+      font-size: 13px; align-items: start;
+    }
+    .audit-item .q { color: #333; }
+    .audit-item .verdict {
+      font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px;
+      text-align: center; white-space: nowrap;
+    }
+    .verdict.na { background: #f0f0f0; color: #888; }
+    .verdict.yes { background: #e1f5ee; color: #1d7a5a; }
+    .verdict.no { background: #fde8ea; color: #C1121F; }
+    .verdict.partial { background: #fff3d6; color: #b8860b; }
+    .audit-obs {
+      grid-column: 1 / -1; font-size: 12px; color: #888;
+      border-left: 2px solid var(--steel-blue); padding-left: 10px; margin-top: -4px;
+    }
+
+    /* ── Doc control ── */
+    .doc-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px;
+    }
+    .doc-card {
+      background: var(--color-bg-soft); border-radius: 8px; padding: 14px 16px;
+      border-left: 3px solid var(--steel-blue);
+    }
+    .doc-card h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .doc-card p { font-size: 12px; color: #666; }
+
+    /* ── Templates ── */
+    .tpl-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px;
+    }
+    .tpl-card {
+      background: var(--papaya-whip); border-radius: 8px; padding: 16px 18px;
+      display: flex; align-items: center; gap: 10px; cursor: default;
+      transition: transform .2s; font-size: 13px; font-weight: 500;
+    }
+    .tpl-card:hover { transform: translateY(-2px); }
+    .tpl-card i { font-size: 18px; color: var(--flag-red); }
+
+    /* ── Quick links bar ── */
+    .quick-links {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0;
+    }
+    .quick-links a {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+      padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px; transition: background .2s;
+    }
+    .quick-links a:hover { background: #f0e0c0; }
+
+    /* ── Roadmap ── */
+    #roadmap .container { max-width: 800px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ── CTA ── */
+    #cta {
+      background: var(--deep-space-blue); color: var(--papaya-whip); text-align: center;
+      border-bottom: none !important;
+    }
+    #cta h2 { font-size: clamp(22px,3vw,30px); font-weight: 700; margin-bottom: 12px; }
+    #cta p { opacity: .8; margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto; font-size: 15px; }
+
+    /* ── Footer ── */
+    footer {
+      background: #001a2b; color: rgba(253,240,213,.55);
+      padding: 28px 0; font-size: 13px; text-align: center;
+    }
+    footer a { color: var(--steel-blue); }
+
+    /* ── Responsive ── */
+    @media (min-width: 1024px) { .sidebar.visible { display: block; } }
+    @media (max-width: 768px) {
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 11px; }
+      .hero { padding: 40px 0 36px; }
+      section { padding: 36px 0; }
+      .page-wrap { padding: 0 16px; gap: 0; }
+      .audit-item { grid-template-columns: 1fr 70px 70px; }
+      .gap-table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Nav ═══ -->
+  <nav>
+    <div class="container">
+      <div class="logo">THRIL<span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#clauses">Clauses</a></li>
+        <li><a href="#gap-analysis">Gap</a></li>
+        <li><a href="#audit-checklist">Audit</a></li>
+        <li><a href="#templates">Templates</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ═══ Hero Dashboard ═══ -->
+  <header class="hero">
+    <div class="container">
+      <h1>QMS Wiki &mdash; ISO 9001:2015<span>.</span></h1>
+      <p>Central hub for your quality management system. Clause references, gap analysis, audit checklists, templates, and the full implementation roadmap &mdash; wiki-style, always accessible.</p>
+      <div>
+        <a href="#clauses" class="btn-primary">Browse clauses</a>
+        <a href="#audit-checklist" class="btn-outline" style="margin-left:10px;">Audit checklist</a>
+      </div>
+      <div class="dash-cards">
+        <div class="dash-card"><strong>10</strong><span>ISO 9001 clauses</span></div>
+        <div class="dash-card"><strong>6</strong><span>Mandatory procedures</span></div>
+        <div class="dash-card"><strong>9&ndash;18</strong><span>Months to certify</span></div>
+        <div class="dash-card"><strong>8</strong><span>Ready templates</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar + Main ═══ -->
+  <div class="page-wrap">
+    <aside class="sidebar visible">
+      <nav>
+        <div class="toc-group">
+          <div class="toc-label">Reference</div>
+          <a href="#clauses"><i class="ti ti-file-description"></i>Clause breakdown</a>
+          <a href="#gap-analysis"><i class="ti ti-clipboard-list"></i>Gap analysis</a>
+          <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Management</div>
+          <a href="#doc-control"><i class="ti ti-file-text"></i>Document control</a>
+          <a href="#records"><i class="ti ti-archive"></i>Records management</a>
+          <a href="#templates"><i class="ti ti-template"></i>Templates</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Planning</div>
+          <a href="#roadmap"><i class="ti ti-road"></i>Roadmap</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-content">
+
+      <!-- ═══ ISO 9001 Clause Breakdown ═══ -->
+      <section id="clauses">
+        <p class="section-label">Standard</p>
+        <h2 class="section-title">ISO 9001:2015 &mdash; clause breakdown</h2>
+        <p class="section-sub">Each clause with its requirements, mandatory documentation, and what auditors look for. Click to expand.</p>
+
+        <div class="clause open">
+          <div class="clause-header">
+            <h4>Clause 4 &mdash; Context of the organization <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Determine external/internal issues relevant to your QMS, interested parties and their requirements, define the QMS scope, and establish, implement, maintain, and continually improve the QMS including its processes.</p>
+              <ul>
+                <li>4.1 &mdash; Understand the organization and its context (SWOT/PESTLE analysis)</li>
+                <li>4.2 &mdash; Understand needs and expectations of interested parties</li>
+                <li>4.3 &mdash; Determine the scope of the QMS (documented)</li>
+                <li>4.4 &mdash; QMS and its processes (process interaction map)</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Scope of QMS</span>
+                <span class="req-badge mand">Mandatory: Process interaction map</span>
+                <span class="req-badge rec">Recommended: Context register</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Evidence that you've identified relevant issues, interested parties, and that your QMS scope is accurate and justified. They'll ask for records of reviews.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 5 &mdash; Leadership <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Top management must demonstrate leadership and commitment, establish a quality policy, ensure quality objectives are set, assign QMS roles and responsibilities, and promote process approach and risk-based thinking.</p>
+              <ul>
+                <li>5.1 &mdash; Leadership and commitment</li>
+                <li>5.2 &mdash; Quality policy (documented)</li>
+                <li>5.3 &mdash; Organizational roles, responsibilities and authorities</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Quality policy</span>
+                <span class="req-badge mand">Mandatory: QMS role assignments</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Evidence of management review meetings, signed quality policy, communication records showing leadership engagement. The quality policy must be appropriate and communicated.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 6 &mdash; Planning <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Plan actions to address risks and opportunities, establish measurable quality objectives, and plan changes to the QMS when needed.</p>
+              <ul>
+                <li>6.1 &mdash; Actions to address risks and opportunities (risk register)</li>
+                <li>6.2 &mdash; Quality objectives and planning to achieve them</li>
+                <li>6.3 &mdash; Planning of changes</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Quality objectives (measured)</span>
+                <span class="req-badge rec">Recommended: Risk register</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Documented quality objectives with targets, evidence of risk assessment, action plans for risks/opportunities. Objectives must be monitored and communicated.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 7 &mdash; Support <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Ensure adequate resources, competent personnel, documented infrastructure and environment, measurement traceability, and documented information (document control).</p>
+              <ul>
+                <li>7.1 &mdash; Resources (people, infrastructure, environment)</li>
+                <li>7.2 &mdash; Competence (training records)</li>
+                <li>7.3 &mdash; Awareness</li>
+                <li>7.4 &mdash; Communication</li>
+                <li>7.5 &mdash; Documented information (document control + records control)</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Document control procedure</span>
+                <span class="req-badge mand">Mandatory: Records control procedure</span>
+                <span class="req-badge rec">Recommended: Training matrix</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Training records, competence evaluations, document approval/change history, legible records. Clause 7.5 is a frequent finding area.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 8 &mdash; Operation <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Plan, implement, and control operational processes including product/service requirements, design/development, externally provided products/services, production/service provision, and release of products/services.</p>
+              <ul>
+                <li>8.1 &mdash; Operational planning and control</li>
+                <li>8.2 &mdash; Requirements for products and services (contract review)</li>
+                <li>8.3 &mdash; Design and development (if applicable)</li>
+                <li>8.4 &mdash; Control of externally provided processes/products/services</li>
+                <li>8.5 &mdash; Production and service provision (including traceability, preservation)</li>
+                <li>8.6 &mdash; Release of products and services</li>
+                <li>8.7 &mdash; Control of nonconforming outputs (NCR process)</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Nonconformity control procedure</span>
+                <span class="req-badge mand">Mandatory: Records of nonconformities (NCRs)</span>
+                <span class="req-badge rec">Recommended: Supplier evaluation records</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Signed contracts/reviews, supplier evaluation records, traceability of product, NCR logs, corrective actions for nonconformities. This clause has the most process evidence.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 9 &mdash; Performance evaluation <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Monitor, measure, analyze, and evaluate QMS performance. Conduct internal audits at planned intervals and perform management reviews.</p>
+              <ul>
+                <li>9.1 &mdash; Monitoring, measurement, analysis and evaluation (KPIs)</li>
+                <li>9.2 &mdash; Internal audit (audit program, audit records)</li>
+                <li>9.3 &mdash; Management review (review records, action items)</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Internal audit procedure</span>
+                <span class="req-badge mand">Mandatory: Internal audit records</span>
+                <span class="req-badge mand">Mandatory: Management review records</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Completed internal audit reports with findings, management review meeting minutes, KPI trend data. They will track closure of action items from previous reviews.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="clause">
+          <div class="clause-header">
+            <h4>Clause 10 &mdash; Improvement <span class="pill">Mandatory</span></h4>
+            <i class="ti ti-chevron-down chevron"></i>
+          </div>
+          <div class="clause-body">
+            <div class="clause-body-inner">
+              <p><strong>What it requires:</strong> Determine and select opportunities for improvement, manage nonconformities and corrective actions, and continually improve the suitability, adequacy, and effectiveness of the QMS.</p>
+              <ul>
+                <li>10.1 &mdash; Nonconformity and corrective action (root cause analysis)</li>
+                <li>10.2 &mdash; Continual improvement</li>
+              </ul>
+              <div style="margin-top:10px;">
+                <span class="req-badge mand">Mandatory: Corrective action procedure</span>
+                <span class="req-badge mand">Mandatory: Corrective action records (CARs)</span>
+              </div>
+              <p style="margin-top:8px;font-size:13px;color:#888;"><strong>Auditor looks for:</strong> Root cause analysis on nonconformities, corrective actions that actually prevent recurrence, evidence of continual improvement. This is where the PDCA cycle closes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Gap Analysis ═══ -->
+      <section id="gap-analysis">
+        <p class="section-label">Assessment</p>
+        <h2 class="section-title">Gap analysis toolkit</h2>
+        <p class="section-sub">Score your organization against each ISO 9001:2015 requirement. Rate as <strong>Compliant</strong>, <strong>Partial</strong>, or <strong>Gap</strong> to identify where to focus implementation effort.</p>
+
+        <div style="overflow-x:auto;">
+          <table class="gap-table">
+            <thead>
+              <tr><th style="width:40px">#</th><th>Requirement</th><th style="width:110px">Your score</th><th>Priority</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>4.1</td><td>Context of the organization identified and reviewed</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>4.2</td><td>Interested parties and their requirements identified</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>4.3</td><td>QMS scope defined and documented</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>4.4</td><td>QMS processes and their interactions mapped</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>5.1</td><td>Top management leadership and commitment demonstrated</td><td><span class="score score-partial">Partial</span></td><td>High</td></tr>
+              <tr><td>5.2</td><td>Quality policy established and communicated</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>5.3</td><td>Roles, responsibilities, and authorities assigned</td><td><span class="score score-compliant">Compliant</span></td><td>Low</td></tr>
+              <tr><td>6.1</td><td>Risks and opportunities identified and addressed</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>6.2</td><td>Quality objectives established with measurable targets</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>7.1</td><td>Resources (people, infrastructure, environment) adequate</td><td><span class="score score-compliant">Compliant</span></td><td>Low</td></tr>
+              <tr><td>7.2</td><td>Personnel competence ensured with training records</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>7.5</td><td>Documented information controlled (document/records control)</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>8.1</td><td>Operational planning and control implemented</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>8.2</td><td>Product/service requirements reviewed before commitment</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>8.4</td><td>External providers evaluated and controlled</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>8.7</td><td>Nonconforming outputs identified and controlled (NCR)</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>9.2</td><td>Internal audits conducted at planned intervals</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>9.3</td><td>Management reviews conducted with documented minutes</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+              <tr><td>10.1</td><td>Nonconformities managed with corrective actions (CAR)</td><td><span class="score score-gap">Gap</span></td><td>High</td></tr>
+              <tr><td>10.2</td><td>Continual improvement demonstrated</td><td><span class="score score-partial">Partial</span></td><td>Medium</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:13px;color:#888;margin-top:12px;">
+          <span class="score score-gap" style="margin-right:4px;">Gap</span> = missing / not started &nbsp;
+          <span class="score score-partial" style="margin-right:4px;">Partial</span> = in progress / partial compliance &nbsp;
+          <span class="score score-compliant" style="margin-right:4px;">Compliant</span> = fully met
+        </p>
+
+        <div style="margin-top:20px;background:var(--papaya-whip);border-radius:10px;padding:20px;">
+          <h4 style="font-size:15px;font-weight:600;color:var(--molten-lava);margin-bottom:6px;">&nearr; How to close a gap</h4>
+          <ol style="font-size:13px;color:#444;margin-left:18px;">
+            <li>Identify the specific clause requirement</li>
+            <li>Write a procedure or work instruction addressing it</li>
+            <li>Assign an owner and target completion date</li>
+            <li>Implement and train staff on the new process</li>
+            <li>Collect evidence (records, signed forms, audit trails)</li>
+            <li>Re-assess score after implementation</li>
+          </ol>
+        </div>
+
+        <div class="quick-links">
+          <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
+          <a href="#templates"><i class="ti ti-template"></i>Templates</a>
+          <a href="#roadmap"><i class="ti ti-road"></i>Roadmap</a>
+        </div>
+      </section>
+
+      <!-- ═══ 3rd Party Audit Checklist ═══ -->
+      <section id="audit-checklist" class="bg-soft">
+        <p class="section-label">Audit</p>
+        <h2 class="section-title">3rd-party audit checklist</h2>
+        <p class="section-sub">Pre-audit readiness assessment. Each item is what an external certification auditor will verify. Mark <strong>Yes</strong> (evidence exists), <strong>No</strong> (missing), <strong>Partial</strong> (some evidence), or <strong>N/A</strong>.</p>
+
+        <div class="audit-section">
+          <h4>Clause 4 &mdash; Context of the organization</h4>
+          <div class="audit-item">
+            <span class="q">Has the organization identified external and internal issues relevant to its QMS?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are interested parties and their requirements documented and reviewed?</span>
+            <span class="verdict yes">Yes</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is the QMS scope defined, documented, and justified (including exclusions)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are QMS processes, sequence, and interactions mapped?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 5 &mdash; Leadership</h4>
+          <div class="audit-item">
+            <span class="q">Does top management demonstrate leadership and commitment to the QMS?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is a quality policy established, documented, and communicated to all personnel?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are QMS roles, responsibilities, and authorities assigned and communicated?</span>
+            <span class="verdict yes">Yes</span>
+            <span class="verdict">—</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 6 &mdash; Planning</h4>
+          <div class="audit-item">
+            <span class="q">Has the organization determined risks and opportunities and planned actions to address them?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are quality objectives established for relevant functions and levels with measurable targets?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is there a documented process for planning QMS changes?</span>
+            <span class="verdict yes">Yes</span>
+            <span class="verdict">—</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 7 &mdash; Support</h4>
+          <div class="audit-item">
+            <span class="q">Are adequate resources (people, infrastructure, environment) provided for the QMS?</span>
+            <span class="verdict yes">Yes</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is personnel competence determined and maintained (training records, certifications)?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is there a documented document control procedure (approval, review, changes, versioning)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is there a documented records control procedure (identification, storage, retention, disposal)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 8 &mdash; Operation</h4>
+          <div class="audit-item">
+            <span class="q">Are customer requirements reviewed before commitment (contract review process)?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are external providers evaluated, selected, and re-evaluated (supplier management)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is product/service traceability maintained where required?</span>
+            <span class="verdict yes">Yes</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is there a documented process for controlling nonconforming outputs (NCR)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 9 &mdash; Performance evaluation</h4>
+          <div class="audit-item">
+            <span class="q">Are internal audits conducted at planned intervals (audit schedule, reports, findings)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is KPI data monitored, measured, analyzed, and evaluated?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Are management reviews conducted with documented minutes and action items?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+        </div>
+
+        <div class="audit-section">
+          <h4>Clause 10 &mdash; Improvement</h4>
+          <div class="audit-item">
+            <span class="q">Are nonconformities responded to, corrected, and root causes analyzed (CAR process)?</span>
+            <span class="verdict no">No</span>
+            <span class="verdict no">No</span>
+          </div>
+          <div class="audit-item">
+            <span class="q">Is there evidence of continual improvement of the QMS?</span>
+            <span class="verdict partial">Partial</span>
+            <span class="verdict">—</span>
+          </div>
+        </div>
+
+        <p style="font-size:13px;color:#888;margin-top:16px;">
+          Template: copy this checklist and populate with your actual status before the Stage 1 document review.
+        </p>
+
+        <div class="quick-links">
+          <a href="#clauses"><i class="ti ti-file-description"></i>Clause details</a>
+          <a href="#gap-analysis"><i class="ti ti-clipboard-list"></i>Gap analysis</a>
+          <a href="#templates"><i class="ti ti-template"></i>Templates</a>
+        </div>
+      </section>
+
+      <!-- ═══ Document Control ═══ -->
+      <section id="doc-control">
+        <p class="section-label">Governance</p>
+        <h2 class="section-title">Document control guidelines</h2>
+        <p class="section-sub">Clause 7.5 requires documented information to be controlled. These conventions ensure audit-ready documentation.</p>
+
+        <div class="doc-grid">
+          <div class="doc-card">
+            <h5>Naming convention</h5>
+            <p><code>[TYPE]-[dept]-[number]-[version]</code><br>e.g. <code>SOP-OPS-001-v2</code>, <code>POL-QMS-001-v1</code></p>
+          </div>
+          <div class="doc-card">
+            <h5>Version control</h5>
+            <p>Each document has a version history table: date, version, author, approver, change description. Major revisions increment the version number.</p>
+          </div>
+          <div class="doc-card">
+            <h5>Approval workflow</h5>
+            <p>Draft &rarr; Review by QMS rep &rarr; Approval by process owner &rarr; Publish. Electronic signatures or email approval records accepted.</p>
+          </div>
+          <div class="doc-card">
+            <h5>Review cycle</h5>
+            <p>All QMS documents reviewed at least annually (or when processes change). Review date tracked in the document register.</p>
+          </div>
+          <div class="doc-card">
+            <h5>Document register</h5>
+            <p>Master list of all QMS documents: title, ID, version, effective date, owner, review date, status (draft/active/obsolete).</p>
+          </div>
+          <div class="doc-card">
+            <h5>Obsolete management</h5>
+            <p>Obsolete docs are marked "superseded" and retained for records. Current versions are clearly distinguished from historical.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Records Management ═══ -->
+      <section id="records" class="bg-soft">
+        <p class="section-label">Retention</p>
+        <h2 class="section-title">Records management &amp; retention schedule</h2>
+        <p class="section-sub">Mandatory records required by ISO 9001:2015 and recommended retention periods for audit traceability.</p>
+
+        <div style="overflow-x:auto;">
+          <table class="gap-table">
+            <thead>
+              <tr><th>Record type</th><th>Clause</th><th>Retention</th><th>Format</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>QMS scope document</td><td>4.3</td><td>Current + 1 superseded version</td><td>PDF / wiki page</td></tr>
+              <tr><td>Quality policy</td><td>5.2</td><td>Current + 1 superseded version</td><td>PDF / wiki page</td></tr>
+              <tr><td>Quality objectives &amp; performance data</td><td>6.2</td><td>3 years</td><td>Spreadsheet / dashboard</td></tr>
+              <tr><td>Risk register</td><td>6.1</td><td>3 years</td><td>Spreadsheet / wiki table</td></tr>
+              <tr><td>Training records &amp; competency matrix</td><td>7.2</td><td>Employment + 3 years</td><td>HR system / spreadsheet</td></tr>
+              <tr><td>Document approval records</td><td>7.5</td><td>Life of doc + 3 years</td><td>Wiki history / email archive</td></tr>
+              <tr><td>Contract / order reviews</td><td>8.2</td><td>3 years</td><td>CRM / signed forms</td></tr>
+              <tr><td>Supplier evaluation records</td><td>8.4</td><td>3 years</td><td>Spreadsheet / procurement system</td></tr>
+              <tr><td>Nonconformance reports (NCRs)</td><td>8.7</td><td>5 years</td><td>Wiki page / forms</td></tr>
+              <tr><td>Corrective action reports (CARs)</td><td>10.1</td><td>5 years</td><td>Wiki page / forms</td></tr>
+              <tr><td>Internal audit reports &amp; findings</td><td>9.2</td><td>5 years</td><td>PDF / wiki page</td></tr>
+              <tr><td>Management review minutes</td><td>9.3</td><td>5 years</td><td>PDF / wiki page</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Templates ═══ -->
+      <section id="templates">
+        <p class="section-label">Resources</p>
+        <h2 class="section-title">Template library</h2>
+        <p class="section-sub">Pre-built templates aligned to ISO 9001:2015. Each includes prompts and examples to accelerate your documentation.</p>
+        <div class="tpl-grid">
+          <div class="tpl-card"><i class="ti ti-file-description"></i>Quality Manual</div>
+          <div class="tpl-card"><i class="ti ti-clipboard-list"></i>Gap analysis checklist</div>
+          <div class="tpl-card"><i class="ti ti-checklist"></i>Internal audit checklist</div>
+          <div class="tpl-card"><i class="ti ti-file-plus"></i>Quality policy</div>
+          <div class="tpl-card"><i class="ti ti-tool"></i>Corrective action (CAR)</div>
+          <div class="tpl-card"><i class="ti ti-alert-triangle"></i>Nonconformance (NCR)</div>
+          <div class="tpl-card"><i class="ti ti-adjustments"></i>Risk register</div>
+          <div class="tpl-card"><i class="ti ti-file-report"></i>Management review minutes</div>
+          <div class="tpl-card"><i class="ti ti-school"></i>Training record</div>
+          <div class="tpl-card"><i class="ti ti-truck"></i>Supplier evaluation</div>
+          <div class="tpl-card"><i class="ti ti-clipboard-data"></i>KPI dashboard</div>
+          <div class="tpl-card"><i class="ti ti-git-branch"></i>SOP template</div>
+        </div>
+      </section>
+
+      <!-- ═══ Implementation Roadmap ═══ -->
+      <section id="roadmap" class="bg-soft">
+        <div class="container" style="padding:0;">
+          <p class="section-label">Roadmap</p>
+          <h2 class="section-title">Implementation roadmap</h2>
+          <p class="section-sub">A proven 6-phase plan from gap analysis through ISO 9001:2015 certification.</p>
+          <div id="roadmap-content"><!-- injected from iso9001_implementation_roadmap.html --></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ═══ CTA ═══ -->
+  <section id="cta">
+    <div class="container">
+      <h2>Your QMS starts here.</h2>
+      <p>Gap analysis, clause references, audit checklists, templates, and the full roadmap &mdash; everything in one wiki-style platform.</p>
+      <a href="#clauses" class="btn-primary">Start with the clauses</a>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══ -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Thril. Built for quality.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── Accordion ──
+    document.querySelectorAll('.clause-header').forEach(h => {
+      h.addEventListener('click', () => {
+        h.parentElement.classList.toggle('open');
+      });
+    });
+
+    // ── Inject roadmap ──
+    fetch('iso9001_implementation_roadmap.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('roadmap-content').innerHTML = html;
+      })
+      .catch(() => {});
+
+    // ── Active TOC highlight ──
+    const tocLinks = document.querySelectorAll('.sidebar nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const id = e.target.id;
+          tocLinks.forEach(l => { if (l.getAttribute('href') === '#' + id) l.classList.add('active'); });
+        }
+      });
+    }, { rootMargin: '-100px 0 -60% 0' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
