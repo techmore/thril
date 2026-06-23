@@ -257,6 +257,49 @@
       padding: 2px 8px; color: var(--deep-space-blue);
     }
 
+    /* ── Systems management ── */
+    .sys-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 16px; }
+    .sys-card {
+      background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px;
+      overflow: hidden; transition: box-shadow .2s;
+    }
+    .sys-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .sys-head {
+      background: var(--deep-space-blue); color: var(--papaya-whip);
+      padding: 14px 18px; display: flex; align-items: center; gap: 10px;
+    }
+    .sys-head i { font-size: 22px; color: var(--steel-blue); }
+    .sys-head h4 { font-size: 15px; font-weight: 600; }
+    .sys-head .sys-tag {
+      font-size: 10px; background: var(--flag-red); color: #fff;
+      padding: 2px 10px; border-radius: 20px; margin-left: auto; font-weight: 500;
+    }
+    .sys-body { padding: 14px 18px; }
+    .sys-body .row {
+      display: flex; justify-content: space-between; padding: 4px 0;
+      font-size: 13px; border-bottom: 1px solid #f5f0e8;
+    }
+    .sys-body .row .label { color: #888; font-weight: 500; }
+    .sys-body .row .value { color: #333; text-align: right; }
+    .sys-body .task-list { margin-top: 10px; }
+    .sys-body .task-list li {
+      font-size: 12px; color: #555; margin-bottom: 4px; list-style: disc; margin-left: 16px;
+    }
+    .schedule-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+    .schedule-table th {
+      text-align: left; padding: 8px 12px; background: var(--deep-space-blue);
+      color: var(--papaya-whip); font-weight: 600; font-size: 12px;
+    }
+    .schedule-table td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); }
+    .schedule-table tr:hover td { background: var(--papaya-whip); }
+    .freq-badge {
+      display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500;
+    }
+    .freq-weekly { background: #fde8ea; color: #C1121F; }
+    .freq-monthly { background: #fff3d6; color: #b8860b; }
+    .freq-quarterly { background: #e1f5ee; color: #1d7a5a; }
+    .freq-annual { background: #e8edf0; color: #003049; }
+
     /* ── Templates ── */
     .tpl-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px;
@@ -321,6 +364,7 @@
       <ul class="nav-links">
         <li><a href="#clauses">Clauses</a></li>
         <li><a href="#gap-analysis">Gap</a></li>
+        <li><a href="#systems">Systems</a></li>
         <li><a href="#equipment">Equipment</a></li>
         <li><a href="#procedures">Procedures</a></li>
         <li><a href="#audit-checklist">Audit</a></li>
@@ -334,7 +378,7 @@
   <header class="hero">
     <div class="container">
       <h1>QMS Wiki &mdash; ISO 9001:2015<span>.</span></h1>
-      <p>Central hub for your quality management system. Clause references, gap analysis, audit checklists, templates, and the full implementation roadmap &mdash; wiki-style, always accessible.</p>
+      <p>Central hub for your quality management system. Clause references, gap analysis, systems &amp; OS management, equipment profiles, assembly procedures, audit checklists, templates, and the full implementation roadmap &mdash; wiki-style, always accessible.</p>
       <div>
         <a href="#clauses" class="btn-primary">Browse clauses</a>
         <a href="#audit-checklist" class="btn-outline" style="margin-left:10px;">Audit checklist</a>
@@ -357,6 +401,10 @@
           <a href="#clauses"><i class="ti ti-file-description"></i>Clause breakdown</a>
           <a href="#gap-analysis"><i class="ti ti-clipboard-list"></i>Gap analysis</a>
           <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Infrastructure</div>
+          <a href="#systems"><i class="ti ti-server"></i>Systems &amp; OS</a>
         </div>
         <div class="toc-group">
           <div class="toc-label">Operations</div>
@@ -606,6 +654,170 @@
           <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
           <a href="#templates"><i class="ti ti-template"></i>Templates</a>
           <a href="#roadmap"><i class="ti ti-road"></i>Roadmap</a>
+        </div>
+      </section>
+
+      <!-- ═══ Systems & OS Management ═══ -->
+      <section id="systems">
+        <p class="section-label">Infrastructure</p>
+        <h2 class="section-title">Systems &amp; OS management</h2>
+        <p class="section-sub">Server operating environment, remote management tooling, and maintenance cadence. Maps to ISO 9001 Clause 7.1 (resources) — infrastructure and monitoring are part of your QMS support systems.</p>
+
+        <div class="sys-grid">
+
+          <!-- Ubuntu 24.04 LTS -->
+          <div class="sys-card">
+            <div class="sys-head">
+              <i class="ti ti-brand-ubuntu"></i>
+              <h4>Ubuntu 24.04 LTS</h4>
+              <span class="sys-tag">OS</span>
+            </div>
+            <div class="sys-body">
+              <div class="row"><span class="label">Version</span><span class="value">24.04.1 LTS (Noble Numbat)</span></div>
+              <div class="row"><span class="label">Kernel</span><span class="value">6.8.x (generic/HWE)</span></div>
+              <div class="row"><span class="label">Support window</span><span class="value">April 2024 – April 2029 (std) / 2036 (EOL, UA)</span></div>
+              <div class="row"><span class="label">Patch cadence</span><span class="value">Security: daily / Kernel: rolling HWE / Base: monthly</span></div>
+              <div class="row"><span class="label">Config mgmt</span><span class="value">FleetDM + Ansible playbooks</span></div>
+              <div class="row"><span class="label">CVE monitoring</span><span class="value">Ubuntu Pro + FleetDM vulnerability feed</span></div>
+              <ul class="task-list">
+                <li>Security patches applied within 48 h of release (critical) / 7 d (high)</li>
+                <li>Kernel livepatch enabled — no reboot required for most vulns</li>
+                <li>Monthly compliance scan via FleetDM — CIS Level 2 benchmark</li>
+                <li>LTS upgrade planning starts 6 months before EOL</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- FleetDM -->
+          <div class="sys-card">
+            <div class="sys-head">
+              <i class="ti ti-device-laptop"></i>
+              <h4>FleetDM</h4>
+              <span class="sys-tag">Management</span>
+            </div>
+            <div class="sys-body">
+              <div class="row"><span class="label">Deployment</span><span class="value">Self-hosted (single host / HA pair)</span></div>
+              <div class="row"><span class="label">Agent</span><span class="value">osquery (Fleet-managed)</span></div>
+              <div class="row"><span class="label">Coverage</span><span class="value">All production Ubuntu 24.04 hosts</span></div>
+              <div class="row"><span class="label">Upgrade mgmt</span><span class="value">Fleet-managed software update campaigns</span></div>
+              <ul class="task-list">
+                <li>Agent health check: every 60 s — alerts on stale nodes</li>
+                <li>Scheduled queries: CIS compliance, running services, open ports, package versions</li>
+                <li>Update campaigns: staged rollout (dev &rarr; staging &rarr; prod) with rollback on failure</li>
+                <li>Host inventory exported to QMS records monthly</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Cockpit -->
+          <div class="sys-card">
+            <div class="sys-head">
+              <i class="ti ti-dashboard"></i>
+              <h4>Cockpit</h4>
+              <span class="sys-tag">Direct Control</span>
+            </div>
+            <div class="sys-body">
+              <div class="row"><span class="label">Access</span><span class="value">HTTPS :9090 (LAN / VPN only)</span></div>
+              <div class="row"><span class="label">Auth</span><span class="value">Local PAM + SSH key / SSO (via reverse proxy)</span></div>
+              <div class="row"><span class="label">Role</span><span class="value">Direct console — service mgmt, logs, terminal, updates</span></div>
+              <ul class="task-list">
+                <li>Used for ad-hoc troubleshooting and service restarts only</li>
+                <li>All routine changes go through FleetDM or Ansible (audit trail)</li>
+                <li>Session recording enabled — logged to /var/log/audit/</li>
+                <li>Access reviewed quarterly against QMS user register</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Maintenance schedule table -->
+        <h4 style="font-size:15px;font-weight:600;color:var(--molten-lava);margin:28px 0 10px;">
+          <i class="ti ti-calendar"></i> Maintenance &amp; update schedule
+        </h4>
+
+        <div style="overflow-x:auto;">
+          <table class="schedule-table">
+            <thead>
+              <tr><th>Task</th><th>Tool</th><th>Frequency</th><th>Owner</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Security patch audit &amp; apply (critical)</td>
+                <td>FleetDM + unattended-upgrades</td>
+                <td><span class="freq-badge freq-weekly">Continuous / daily</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>Security patch audit &amp; apply (high)</td>
+                <td>FleetDM update campaign</td>
+                <td><span class="freq-badge freq-weekly">Weekly</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>Kernel livepatch status check</td>
+                <td>Cockpit + fleetctl</td>
+                <td><span class="freq-badge freq-weekly">Weekly</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>CIS compliance scan</td>
+                <td>FleetDM scheduled query</td>
+                <td><span class="freq-badge freq-monthly">Monthly</span></td>
+                <td>QMS / Security</td>
+              </tr>
+              <tr>
+                <td>Host inventory export to QMS</td>
+                <td>FleetDM &rarr; CSV &rarr; Thril</td>
+                <td><span class="freq-badge freq-monthly">Monthly</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>Cockpit / FleetDM version upgrade</td>
+                <td>Ansible playbook</td>
+                <td><span class="freq-badge freq-quarterly">Quarterly</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>Cockpit access review (user register)</td>
+                <td>QMS review record</td>
+                <td><span class="freq-badge freq-quarterly">Quarterly</span></td>
+                <td>QMS rep</td>
+              </tr>
+              <tr>
+                <td>Full OS patch window + reboot</td>
+                <td>FleetDM staged campaign</td>
+                <td><span class="freq-badge freq-monthly">Monthly</span></td>
+                <td>Sysadmin</td>
+              </tr>
+              <tr>
+                <td>Disaster recovery drill</td>
+                <td>Manual restore test</td>
+                <td><span class="freq-badge freq-annual">Annually</span></td>
+                <td>IT / QMS</td>
+              </tr>
+              <tr>
+                <td>Ubuntu LTS base image refresh</td>
+                <td>Packer + FleetDM enrollment</td>
+                <td><span class="freq-badge freq-annual">Annually</span></td>
+                <td>Sysadmin</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size:13px;color:#888;margin-top:14px;">
+          <span class="freq-badge freq-weekly">Continuous / daily</span> automated —
+          <span class="freq-badge freq-weekly">Weekly</span> —
+          <span class="freq-badge freq-monthly">Monthly</span> —
+          <span class="freq-badge freq-quarterly">Quarterly</span> —
+          <span class="freq-badge freq-annual">Annually</span>
+        </p>
+
+        <div class="quick-links">
+          <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
+          <a href="#templates"><i class="ti ti-template"></i>IT SOP template</a>
+          <a href="#clauses"><i class="ti ti-file-description"></i>Clause 7 &mdash; Support</a>
         </div>
       </section>
 
