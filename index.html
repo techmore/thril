@@ -365,6 +365,7 @@
         <li><a href="#clauses">Clauses</a></li>
         <li><a href="#gap-analysis">Gap</a></li>
         <li><a href="#systems">Systems</a></li>
+        <li><a href="#hosts">Hosts</a></li>
         <li><a href="#equipment">Equipment</a></li>
         <li><a href="#procedures">Procedures</a></li>
         <li><a href="#audit-checklist">Audit</a></li>
@@ -405,6 +406,7 @@
         <div class="toc-group">
           <div class="toc-label">Infrastructure</div>
           <a href="#systems"><i class="ti ti-server"></i>Systems &amp; OS</a>
+          <a href="#hosts"><i class="ti ti-device-desktop"></i>Host inventory</a>
         </div>
         <div class="toc-group">
           <div class="toc-label">Operations</div>
@@ -818,6 +820,58 @@
           <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
           <a href="#templates"><i class="ti ti-template"></i>IT SOP template</a>
           <a href="#clauses"><i class="ti ti-file-description"></i>Clause 7 &mdash; Support</a>
+        </div>
+      </section>
+
+      <!-- ═══ Host Inventory ═══ -->
+      <section id="hosts" class="bg-soft">
+        <p class="section-label">Infrastructure</p>
+        <h2 class="section-title">Host inventory</h2>
+        <p class="section-sub">Physical and virtual hosts in the QMS scope. Each entry documents purpose, OS, network, connected peripherals, and key services. Maps to Clause 7.1.3 (infrastructure).</p>
+
+        <div class="sys-grid">
+
+          <!-- PackIT shipping workstation -->
+          <div class="sys-card">
+            <div class="sys-head">
+              <i class="ti ti-device-desktop"></i>
+              <h4>PackIT shipping workstation</h4>
+              <span class="sys-tag">Workstation</span>
+            </div>
+            <div class="sys-body">
+              <div class="row"><span class="label">IP</span><span class="value"><code>10.20.0.109</code></span></div>
+              <div class="row"><span class="label">Hostname</span><span class="value">matt-QM9400H-9500H-6C-V3</span></div>
+              <div class="row"><span class="label">OS</span><span class="value">Ubuntu 24.04.4 LTS (Noble) / 6.17.0-35-generic</span></div>
+              <div class="row"><span class="label">CPU</span><span class="value">Intel Haswell-ULT (4th gen)</span></div>
+              <div class="row"><span class="label">Memory</span><span class="value">3.7 GB</span></div>
+              <div class="row"><span class="label">Disk</span><span class="value">119.2 GB SSD (SCCTS-602-128G) — ZFS</span></div>
+              <div class="row"><span class="label">WiFi</span><span class="value">10.20.0.109/24 (wlp1s0, DHCP)</span></div>
+              <div class="row"><span class="label">Ethernet</span><span class="value">192.168.0.10/24 (enp2s0, static)</span></div>
+              <div class="row"><span class="label">Gateway</span><span class="value">10.20.0.1 (WiFi) / 192.168.0.1 (eth)</span></div>
+              <div class="row"><span class="label">Purpose</span><span class="value">PackIT shipping label &amp; weight station</span></div>
+              <div class="row"><span class="label">Key services</span><span class="value">SSH :22, Cockpit :9090, CUPS :631</span></div>
+              <div class="row"><span class="label">Management</span><span class="value">Cockpit (<a href="https://10.20.0.109:9090" style="color:var(--steel-blue)">https://10.20.0.109:9090</a>)</span></div>
+              <ul class="task-list" style="margin-top:8px;">
+                <li>Chrome kiosk at <code>https://packit.thril-usa.com/count</code> — shipping count &amp; label printing</li>
+                <li>ATEN serial bridge for scale integration</li>
+                <li>H264 USB camera for package photography</li>
+                <li>Touch screen + barcode scanner for operator input</li>
+                <li>Requires restart (pending kernel update from 6.17.0-35)</li>
+              </ul>
+              <div class="sop-list">
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-SHIP-001 — PackIT operation</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-SHIP-002 — Daily weight verification</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>WI-SYS-001 — Workstation maintenance</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="quick-links">
+          <a href="#systems"><i class="ti ti-server"></i>Systems &amp; OS</a>
+          <a href="#equipment"><i class="ti ti-tools"></i>Equipment profiles</a>
+          <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
         </div>
       </section>
 
