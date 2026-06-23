@@ -206,6 +206,57 @@
     .doc-card h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
     .doc-card p { font-size: 12px; color: #666; }
 
+    /* ── Equipment profiles ── */
+    .equip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 16px; }
+    .equip-card {
+      background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px;
+      overflow: hidden; transition: box-shadow .2s;
+    }
+    .equip-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .equip-head {
+      background: var(--deep-space-blue); color: var(--papaya-whip);
+      padding: 16px 18px; display: flex; align-items: center; gap: 12px;
+    }
+    .equip-head i { font-size: 24px; color: var(--steel-blue); }
+    .equip-head h4 { font-size: 16px; font-weight: 600; }
+    .equip-head .equip-tag {
+      font-size: 10px; background: var(--flag-red); color: #fff;
+      padding: 2px 10px; border-radius: 20px; margin-left: auto; font-weight: 500;
+    }
+    .equip-body { padding: 16px 18px; }
+    .equip-body .row {
+      display: flex; justify-content: space-between; padding: 5px 0;
+      font-size: 13px; border-bottom: 1px solid #f5f0e8;
+    }
+    .equip-body .row .label { color: #888; font-weight: 500; }
+    .equip-body .row .value { color: #333; text-align: right; }
+    .equip-body .sop-list { margin-top: 10px; }
+    .equip-body .sop-list .sop-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--papaya-whip); border-radius: 6px; padding: 4px 10px;
+      font-size: 12px; margin: 3px 3px 0 0;
+    }
+
+    /* ── Assembly / procedure cards ── */
+    .proc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 14px; }
+    .proc-card {
+      background: var(--color-bg-soft); border-radius: 10px; padding: 18px 20px;
+      border-left: 3px solid var(--steel-blue); transition: transform .2s;
+    }
+    .proc-card:hover { transform: translateY(-2px); }
+    .proc-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .proc-card h4 i { color: var(--flag-red); font-size: 18px; }
+    .proc-card p { font-size: 13px; color: #555; margin-bottom: 8px; }
+    .proc-card .steps {
+      font-size: 12px; color: #777; padding-left: 18px; margin: 6px 0 0;
+    }
+    .proc-card .steps li { margin-bottom: 3px; }
+    .proc-card .refs { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .proc-card .refs span {
+      font-size: 11px; background: var(--papaya-whip); border-radius: 4px;
+      padding: 2px 8px; color: var(--deep-space-blue);
+    }
+
     /* ── Templates ── */
     .tpl-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 10px;
@@ -270,6 +321,8 @@
       <ul class="nav-links">
         <li><a href="#clauses">Clauses</a></li>
         <li><a href="#gap-analysis">Gap</a></li>
+        <li><a href="#equipment">Equipment</a></li>
+        <li><a href="#procedures">Procedures</a></li>
         <li><a href="#audit-checklist">Audit</a></li>
         <li><a href="#templates">Templates</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
@@ -289,8 +342,8 @@
       <div class="dash-cards">
         <div class="dash-card"><strong>10</strong><span>ISO 9001 clauses</span></div>
         <div class="dash-card"><strong>6</strong><span>Mandatory procedures</span></div>
-        <div class="dash-card"><strong>9&ndash;18</strong><span>Months to certify</span></div>
-        <div class="dash-card"><strong>8</strong><span>Ready templates</span></div>
+        <div class="dash-card"><strong>2</strong><span>Equipment profiles</span></div>
+        <div class="dash-card"><strong>12</strong><span>Ready templates</span></div>
       </div>
     </div>
   </header>
@@ -304,6 +357,11 @@
           <a href="#clauses"><i class="ti ti-file-description"></i>Clause breakdown</a>
           <a href="#gap-analysis"><i class="ti ti-clipboard-list"></i>Gap analysis</a>
           <a href="#audit-checklist"><i class="ti ti-checklist"></i>Audit checklist</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Operations</div>
+          <a href="#equipment"><i class="ti ti-tools"></i>Equipment &amp; machinery</a>
+          <a href="#procedures"><i class="ti ti-settings"></i>Assembly procedures</a>
         </div>
         <div class="toc-group">
           <div class="toc-label">Management</div>
@@ -792,6 +850,159 @@
           <div class="tpl-card"><i class="ti ti-truck"></i>Supplier evaluation</div>
           <div class="tpl-card"><i class="ti ti-clipboard-data"></i>KPI dashboard</div>
           <div class="tpl-card"><i class="ti ti-git-branch"></i>SOP template</div>
+        </div>
+      </section>
+
+      <!-- ═══ Equipment & Machinery ═══ -->
+      <section id="equipment" class="bg-soft">
+        <p class="section-label">Operations</p>
+        <h2 class="section-title">Equipment &amp; machinery profiles</h2>
+        <p class="section-sub">Register of production and shipping equipment. Each profile links to associated SOPs, maintenance schedules, calibration records (Clause 7.1.5), and training requirements.</p>
+
+        <div class="equip-grid">
+
+          <!-- PackIT Shipping & Weight Station -->
+          <div class="equip-card">
+            <div class="equip-head">
+              <i class="ti ti-package"></i>
+              <h4>PackIT Shipping &amp; Weight Station</h4>
+              <span class="equip-tag">Shipping</span>
+            </div>
+            <div class="equip-body">
+              <div class="row"><span class="label">Model</span><span class="value">PackIT PS-200</span></div>
+              <div class="row"><span class="label">Location</span><span class="value">Shipping bay A</span></div>
+              <div class="row"><span class="label">Serial #</span><span class="value">PKT-2410-058</span></div>
+              <div class="row"><span class="label">Calibration due</span><span class="value">2026-09-15</span></div>
+              <div class="row"><span class="label">Calibration frequency</span><span class="value">Quarterly</span></div>
+              <div class="row"><span class="label">Last maintenance</span><span class="value">2026-05-20</span></div>
+              <div class="row"><span class="label">Maintenance interval</span><span class="value">Monthly</span></div>
+              <div class="sop-list">
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-SHIP-001 — PackIT operation</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-SHIP-002 — Daily weight verification</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>REC-CAL-001 — Calibration log</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Advanced Machine Poly Bagger T1000 -->
+          <div class="equip-card">
+            <div class="equip-head">
+              <i class="ti ti-tool"></i>
+              <h4>Advanced Machine Poly Bagger T1000</h4>
+              <span class="equip-tag">Packaging</span>
+            </div>
+            <div class="equip-body">
+              <div class="row"><span class="label">Model</span><span class="value">Poly Bagger T1000</span></div>
+              <div class="row"><span class="label">Location</span><span class="value">Packaging line 2</span></div>
+              <div class="row"><span class="label">Serial #</span><span class="value">AMB-1123-442</span></div>
+              <div class="row"><span class="label">Film width range</span><span class="value">4"–14"</span></div>
+              <div class="row"><span class="label">Bagging speed</span><span class="value">Up to 45 bags/min</span></div>
+              <div class="row"><span class="label">Last maintenance</span><span class="value">2026-06-01</span></div>
+              <div class="row"><span class="label">Maintenance interval</span><span class="value">Weekly (operator) / Quarterly (tech)</span></div>
+              <div class="sop-list">
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-PKG-001 — T1000 setup &amp; operation</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-PKG-002 — Film changeover procedure</span>
+                <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>WI-PKG-003 — Daily jam-clearing &amp; safety check</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:16px;font-size:13px;color:#888;">
+          <i class="ti ti-link" style="color:var(--steel-blue)"></i> See also: <a href="#procedures" style="color:var(--flag-red);font-weight:500;">Assembly procedures</a> &middot; <a href="#templates" style="color:var(--flag-red);font-weight:500;">Maintenance log template</a>
+        </div>
+      </section>
+
+      <!-- ═══ Assembly Procedures ═══ -->
+      <section id="procedures">
+        <p class="section-label">Production</p>
+        <h2 class="section-title">Assembly procedures &amp; work instructions</h2>
+        <p class="section-sub">Step-by-step assembly and building procedures for product lines. Each procedure references associated equipment, quality checkpoints, and required training (Clause 8.5 — production and service provision).</p>
+
+        <div class="proc-grid">
+
+          <!-- Micros assembly -->
+          <div class="proc-card">
+            <h4><i class="ti ti-microchip"></i>Micros — final assembly</h4>
+            <p>Board mounting, connector seating, firmware load, and functional test for the Micros product line.</p>
+            <ol class="steps">
+              <li>Mount mainboard to chassis — 4× M3 screws @ 6 in&middot;lb</li>
+              <li>Seat ribbon cable connectors J1–J4 — verify latch click</li>
+              <li>Install I/O shield plate — torque to spec on label</li>
+              <li>Load firmware via JTAG — verify checksum match</li>
+              <li>Run functional test script <code>ft_micros_v2</code></li>
+              <li>Inspect solder joints under magnification &mdash; 9× minimum</li>
+            </ol>
+            <div class="refs">
+              <span>BOM-MIC-A2</span>
+              <span>WI-ELEC-001</span>
+              <span>QCP-MIC-001</span>
+              <span>Training: ASSY-100</span>
+            </div>
+          </div>
+
+          <!-- KV9 assembly -->
+          <div class="proc-card">
+            <h4><i class="ti ti-device-desktop"></i>KV9 — chassis build &amp; wiring</h4>
+            <p>Chassis assembly, harness routing, power supply installation, and continuity test for the KV9 enclosure.</p>
+            <ol class="steps">
+              <li>Install standoffs and backplane into chassis</li>
+              <li>Route power harness per routing diagram <code>KV9-WD-003</code></li>
+              <li>Secure PSU bracket — 2× M4 screws</li>
+              <li>Terminate DC lines to backplane — torque to 4 in&middot;lb</li>
+              <li>Perform continuity and isolation test &mdash; log results</li>
+              <li>Install front bezel and label with serial number</li>
+            </ol>
+            <div class="refs">
+              <span>BOM-KV9-B1</span>
+              <span>WI-MECH-002</span>
+              <span>QCP-KV9-001</span>
+              <span>Training: ASSY-200</span>
+            </div>
+          </div>
+
+          <!-- General mechanical assembly -->
+          <div class="proc-card">
+            <h4><i class="ti ti-tools"></i>General mechanical build — all product lines</h4>
+            <p>Common mechanical assembly procedures applicable across Micros, KV9, and custom builds.</p>
+            <ol class="steps">
+              <li>Verify all components against BOM and revision level</li>
+              <li>Inspect fasteners for correct thread pitch and length</li>
+              <li>Apply thread-locker (blue Loctite 242) to all M3+ threaded joints</li>
+              <li>Torque to spec — use calibrated torque driver only</li>
+              <li>Verify ground bond &lt; 0.1 &Omega; per <code>QCP-GEN-002</code></li>
+              <li>Complete build record and pass to QC inspection</li>
+            </ol>
+            <div class="refs">
+              <span>WI-MECH-001</span>
+              <span>QCP-GEN-002</span>
+              <span>Training: ASSY-001</span>
+            </div>
+          </div>
+
+          <!-- Custom / other equipment -->
+          <div class="proc-card">
+            <h4><i class="ti ti-adjustments"></i>Custom build — per work order</h4>
+            <p>Non-standard assemblies, prototype builds, or customer-specific configurations. Each follows a unique work order packet.</p>
+            <ol class="steps">
+              <li>Pull work order packet from QMS &mdash; verify BOM and rev</li>
+              <li>Stage components on ESD-safe work surface</li>
+              <li>Follow work-order-specific step sequence (appended to packet)</li>
+              <li>Photograph critical assembly steps for traceability</li>
+              <li>QC inspect per <code>QCP-GEN-003</code> before sealing</li>
+            </ol>
+            <div class="refs">
+              <span>WI-GEN-001</span>
+              <span>QCP-GEN-003</span>
+              <span>Template: work order packet</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:16px;font-size:13px;color:#888;">
+          <i class="ti ti-link" style="color:var(--steel-blue)"></i> See also: <a href="#equipment" style="color:var(--flag-red);font-weight:500;">Equipment profiles</a> &middot; <a href="#templates" style="color:var(--flag-red);font-weight:500;">SOP template</a> &middot; <a href="#clauses" style="color:var(--flag-red);font-weight:500;">Clause 8 &mdash; Operation</a>
         </div>
       </section>
 
