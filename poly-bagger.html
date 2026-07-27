@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poly Bagger — Label Printing &amp; Setup Guide</title>
+  <meta name="description" content="Complete guide for the Advanced Poly T-1000 bagger: initial setup, Mac configuration, label printing, compressor setup, rebagging, and troubleshooting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --molten-lava: #780000;
+      --flag-red: #C1121F;
+      --papaya-whip: #FDF0D5;
+      --deep-space-blue: #003049;
+      --steel-blue: #669BBC;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f8f6f2;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #5a5a5a;
+      --color-border: #e5e0d8;
+      --sidebar-width: 220px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 68px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    nav {
+      background: var(--deep-space-blue); padding: 12px 0;
+      position: sticky; top: 0; z-index: 100; height: 56px;
+    }
+    nav .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--papaya-whip); letter-spacing: -0.5px; }
+    .logo span { color: var(--flag-red); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      color: rgba(253,240,213,.7); font-size: 13px; font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--papaya-whip); }
+    .nav-links a.active { color: var(--papaya-whip); border-bottom: 2px solid var(--steel-blue); }
+
+    .page-wrap { display: flex; max-width: 1360px; margin: 0 auto; padding: 0 24px; gap: 32px; }
+    .sidebar {
+      width: var(--sidebar-width); flex-shrink: 0;
+      position: sticky; top: 80px; align-self: start;
+      max-height: calc(100vh - 96px); overflow-y: auto;
+      padding: 16px 0; display: none;
+    }
+    .sidebar.visible { display: block; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 6px;
+      font-size: 13px; color: #5a5a5a; transition: all .15s;
+    }
+    .sidebar nav a:hover, .sidebar nav a.active {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+    }
+    .sidebar nav a i { font-size: 16px; width: 20px; color: var(--steel-blue); }
+    .sidebar .toc-group { margin-bottom: 16px; }
+    .sidebar .toc-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+      color: #999; padding: 0 12px; margin-bottom: 6px;
+    }
+    .main-content { flex: 1; min-width: 0; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--deep-space-blue) 0%, #4a1a1a 50%, var(--molten-lava) 100%);
+      color: var(--papaya-whip); padding: 48px 0 40px;
+    }
+    .hero .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .hero h1 {
+      font-size: clamp(28px,4vw,42px); font-weight: 800; line-height: 1.1; margin-bottom: 10px;
+    }
+    .hero h1 span { color: var(--steel-blue); }
+    .hero p { font-size: 15px; max-width: 640px; opacity: .85; }
+
+    section { padding: 48px 0; border-bottom: 1px solid var(--color-border); }
+    section:last-of-type { border-bottom: none; }
+    .section-label {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 1.8px;
+      font-weight: 600; color: var(--flag-red); margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(22px,2.5vw,30px); font-weight: 700; margin-bottom: 8px;
+      color: var(--deep-space-blue);
+    }
+    .section-sub {
+      font-size: 14px; color: var(--color-text-secondary); margin-bottom: 28px; max-width: 680px;
+    }
+
+    .poly-sub { margin-top: 28px; }
+    .poly-sub h3 {
+      font-size: 18px; font-weight: 600; color: var(--deep-space-blue);
+      margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid var(--papaya-whip);
+    }
+    .poly-sub h4 {
+      font-size: 14px; font-weight: 600; color: var(--molten-lava);
+      margin: 18px 0 6px;
+    }
+    .poly-sub p.desc { font-size: 13px; color: #555; }
+    .poly-sub .cmd {
+      background: #1e1e1e; color: #d4d4d4; padding: 10px 14px; border-radius: 6px;
+      overflow-x: auto; font-size: 13px; line-height: 1.5; margin: 8px 0;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+    .poly-sub .cmd code { background: transparent; padding: 0; color: inherit; }
+    .poly-sub code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px; background: #edf2f7; padding: 1px 5px; border-radius: 3px;
+    }
+    .poly-tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    .poly-tbl th {
+      text-align: left; padding: 8px 12px; background: var(--deep-space-blue);
+      color: var(--papaya-whip); font-weight: 600; font-size: 12px;
+    }
+    .poly-tbl td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+    .poly-tbl tr:hover td { background: var(--papaya-whip); }
+    .poly-steps { font-size: 13px; color: #444; margin: 6px 0 6px 18px; }
+    .poly-steps li { margin-bottom: 4px; }
+
+    .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+    .callout.danger { background: #fde8ea; border-left: 4px solid var(--flag-red); color: #721c24; }
+    .callout.warn { background: #fff3d6; border-left: 4px solid #ffc107; color: #856404; }
+    .callout.tip { background: #e1f5ee; border-left: 4px solid #28a745; color: #1d7a5a; }
+    .callout.info { background: #e8edf0; border-left: 4px solid var(--steel-blue); color: #003049; }
+
+    .qr-block {
+      background: #fff; border: 2px dashed var(--deep-space-blue); border-radius: 12px;
+      padding: 20px 24px; margin: 24px 0; text-align: center;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap; justify-content: center;
+    }
+    .qr-block img { border-radius: 8px; width: 180px; height: 180px; }
+    .qr-block .qr-text { text-align: left; }
+    .qr-block .qr-text h4 { font-size: 16px; font-weight: 700; color: var(--deep-space-blue); margin-bottom: 4px; }
+    .qr-block .qr-text p { font-size: 13px; color: #555; margin-bottom: 8px; }
+    .qr-block .qr-text .qr-url {
+      font-size: 12px; color: var(--steel-blue); word-break: break-all;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+    .qr-print-link { font-size: 12px; color: var(--flag-red); font-weight: 500; cursor: pointer; }
+
+    .quick-links {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0;
+    }
+    .quick-links a {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+      padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px; transition: background .2s;
+    }
+    .quick-links a:hover { background: #f0e0c0; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--steel-blue); font-weight: 500; margin-bottom: 16px;
+    }
+    .back-link:hover { color: var(--deep-space-blue); }
+
+    @media print {
+      nav, .sidebar, .hero, .quick-links, .back-link { display: none !important; }
+      .page-wrap { display: block; max-width: 100%; padding: 0; }
+      .main-content { max-width: 100%; }
+      section { break-inside: auto; padding: 16px 0; border: none; }
+      .poly-sub { break-inside: avoid; page-break-inside: avoid; }
+      .qr-block { border: 2px solid #000; }
+      .callout { border: 1px solid #999; }
+      .cmd { border: 1px solid #ccc; white-space: pre-wrap; word-break: break-all; }
+      .poly-tbl td, .poly-tbl th { border: 1px solid #999; }
+    }
+
+    @media (min-width: 1024px) { .sidebar.visible { display: block; } }
+    @media (max-width: 768px) {
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 11px; }
+      .hero { padding: 32px 0 28px; }
+      section { padding: 28px 0; }
+      .page-wrap { padding: 0 16px; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">THRIL<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">QMS Wiki</a></li>
+        <li><a href="index.html#equipment">Equipment</a></li>
+        <li><a href="index.html#procedures">Procedures</a></li>
+        <li><a href="poly-bagger.html" class="active">Poly Bagger</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>Poly Bagger &mdash; label printing &amp; setup<span>.</span></h1>
+      <p>Complete guide for the Advanced Poly T-1000 bagger: Mac configuration, label printing workflow, compressor setup, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <aside class="sidebar visible">
+      <nav>
+        <div class="toc-group">
+          <div class="toc-label">Guide</div>
+          <a href="#setup"><i class="ti ti-settings"></i>Setup &amp; Mac config</a>
+          <a href="#usage"><i class="ti ti-printer"></i>Usage &amp; workflow</a>
+          <a href="#compressor"><i class="ti ti-wind"></i>Compressor &amp; air supply</a>
+          <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
+          <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
+          <a href="#qr-print"><i class="ti ti-qrcode"></i>QR code &amp; print</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Resources</div>
+          <a href="poly-bagger/print_label.py"><i class="ti ti-code"></i>print_label.py</a>
+          <a href="poly-bagger/UPC_Label_Bagger_Workflow_v3.html"><i class="ti ti-file-text"></i>Full v3 workflow doc</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Back to</div>
+          <a href="index.html"><i class="ti ti-home"></i>QMS Wiki home</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-content">
+
+      <a href="index.html" class="back-link"><i class="ti ti-arrow-left"></i> Back to QMS Wiki</a>
+
+      <!-- ═══ Setup ═══ -->
+      <section id="setup">
+        <p class="section-label">Getting started</p>
+        <h2 class="section-title">Initial setup &amp; Mac configuration</h2>
+        <p class="section-sub">One-time printer setup for macOS: connect the Zebra printer, create the CUPS queue, and install dependencies. This is the only section that requires admin access.</p>
+
+        <div class="poly-sub">
+          <h3>Connect printer</h3>
+          <p class="desc">Connect the Zebra ZTC 110Xi4-203dpi printer via USB-B to USB-A cable (or USB-C adapter). The port is on the back of the printer.</p>
+
+          <h4>Create CUPS print queue (one-time)</h4>
+          <p class="desc">Run this once to register the printer queue on macOS. You only need to do this when first connecting the printer:</p>
+          <div class="cmd">lpadmin -p Zebra -E \
+  -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
+  -o printer-is-shared=false</div>
+
+          <h4>Verify detection</h4>
+          <p class="desc">Confirm the printer is visible to the system:</p>
+          <div class="cmd">lpinfo -v | grep -i zebra</div>
+
+          <h4>Install dependencies</h4>
+          <p class="desc">The Python label script requires <code>Pillow</code> for image processing:</p>
+          <div class="cmd">pip3 install Pillow</div>
+
+          <h4>Critical: always use <code>-o raw</code></h4>
+          <div class="callout danger">Without <code>-o raw</code>, macOS converts the ZPL to a raster image, producing garbled output. Always pass <code>-o raw</code> when sending ZPL via <code>lp</code>.</div>
+          <div class="callout tip">The one-step script (<code>print_label.py</code>) handles <code>-o raw</code> automatically. You only need to worry about this when sending ZPL files directly.</div>
+        </div>
+      </section>
+
+      <!-- ═══ Usage ═══ -->
+      <section id="usage">
+        <p class="section-label">Daily operation</p>
+        <h2 class="section-title">Usage &amp; workflow</h2>
+        <p class="section-sub">Print UPC barcode labels from .docx source files using the one-step Python script or the manual ZPL workflow.</p>
+
+        <div class="poly-sub">
+          <h3>One-step automated script</h3>
+          <p class="desc">From the <code>poly-bagger/</code> directory, run <code>print_label.py</code> to extract the image, generate ZPL, and print in one command:</p>
+          <div class="cmd">python3 print_label.py "UPC Labels/AKV PLUM - PSA RETAIL.docx"</div>
+          <p class="desc">If the label prints upside down, add <code>--rotate 180</code>:</p>
+          <div class="cmd">python3 print_label.py "UPC Labels/AK47 G2 Ribbed PLUM - PSA RETAIL.docx" --rotate 180</div>
+
+          <h4 style="font-size:14px;font-weight:600;margin-top:16px;color:var(--molten-lava);">Script options</h4>
+          <table class="poly-tbl" style="max-width:500px;">
+            <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>--scale</code></td><td>4</td><td>Scale factor: 3 (2.85"), 4 (3.80"), 5 (4.75")</td></tr>
+              <tr><td><code>--rotate</code></td><td>0</td><td>Rotate image degrees (180 to fix upside down)</td></tr>
+              <tr><td><code>--no-print</code></td><td>off</td><td>Generate ZPL only, don't send to printer</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Manual workflow</h3>
+          <p class="desc">If you need to inspect or modify the intermediate files:</p>
+          <ol class="poly-steps">
+            <li>Extract image from .docx: <code>python3 -c "..."</code></li>
+            <li>Rotate if needed: <code>python3 -c "Image.open(...).rotate(180).save(...)"</code></li>
+            <li>Generate ZPL: encode 1-bit image as <code>^GFA</code> hex</li>
+            <li>Send to printer: <code>lp -d Zebra -o raw label.zpl</code></li>
+            <li>Verify queue: <code>lpq -P Zebra</code></li>
+          </ol>
+
+          <h3 style="margin-top:28px;">Printer queue commands</h3>
+          <table class="poly-tbl" style="max-width:520px;">
+            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>lpq -P Zebra</code></td><td>Check print queue</td></tr>
+              <tr><td><code>lpstat -p Zebra</code></td><td>Check printer status</td></tr>
+              <tr><td><code>cancel -a Zebra</code></td><td>Cancel all queued jobs</td></tr>
+              <tr><td><code>cupsenable Zebra</code></td><td>Re-enable printer (if disabled)</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Scale &amp; label dimensions</h3>
+          <table class="poly-tbl" style="max-width:520px;">
+            <thead><tr><th>Scale</th><th>Image dots</th><th>Physical size</th><th>Label area</th></tr></thead>
+            <tbody>
+              <tr><td>3×</td><td>579 × 150</td><td>2.85" × 0.74"</td><td>699 × 230</td></tr>
+              <tr><td>4×</td><td>772 × 200</td><td>3.80" × 0.99"</td><td>892 × 280</td></tr>
+              <tr><td>5×</td><td>965 × 250</td><td>4.75" × 1.23"</td><td>1085 × 330</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout danger">
+            <strong>Never</strong> use <code>^PON</code> or <code>^FWN</code> in ZPL &mdash; these commands cause the printer to reject the job with a "not ready" error. Always rotate the image in Python instead.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Compressor ═══ -->
+      <section id="compressor">
+        <p class="section-label">Infrastructure</p>
+        <h2 class="section-title">Compressor &amp; air supply setup</h2>
+        <p class="section-sub">The T-1000 bagger uses compressed air for bag-opening jets and film sealing. Proper air supply is critical for consistent operation.</p>
+
+        <div class="poly-sub">
+          <h3>Compressor requirements</h3>
+          <table class="poly-tbl" style="max-width:480px;">
+            <thead><tr><th>Parameter</th><th>Requirement</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Minimum pressure</td><td>80 PSI</td><td>Regulated at the machine inlet</td></tr>
+              <tr><td>Recommended flow</td><td>6&ndash;10 CFM @ 90 PSI</td><td>Higher CFM reduces cycle-time lag</td></tr>
+              <tr><td>Air line fitting</td><td>1/4" NPT quick-disconnect</td><td>Standard industrial coupler</td></tr>
+              <tr><td>Air hose</td><td>3/8" ID minimum</td><td>1/4" ID causes pressure drop on long runs</td></tr>
+              <tr><td>Filter / dryer</td><td>Water separator + coalescing filter</td><td>Moisture causes seal failures</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Connection &amp; startup</h3>
+          <ol class="poly-steps">
+            <li>Ensure compressor tank is drained of condensate (open petcock until dry)</li>
+            <li>Verify regulator is set to 80&ndash;90 PSI at the machine inlet</li>
+            <li>Connect air hose to the T-1000 quick-disconnect on the rear panel</li>
+            <li>Open the compressor ball valve &mdash; listen for air flow</li>
+            <li>Cycle the bagger once manually to purge any moisture from the lines</li>
+            <li>Check the pressure gauge on the machine &mdash; should hold steady during a cycle</li>
+          </ol>
+
+          <h3 style="margin-top:28px;">Daily operator checks</h3>
+          <ol class="poly-steps">
+            <li>Drain compressor tank (moisture accumulates overnight)</li>
+            <li>Check regulator pressure &mdash; adjust if below 80 PSI at idle</li>
+            <li>Inspect air hose for kinks, cuts, or loose fittings</li>
+            <li>Listen for air leaks while machine is idle &mdash; hissing indicates a leak</li>
+            <li>Verify the water separator bowl isn't full &mdash; drain if needed</li>
+          </ol>
+
+          <div class="callout warn">
+            <strong>Low air pressure</strong> is the most common cause of poor seals, misaligned bags, and inconsistent label placement. Always check the regulator pressure first when troubleshooting bag quality issues.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Rebagging ═══ -->
+      <section id="rebagging">
+        <p class="section-label">Quality</p>
+        <h2 class="section-title">Rebagging procedure</h2>
+        <p class="section-sub">When a product needs to be removed from its original bag and placed into a new one due to damage, incorrect labeling, or QC failure.</p>
+
+        <div class="poly-sub">
+          <h3>When to re-bag</h3>
+          <table class="poly-tbl" style="max-width:600px;">
+            <thead><tr><th>Situation</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>Bag torn or punctured during handling</td><td>Re-bag with the same label on a fresh bag</td></tr>
+              <tr><td>Label printed crooked or off-center</td><td>Re-bag with a corrected label print</td></tr>
+              <tr><td>Seal failed (bag not closed)</td><td>Re-bag; inspect sealer bar for residue or damage</td></tr>
+              <tr><td>Wrong product in bag</td><td>Re-bag with correct product and label</td></tr>
+              <tr><td>QC inspection failure</td><td>Repair/rework per NCR, then re-bag with original label if product passes</td></tr>
+              <tr><td>Film roll change caused misaligned print</td><td>Re-bag any products bagged during the transition</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Step-by-step re-bagging</h3>
+          <ol class="poly-steps">
+            <li><strong>Inspect the product</strong> &mdash; ensure it isn't damaged and still meets QC criteria</li>
+            <li><strong>Remove old bag</strong> &mdash; cut or tear open the original bag; discard it</li>
+            <li><strong>Verify the label</strong> &mdash; confirm the existing label is correct and legible, or print a new one</li>
+            <li><strong>Place product in new bag</strong> &mdash; align the product so the label faces outward and is readable</li>
+            <li><strong>Position the label</strong> &mdash; ensure the barcode is not wrinkled, folded, or obscured</li>
+            <li><strong>Seal the bag</strong> &mdash; run through the T-1000 sealer or use a hand sealer if doing a single bag</li>
+            <li><strong>Verify the seal</strong> &mdash; tug test on both ends of the seal; no gaps</li>
+            <li><strong>QC check</strong> &mdash; confirm the barcode scans, label is upright, bag is clean</li>
+          </ol>
+
+          <h3 style="margin-top:28px;">Label reuse rules</h3>
+          <ol class="poly-steps">
+            <li>If the original label is undamaged and still adhered, it <strong>can</strong> be reused on the new bag</li>
+            <li>If the label lifted or is creased, print a fresh label using <code>print_label.py</code></li>
+            <li>Never hand-write a replacement barcode &mdash; always print from the .docx source</li>
+            <li>Re-bagged items must be logged in the rework log (form REWORK-001)</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ═══ Troubleshooting ═══ -->
+      <section id="troubleshooting">
+        <p class="section-label">Support</p>
+        <h2 class="section-title">Troubleshooting: label placement &amp; orientation</h2>
+        <p class="section-sub">Label position on the bag can vary due to printer calibration, media alignment, padding values, or orientation. Use this guide to isolate and correct placement issues.</p>
+
+        <div class="poly-sub">
+          <h3>Placement variance: root causes &amp; fixes</h3>
+          <table class="poly-tbl">
+            <thead>
+              <tr><th style="width:34%;">Symptom</th><th style="width:20%;">Root cause</th><th>Fix</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Label shifted too far left</td>
+                <td><code>left_margin</code> too low</td>
+                <td>Increase <code>left_margin</code> (default 60) in <code>generate_zpl()</code> &mdash; try 80&ndash;120</td>
+              </tr>
+              <tr>
+                <td>Label shifted too far right</td>
+                <td><code>left_margin</code> too high <em>or</em> <code>^FO</code> X too large</td>
+                <td>Decrease <code>left_margin</code> (try 40&ndash;20) or reduce <code>side_padding</code></td>
+              </tr>
+              <tr>
+                <td>Label too high (near top of bag)</td>
+                <td><code>top_margin</code> too low</td>
+                <td>Increase <code>top_margin</code> (default 30) &mdash; try 50&ndash;80</td>
+              </tr>
+              <tr>
+                <td>Label too low (near bottom of bag)</td>
+                <td><code>top_margin</code> too high <em>or</em> <code>bottom_padding</code> too low</td>
+                <td>Decrease <code>top_margin</code> (try 10&ndash;20) or increase <code>bottom_padding</code></td>
+              </tr>
+              <tr>
+                <td>Label prints upside down on bag</td>
+                <td>Image not rotated 180°</td>
+                <td>Add <code>--rotate 180</code> to the script, or rotate the image in Python before ZPL generation</td>
+              </tr>
+              <tr>
+                <td>Label prints mirrored / reversed</td>
+                <td>Wrong bit ordering in <code>^GFA</code></td>
+                <td>Use <code>byte_val = (byte_val &lt;&lt; 1) | bit</code> with <code>bit = 0 if px else 1</code>. First pixel = MSB = leftmost dot. Do <strong>not</strong> reverse bits.</td>
+              </tr>
+              <tr>
+                <td>Bottom of label cut off</td>
+                <td><code>bottom_padding</code> too low</td>
+                <td>Increase <code>bottom_padding</code> (default 80) &mdash; try 120&ndash;160</td>
+              </tr>
+              <tr>
+                <td>Sides of label cut off</td>
+                <td><code>side_padding</code> too low</td>
+                <td>Increase <code>side_padding</code> (default 120) &mdash; try 160&ndash;200</td>
+              </tr>
+              <tr>
+                <td>Label prints too large for bag</td>
+                <td>Scale factor too large</td>
+                <td>Reduce <code>--scale</code> from 4 to 3 (2.85" width)</td>
+              </tr>
+              <tr>
+                <td>Label prints too small to read</td>
+                <td>Scale factor too small</td>
+                <td>Increase <code>--scale</code> from 4 to 5 (4.75" width)</td>
+              </tr>
+              <tr>
+                <td>Printer shows "not ready" / rejects job</td>
+                <td>Bad ZPL with <code>^PON</code>/<code>^FWN</code></td>
+                <td>Remove those commands. Reboot printer (power cycle). CUPS re-enable won't fix it.</td>
+              </tr>
+              <tr>
+                <td>Garbled / unreadable printout</td>
+                <td>Wrong bit ordering <em>or</em> missing <code>-o raw</code></td>
+                <td>Check bit ordering in <code>^GFA</code>. Confirm you're sending with <code>-o raw</code> (or use <code>print_label.py</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Padding values reference</h3>
+          <p class="desc">All adjustments are in dots at 203 DPI. Modify these in <code>print_label.py</code> (inside <code>generate_zpl()</code>):</p>
+          <table class="poly-tbl" style="max-width:400px;">
+            <thead><tr><th>Parameter</th><th>Default</th><th>Effect</th></tr></thead>
+            <tbody>
+              <tr><td><code>left_margin</code></td><td>60</td><td>Shifts label left/right</td></tr>
+              <tr><td><code>top_margin</code></td><td>30</td><td>Shifts label up/down</td></tr>
+              <tr><td><code>bottom_padding</code></td><td>80</td><td>Extra space below image (prevents clipping)</td></tr>
+              <tr><td><code>side_padding</code></td><td>120</td><td>Total side padding (prevents side clipping)</td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Mac-specific orientation setup</h3>
+          <p class="desc">On macOS, the printer driver and CUPS filters can interfere with raw ZPL passthrough. This setup ensures correct orientation:</p>
+          <ol class="poly-steps">
+            <li>Create the print queue with <code>lpadmin</code> as shown above &mdash; use the raw USB URI, <strong>do not</strong> install a macOS printer driver</li>
+            <li>Always send ZPL with <code>-o raw</code> to bypass macOS rasterization</li>
+            <li>If the label orientation is wrong, fix it in Python with <code>--rotate 180</code> &mdash; never use ZPL orientation commands</li>
+            <li>The <code>print_label.py</code> script handles all of this automatically: raw queue, correct bit ordering, rotation in Python</li>
+          </ol>
+
+          <div class="callout warn">
+            <strong>After a bad ZPL job:</strong> The printer may show "not ready" persistently. Power-cycle the printer (unplug &rarr; wait 10s &rarr; plug back in). Do not rely on CUPS commands to clear this state.
+          </div>
+
+          <div class="callout info">
+            <strong>Still having issues?</strong> Check the compressor pressure (should be 80+ PSI), verify the film roll is seated correctly, and ensure the label media matches the printer DPI setting (203 DPI).
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ QR Code ═══ -->
+      <section id="qr-print">
+        <p class="section-label">Quick reference</p>
+        <h2 class="section-title">QR code &amp; printable guide</h2>
+        <p class="section-sub">Scan the QR code with your phone to open this guide, or use the print button to post a reference copy at the bagger station.</p>
+
+        <div class="qr-block">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://techmore.github.io/thril/poly-bagger.html"
+               alt="QR Code for Poly Bagger guide"
+               width="180" height="180"
+               crossorigin="anonymous">
+          <div class="qr-text">
+            <h4>Poly Bagger guide &mdash; on your phone</h4>
+            <p>Scan this QR code to open the full guide on your mobile device. Post this at the bagger station for quick access to setup, rebagging, and troubleshooting steps.</p>
+            <div class="qr-url">https://techmore.github.io/thril/poly-bagger.html</div>
+            <p style="margin-top:8px;font-size:12px;color:#999;">
+              <a href="javascript:window.print()" class="qr-print-link"><i class="ti ti-printer"></i> Print this page</a>
+              &nbsp;&middot;&nbsp;
+              <a href="index.html" class="qr-print-link"><i class="ti ti-home"></i> Back to QMS Wiki</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="quick-links">
+          <a href="#setup"><i class="ti ti-settings"></i>Setup</a>
+          <a href="#usage"><i class="ti ti-printer"></i>Usage</a>
+          <a href="#compressor"><i class="ti ti-wind"></i>Compressor</a>
+          <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
+          <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer style="background:#001a2b;color:rgba(253,240,213,.55);padding:28px 0;font-size:13px;text-align:center;">
+    <div class="container" style="max-width:1120px;margin:0 auto;padding:0 24px;">
+      <p>&copy; 2026 Thril. <a href="index.html" style="color:var(--steel-blue);">Back to QMS Wiki</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Active TOC highlight
+    const tocLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const id = e.target.id;
+          tocLinks.forEach(l => { if (l.getAttribute('href') === '#' + id) l.classList.add('active'); });
+        }
+      });
+    }, { rootMargin: '-100px 0 -60% 0' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>

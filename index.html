@@ -434,7 +434,7 @@
         <li><a href="#systems">Systems</a></li>
         <li><a href="#hosts">Hosts</a></li>
         <li><a href="#equipment">Equipment</a></li>
-        <li><a href="#poly-bagger">Bagger</a></li>
+        <li><a href="poly-bagger.html">Bagger</a></li>
         <li><a href="#procedures">Procedures</a></li>
         <li><a href="#audit-checklist">Audit</a></li>
         <li><a href="#templates">Templates</a></li>
@@ -479,7 +479,7 @@
         <div class="toc-group">
           <div class="toc-label">Operations</div>
           <a href="#equipment"><i class="ti ti-tools"></i>Equipment &amp; machinery</a>
-          <a href="#poly-bagger"><i class="ti ti-printer"></i>Poly bagger labels</a>
+          <a href="poly-bagger.html"><i class="ti ti-printer"></i>Poly bagger labels</a>
           <a href="#procedures"><i class="ti ti-settings"></i>Assembly procedures</a>
         </div>
         <div class="toc-group">
@@ -1238,7 +1238,7 @@
                 <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-PKG-001 — T1000 setup &amp; operation</span>
                 <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>SOP-PKG-002 — Film changeover procedure</span>
                 <span class="sop-chip"><i class="ti ti-file-text" style="font-size:11px"></i>WI-PKG-003 — Daily jam-clearing &amp; safety check</span>
-                <span class="sop-chip" style="background:var(--steel-blue);color:#fff;"><i class="ti ti-printer" style="font-size:11px"></i><a href="#poly-bagger" style="color:#fff;">Label printing guide</a></span>
+                <span class="sop-chip" style="background:var(--steel-blue);color:#fff;"><i class="ti ti-printer" style="font-size:11px"></i><a href="poly-bagger.html" style="color:#fff;">Label printing guide</a></span>
               </div>
             </div>
           </div>
@@ -1246,7 +1246,7 @@
         </div>
 
         <div style="margin-top:16px;font-size:13px;color:#888;">
-          <i class="ti ti-link" style="color:var(--steel-blue)"></i> See also: <a href="#poly-bagger" style="color:var(--flag-red);font-weight:500;">Poly bagger label printing guide</a> &middot; <a href="#procedures" style="color:var(--flag-red);font-weight:500;">Assembly procedures</a> &middot; <a href="#templates" style="color:var(--flag-red);font-weight:500;">Maintenance log template</a>
+          <i class="ti ti-link" style="color:var(--steel-blue)"></i> See also: <a href="poly-bagger.html" style="color:var(--flag-red);font-weight:500;">Poly bagger label printing guide</a> &middot; <a href="#procedures" style="color:var(--flag-red);font-weight:500;">Assembly procedures</a> &middot; <a href="#templates" style="color:var(--flag-red);font-weight:500;">Maintenance log template</a>
         </div>
       </section>
 
@@ -1254,291 +1254,35 @@
       <section id="poly-bagger">
         <p class="section-label">Operations</p>
         <h2 class="section-title">Poly Bagger &mdash; label printing system</h2>
-        <p class="section-sub">UPC barcode label printing pipeline for the Advanced Poly T-1000 bagger: .docx &rarr; ZPL &rarr; Zebra ZTC 110Xi4-203dpi thermal transfer printer. Covers initial Mac setup, daily usage, and troubleshooting label placement variance.</p>
+        <p class="section-sub">UPC barcode label printing pipeline for the Advanced Poly T-1000 bagger: .docx &rarr; ZPL &rarr; Zebra ZTC 110Xi4-203dpi thermal transfer printer.</p>
 
-        <!-- ── Setup ── -->
-        <div class="poly-sub">
-          <h3>Initial setup &amp; Mac configuration</h3>
-
-          <h4>Connect printer</h4>
-          <p style="font-size:13px;color:#555;">Connect the Zebra printer via USB-B to USB-A cable (or USB-C adapter). Port is on the back of the printer.</p>
-
-          <h4>Create CUPS print queue (one-time)</h4>
-          <p style="font-size:13px;color:#555;">Run once to register the printer queue on macOS:</p>
-          <div class="cmd">lpadmin -p Zebra -E \
-  -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
-  -o printer-is-shared=false</div>
-
-          <h4>Verify detection</h4>
-          <div class="cmd">lpinfo -v | grep -i zebra</div>
-
-          <h4>Install dependencies</h4>
-          <p style="font-size:13px;color:#555;">The Python script requires <code>Pillow</code> for image processing:</p>
-          <div class="cmd">pip3 install Pillow</div>
-
-          <h4>Critical: always use <code>-o raw</code></h4>
-          <div class="callout danger">Without <code>-o raw</code>, macOS converts the ZPL to a raster image, producing garbled output. Always pass <code>-o raw</code> when sending ZPL via <code>lp</code>.</div>
-
-          <div class="callout tip">The one-step script (<code>print_label.py</code>) handles <code>-o raw</code> automatically. You only need to worry about this when sending ZPL files directly.</div>
-        </div>
-
-        <!-- ── Usage ── -->
-        <div class="poly-sub">
-          <h3>Usage &amp; workflow</h3>
-
-          <h4>One-step automated script</h4>
-          <p style="font-size:13px;color:#555;">From the <code>poly-bagger/</code> directory, run <code>print_label.py</code> to extract, generate, and print in one command:</p>
-          <div class="cmd">python3 print_label.py "UPC Labels/AKV PLUM - PSA RETAIL.docx"</div>
-          <p style="font-size:13px;color:#555;">If the label prints upside down, add <code>--rotate 180</code>:</p>
-          <div class="cmd">python3 print_label.py "UPC Labels/AK47 G2 Ribbed PLUM - PSA RETAIL.docx" --rotate 180</div>
-
-          <h5 style="font-size:13px;font-weight:600;margin-top:14px;color:var(--molten-lava);">Script options</h5>
-          <table class="poly-tbl" style="max-width:500px;">
-            <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>--scale</code></td><td>4</td><td>Scale factor: 3 (2.85"), 4 (3.80"), 5 (4.75")</td></tr>
-              <tr><td><code>--rotate</code></td><td>0</td><td>Rotate image degrees (180 to fix upside down)</td></tr>
-              <tr><td><code>--no-print</code></td><td>off</td><td>Generate ZPL only, don't send to printer</td></tr>
-            </tbody>
-          </table>
-
-          <h4>Manual workflow</h4>
-          <ol class="poly-steps">
-            <li>Extract image from .docx: <code>python3 -c "..."</code></li>
-            <li>Rotate if needed: <code>python3 -c "Image.open(...).rotate(180).save(...)"</code></li>
-            <li>Generate ZPL: encode 1-bit image as <code>^GFA</code> hex</li>
-            <li>Send to printer: <code>lp -d Zebra -o raw label.zpl</code></li>
-            <li>Verify queue: <code>lpq -P Zebra</code></li>
-          </ol>
-
-          <h4>Printer queue commands</h4>
-          <table class="poly-tbl" style="max-width:520px;">
-            <thead><tr><th>Command</th><th>Purpose</th></tr></thead>
-            <tbody>
-              <tr><td><code>lpq -P Zebra</code></td><td>Check print queue</td></tr>
-              <tr><td><code>lpstat -p Zebra</code></td><td>Check printer status</td></tr>
-              <tr><td><code>cancel -a Zebra</code></td><td>Cancel all queued jobs</td></tr>
-              <tr><td><code>cupsenable Zebra</code></td><td>Re-enable printer (if disabled)</td></tr>
-            </tbody>
-          </table>
-
-          <h4>Scale &amp; label dimensions</h4>
-          <table class="poly-tbl" style="max-width:520px;">
-            <thead><tr><th>Scale</th><th>Image dots</th><th>Physical size</th><th>Label area</th></tr></thead>
-            <tbody>
-              <tr><td>3×</td><td>579 × 150</td><td>2.85" × 0.74"</td><td>699 × 230</td></tr>
-              <tr><td>4×</td><td>772 × 200</td><td>3.80" × 0.99"</td><td>892 × 280</td></tr>
-              <tr><td>5×</td><td>965 × 250</td><td>4.75" × 1.23"</td><td>1085 × 330</td></tr>
-            </tbody>
-          </table>
-
-          <div class="callout danger">
-            <strong>Never</strong> use <code>^PON</code> or <code>^FWN</code> in ZPL &mdash; these commands cause the printer to reject the job with a "not ready" error. Always rotate the image in Python instead.
-          </div>
-        </div>
-
-        <!-- ── Compressor & Air Supply ── -->
-        <div class="poly-sub">
-          <h3>Compressor &amp; air supply setup</h3>
-          <p style="font-size:13px;color:#555;">The Advanced Poly T-1000 bagger uses compressed air for the bag-opening jets and film-sealing mechanism. A properly configured air supply is critical for consistent bagging and label adhesion.</p>
-
-          <h4>Compressor requirements</h4>
-          <table class="poly-tbl" style="max-width:480px;">
-            <thead><tr><th>Parameter</th><th>Requirement</th><th>Notes</th></tr></thead>
-            <tbody>
-              <tr><td>Minimum pressure</td><td>80 PSI</td><td>Regulated at the machine inlet</td></tr>
-              <tr><td>Recommended flow</td><td>6&ndash;10 CFM @ 90 PSI</td><td>Higher CFM reduces cycle-time lag</td></tr>
-              <tr><td>Air line fitting</td><td>1/4" NPT quick-disconnect</td><td>Standard industrial coupler</td></tr>
-              <tr><td>Air hose</td><td>3/8" ID minimum</td><td>1/4" ID causes pressure drop on long runs</td></tr>
-              <tr><td>Filter / dryer</td><td>Water separator + coalescing filter</td><td>Moisture causes seal failures</td></tr>
-            </tbody>
-          </table>
-
-          <h4>Connection &amp; startup</h4>
-          <ol class="poly-steps">
-            <li>Ensure compressor tank is drained of condensate (open petcock until dry)</li>
-            <li>Verify regulator is set to 80&ndash;90 PSI at the machine inlet</li>
-            <li>Connect air hose to the T-1000 quick-disconnect on the rear panel</li>
-            <li>Open the compressor ball valve &mdash; listen for air flow</li>
-            <li>Cycle the bagger once manually to purge any moisture from the lines</li>
-            <li>Check the pressure gauge on the machine &mdash; should hold steady during a cycle</li>
-          </ol>
-
-          <h4>Daily operator checks</h4>
-          <ol class="poly-steps">
-            <li>Drain compressor tank (moisture accumulates overnight)</li>
-            <li>Check regulator pressure &mdash; adjust if below 80 PSI at idle</li>
-            <li>Inspect air hose for kinks, cuts, or loose fittings</li>
-            <li>Listen for air leaks while machine is idle &mdash; hissing indicates a leak</li>
-            <li>Verify the water separator bowl isn't full &mdash; drain if needed</li>
-          </ol>
-
-          <div class="callout warn">
-            <strong>Low air pressure</strong> is the most common cause of poor seals, misaligned bags, and inconsistent label placement. Always check the regulator pressure first when troubleshooting bag quality issues.
-          </div>
-        </div>
-
-        <!-- ── Rebagging Procedure ── -->
-        <div class="poly-sub">
-          <h3>Rebagging procedure</h3>
-          <p style="font-size:13px;color:#555;">Rebagging is required when a product needs to be removed from its original bag and placed into a new one &mdash; due to a damaged bag, incorrect label, failed seal, or quality inspection failure.</p>
-
-          <h4>When to re-bag</h4>
-          <table class="poly-tbl" style="max-width:600px;">
-            <thead><tr><th>Situation</th><th>Action</th></tr></thead>
-            <tbody>
-              <tr><td>Bag torn or punctured during handling</td><td>Re-bag with the same label on a fresh bag</td></tr>
-              <tr><td>Label printed crooked or off-center</td><td>Re-bag with a corrected label print</td></tr>
-              <tr><td>Seal failed (bag not closed)</td><td>Re-bag; inspect sealer bar for residue or damage</td></tr>
-              <tr><td>Wrong product in bag</td><td>Re-bag with correct product and label</td></tr>
-              <tr><td>QC inspection failure</td><td>Repair/rework per NCR, then re-bag with original label if product passes</td></tr>
-              <tr><td>Film roll change caused misaligned print</td><td>Re-bag any products bagged during the transition</td></tr>
-            </tbody>
-          </table>
-
-          <h4>Step-by-step re-bagging</h4>
-          <ol class="poly-steps">
-            <li><strong>Inspect the product</strong> &mdash; ensure it isn't damaged and still meets QC criteria</li>
-            <li><strong>Remove old bag</strong> &mdash; cut or tear open the original bag; discard it</li>
-            <li><strong>Verify the label</strong> &mdash; confirm the existing label is correct and legible, or print a new one</li>
-            <li><strong>Place product in new bag</strong> &mdash; align the product so the label faces outward and is readable</li>
-            <li><strong>Position the label</strong> &mdash; ensure the barcode is not wrinkled, folded, or obscured</li>
-            <li><strong>Seal the bag</strong> &mdash; run through the T-1000 sealer or use a hand sealer if doing a single bag</li>
-            <li><strong>Verify the seal</strong> &mdash; tug test on both ends of the seal; no gaps</li>
-            <li><strong>QC check</strong> &mdash; confirm the barcode scans, label is upright, bag is clean</li>
-          </ol>
-
-          <h4>Label reuse rules</h4>
-          <ol class="poly-steps">
-            <li>If the original label is undamaged and still adhered, it <strong>can</strong> be reused on the new bag</li>
-            <li>If the label lifted or is creased, print a fresh label using <code>print_label.py</code></li>
-            <li>Never hand-write a replacement barcode &mdash; always print from the .docx source</li>
-            <li>Re-bagged items must be logged in the rework log (form REWORK-001)</li>
-          </ol>
-        </div>
-
-        <!-- ── Troubleshooting: Label Placement & Orientation ── -->
-        <div class="poly-sub">
-          <h3>Troubleshooting: label placement &amp; orientation</h3>
-          <p style="font-size:13px;color:#555;">Label position on the bag can vary due to printer calibration, media alignment, padding values, or orientation. Use this guide to isolate and correct placement issues.</p>
-
-          <h4>Placement variance: root causes &amp; fixes</h4>
-          <table class="poly-tbl">
-            <thead>
-              <tr><th style="width:34%;">Symptom</th><th style="width:20%;">Root cause</th><th>Fix</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Label shifted too far left</td>
-                <td><code>left_margin</code> too low</td>
-                <td>Increase <code>left_margin</code> (default 60) in <code>generate_zpl()</code> &mdash; try 80&ndash;120</td>
-              </tr>
-              <tr>
-                <td>Label shifted too far right</td>
-                <td><code>left_margin</code> too high <em>or</em> <code>^FO</code> X too large</td>
-                <td>Decrease <code>left_margin</code> (try 40&ndash;20) or reduce <code>side_padding</code></td>
-              </tr>
-              <tr>
-                <td>Label too high (near top of bag)</td>
-                <td><code>top_margin</code> too low</td>
-                <td>Increase <code>top_margin</code> (default 30) &mdash; try 50&ndash;80</td>
-              </tr>
-              <tr>
-                <td>Label too low (near bottom of bag)</td>
-                <td><code>top_margin</code> too high <em>or</em> <code>bottom_padding</code> too low</td>
-                <td>Decrease <code>top_margin</code> (try 10&ndash;20) or increase <code>bottom_padding</code></td>
-              </tr>
-              <tr>
-                <td>Label prints upside down on bag</td>
-                <td>Image not rotated 180°</td>
-                <td>Add <code>--rotate 180</code> to the script, or rotate the image in Python before ZPL generation</td>
-              </tr>
-              <tr>
-                <td>Label prints mirrored / reversed</td>
-                <td>Wrong bit ordering in <code>^GFA</code></td>
-                <td>Use <code>byte_val = (byte_val &lt;&lt; 1) | bit</code> with <code>bit = 0 if px else 1</code>. First pixel = MSB = leftmost dot. Do <strong>not</strong> reverse bits.</td>
-              </tr>
-              <tr>
-                <td>Bottom of label cut off</td>
-                <td><code>bottom_padding</code> too low</td>
-                <td>Increase <code>bottom_padding</code> (default 80) &mdash; try 120&ndash;160</td>
-              </tr>
-              <tr>
-                <td>Sides of label cut off</td>
-                <td><code>side_padding</code> too low</td>
-                <td>Increase <code>side_padding</code> (default 120) &mdash; try 160&ndash;200</td>
-              </tr>
-              <tr>
-                <td>Label prints too large for bag</td>
-                <td>Scale factor too large</td>
-                <td>Reduce <code>--scale</code> from 4 to 3 (2.85" width)</td>
-              </tr>
-              <tr>
-                <td>Label prints too small to read</td>
-                <td>Scale factor too small</td>
-                <td>Increase <code>--scale</code> from 4 to 5 (4.75" width)</td>
-              </tr>
-              <tr>
-                <td>Printer shows "not ready" / rejects job</td>
-                <td>Bad ZPL with <code>^PON</code>/<code>^FWN</code></td>
-                <td>Remove those commands. Reboot printer (power cycle). CUPS re-enable won't fix it.</td>
-              </tr>
-              <tr>
-                <td>Garbled / unreadable printout</td>
-                <td>Wrong bit ordering <em>or</em> missing <code>-o raw</code></td>
-                <td>Check bit ordering in <code>^GFA</code>. Confirm you're sending with <code>-o raw</code> (or use <code>print_label.py</code>).</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Padding values reference</h4>
-          <p style="font-size:13px;color:#555;">All adjustments are in dots at 203 DPI. Modify these in <code>print_label.py</code> (inside <code>generate_zpl()</code>):</p>
-          <table class="poly-tbl" style="max-width:400px;">
-            <thead><tr><th>Parameter</th><th>Default</th><th>Effect</th></tr></thead>
-            <tbody>
-              <tr><td><code>left_margin</code></td><td>60</td><td>Shifts label left/right</td></tr>
-              <tr><td><code>top_margin</code></td><td>30</td><td>Shifts label up/down</td></tr>
-              <tr><td><code>bottom_padding</code></td><td>80</td><td>Extra space below image (prevents clipping)</td></tr>
-              <tr><td><code>side_padding</code></td><td>120</td><td>Total side padding (prevents side clipping)</td></tr>
-            </tbody>
-          </table>
-
-          <h4>Mac-specific orientation setup</h4>
-          <p style="font-size:13px;color:#555;">On macOS, the printer driver and CUPS filters can interfere with raw ZPL passthrough. This setup ensures correct orientation:</p>
-          <ol class="poly-steps">
-            <li>Create the print queue with <code>lpadmin</code> as shown above &mdash; use the raw USB URI, <strong>do not</strong> install a macOS printer driver</li>
-            <li>Always send ZPL with <code>-o raw</code> to bypass macOS rasterization</li>
-            <li>If the label orientation is wrong, fix it in Python with <code>--rotate 180</code> &mdash; never use ZPL orientation commands</li>
-            <li>The <code>print_label.py</code> script handles all of this automatically: raw queue, correct bit ordering, rotation in Python</li>
-          </ol>
-
-          <div class="callout warn">
-            <strong>After a bad ZPL job:</strong> The printer may show "not ready" persistently. Power-cycle the printer (unplug &rarr; wait 10s &rarr; plug back in). Do not rely on CUPS commands to clear this state.
-          </div>
-        </div>
-
-        <!-- ── QR Code: phone-accessible guide ── -->
-        <div class="qr-block" id="qr-print">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://techmore.github.io/thril/%23poly-bagger"
-               alt="QR Code for Poly Bagger guide"
-               width="180" height="180"
-               crossorigin="anonymous">
-          <div class="qr-text">
-            <h4>Poly Bagger guide &mdash; on your phone</h4>
-            <p>Scan this QR code to open the full Poly Bagger setup, usage, rebagging, and troubleshooting guide on your mobile device. Post this at the bagger station for quick reference.</p>
-            <div class="qr-url">https://techmore.github.io/thril/#poly-bagger</div>
-            <p style="margin-top:8px;font-size:12px;color:#999;">
-              <a href="javascript:window.print()" class="qr-print-link"><i class="ti ti-printer"></i> Print this page</a>
-              &nbsp;&middot;&nbsp;
-              <a href="https://techmore.github.io/thril/#poly-bagger" class="qr-print-link" target="_blank">Open in browser</a>
+        <div style="background:var(--color-bg-soft);border:1px solid var(--color-border);border-radius:12px;padding:24px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <h4 style="font-size:16px;font-weight:600;color:var(--deep-space-blue);margin-bottom:6px;">
+              <i class="ti ti-printer" style="color:var(--flag-red);"></i> Dedicated Poly Bagger guide
+            </h4>
+            <p style="font-size:13px;color:#555;margin-bottom:10px;">
+              Full documentation on a separate page: initial Mac setup, compressor &amp; air supply requirements, daily usage &amp; workflow, rebagging procedure, and a dedicated troubleshooting section for label placement variance.
             </p>
+            <a href="poly-bagger.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <i class="ti ti-external-link"></i> Open Poly Bagger guide
+            </a>
+          </div>
+          <div style="text-align:center;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://techmore.github.io/thril/poly-bagger.html"
+                 alt="QR Code" width="120" height="120"
+                 style="border-radius:6px;">
+            <p style="font-size:11px;color:#888;margin-top:4px;">Scan for mobile access</p>
           </div>
         </div>
 
         <div class="quick-links">
-          <a href="#equipment"><i class="ti ti-tools"></i>Poly Bagger T1000 equipment profile</a>
-          <a href="poly-bagger/UPC_Label_Bagger_Workflow_v3.html"><i class="ti ti-file-text"></i>Full v3 workflow doc</a>
-          <a href="poly-bagger/print_label.py"><i class="ti ti-code"></i>print_label.py</a>
+          <a href="poly-bagger.html"><i class="ti ti-external-link"></i>Full guide</a>
+          <a href="poly-bagger.html#setup"><i class="ti ti-settings"></i>Setup</a>
+          <a href="poly-bagger.html#usage"><i class="ti ti-printer"></i>Usage</a>
+          <a href="poly-bagger.html#compressor"><i class="ti ti-wind"></i>Compressor</a>
+          <a href="poly-bagger.html#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
+          <a href="poly-bagger.html#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
         </div>
       </section>
 
