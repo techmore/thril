@@ -202,7 +202,7 @@
   <header class="hero">
     <div class="container">
       <h1>Poly Bagger &mdash; machine setup &amp; label printing<span>.</span></h1>
-      <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor engagement, label printing workflow, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
+      <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor engagement, operator certification checklist, label printing workflow, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
     </div>
   </header>
 
@@ -213,6 +213,7 @@
           <div class="toc-label">Guide</div>
           <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup &amp; startup</a>
           <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
+          <a href="#certification"><i class="ti ti-certificate"></i>Operator certification</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
           <a href="#qr-print"><i class="ti ti-qrcode"></i>QR code &amp; print</a>
@@ -355,6 +356,80 @@
 
           <div class="callout danger">
             <strong>Never</strong> use <code>^PON</code> or <code>^FWN</code> in ZPL &mdash; these commands cause the printer to reject the job with a "not ready" error. Always rotate the image in Python instead.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Certification ═══ -->
+      <section id="certification">
+        <p class="section-label">Training</p>
+        <h2 class="section-title">Operator certification checklist</h2>
+        <p class="section-sub">Operators must demonstrate proficiency in each skill below before being certified to run the T-1000 bagger independently. The certifier initials and dates each line item.</p>
+
+        <div class="poly-sub">
+          <h3>Core machine operations</h3>
+          <table class="poly-tbl" style="max-width:700px;">
+            <thead>
+              <tr><th style="width:5%;">#</th><th style="width:50%;">Skill</th><th style="width:20%;">Date</th><th style="width:25%;">Certifier initials</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Identify all controls on the panel: power, start, E-stop, cycle mode, film tension, seal temp, bag length, pressure gauge, counter</td><td></td><td></td></tr>
+              <tr><td>2</td><td>Perform full startup sequence: drain compressor, connect air, verify 80+ PSI, power on, set tension/temp/length, load film, test cycle</td><td></td><td></td></tr>
+              <tr><td>3</td><td>Perform full shutdown: complete pending cycle, press E-stop, close compressor ball valve, power off, drain compressor tank</td><td></td><td></td></tr>
+              <tr><td>4</td><td>Emergency stop: demonstrate proper E-stop usage and twist-to-release restart</td><td></td><td></td></tr>
+              <tr><td>5</td><td>Change film roll: remove empty core, load new roll, thread film through rollers per diagram, adjust tension dial</td><td></td><td></td></tr>
+              <tr><td>6</td><td>Adjust bag length: measure product, set bag length dial, run test bag, verify fit</td><td></td><td></td></tr>
+              <tr><td>7</td><td>Adjust seal temperature: identify film type, set temp dial, run test seal, inspect for melt-through or weak seal</td><td></td><td></td></tr>
+              <tr><td>8</td><td>Switch cycle modes: toggle between Manual, Semi-auto, and Auto — explain when each is used</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Label &amp; printer operations</h3>
+          <table class="poly-tbl" style="max-width:700px;">
+            <thead>
+              <tr><th style="width:5%;">#</th><th style="width:50%;">Skill</th><th style="width:20%;">Date</th><th style="width:25%;">Certifier initials</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>9</td><td>Print a label: run <code>print_label.py</code> from the Mac workstation with correct .docx file</td><td></td><td></td></tr>
+              <tr><td>10</td><td>Fix upside-down label: add <code>--rotate 180</code> flag and re-print</td><td></td><td></td></tr>
+              <tr><td>11</td><td>Adjust label position on bag: modify <code>left_margin</code> or <code>top_margin</code> in <code>print_label.py</code> to shift label placement</td><td></td><td></td></tr>
+              <tr><td>12</td><td>Change label ribbon (Zebra printer): open printer, replace ribbon roll, close and feed</td><td></td><td></td></tr>
+              <tr><td>13</td><td>Clear printer jam: safely remove jammed label/media from Zebra printer, verify feed path</td><td></td><td></td></tr>
+              <tr><td>14</td><td>Check printer queue and status: run <code>lpq -P Zebra</code> and <code>lpstat -p Zebra</code></td><td></td><td></td></tr>
+              <tr><td>15</td><td>Cancel a stuck print job: run <code>cancel -a Zebra</code> and <code>cupsenable Zebra</code></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Troubleshooting &amp; quality</h3>
+          <table class="poly-tbl" style="max-width:700px;">
+            <thead>
+              <tr><th style="width:5%;">#</th><th style="width:50%;">Skill</th><th style="width:20%;">Date</th><th style="width:25%;">Certifier initials</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>16</td><td>Identify and respond to low air pressure: check regulator, drain compressor, inspect hose for leaks</td><td></td><td></td></tr>
+              <tr><td>17</td><td>Troubleshoot poor seal quality: check temp setting, inspect sealer bar for residue, verify air pressure</td><td></td><td></td></tr>
+              <tr><td>18</td><td>Clear a bag jam in the T-1000: safely open film guard, clear jammed film, reset machine, test cycle</td><td></td><td></td></tr>
+              <tr><td>19</td><td>Rebag a product: remove damaged bag, inspect product, print new label if needed, re-bag and seal, log in REWORK-001</td><td></td><td></td></tr>
+              <tr><td>20</td><td>Recover from printer "not ready" error: power-cycle the Zebra printer, resend last ZPL job</td><td></td><td></td></tr>
+              <tr><td>21</td><td>Perform daily operator checks: drain compressor, verify pressure, inspect air hose, check water separator</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top:24px;padding:16px 20px;background:var(--color-bg-soft);border-radius:8px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+              <div>
+                <p><strong>Operator name:</strong> _________________________________</p>
+                <p style="margin-top:8px;"><strong>Date certified:</strong> ________________</p>
+              </div>
+              <div>
+                <p><strong>Certifier name:</strong> _________________________________</p>
+                <p style="margin-top:8px;"><strong>Recertification due:</strong> ______________</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout info">
+            <strong>Recertification:</strong> Operators must recertify annually, after any machine repair or modification, or if the machine has been idle for more than 30 days. Signed checklists are retained in the training records file (per Clause 7.2).
           </div>
         </div>
       </section>
@@ -534,6 +609,7 @@
         <div class="quick-links">
           <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup</a>
           <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
+          <a href="#certification"><i class="ti ti-certificate"></i>Certification</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
         </div>
