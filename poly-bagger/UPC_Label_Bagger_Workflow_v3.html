@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UPC Label → Poly Bagger Printer Workflow v3</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 24px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 1.6rem; border-bottom: 3px solid #2b6cb0; padding-bottom: 10px; }
+  h2 { font-size: 1.15rem; margin-top: 32px; color: #2b6cb0; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+  h3 { font-size: 1rem; margin-top: 22px; color: #444; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 14px 16px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; }
+  code { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.85rem; background: #edf2f7; padding: 1px 5px; border-radius: 3px; }
+  pre code { background: transparent; padding: 0; }
+  .meta { color: #666; font-size: 0.85rem; margin-bottom: 24px; }
+  .danger { background: #f8d7da; border-left: 4px solid #dc3545; padding: 10px 14px; margin: 16px 0; border-radius: 4px; }
+  .danger strong { color: #721c24; }
+  .note { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 14px; margin: 16px 0; border-radius: 4px; }
+  .note strong { color: #856404; }
+  .tip { background: #e6ffed; border-left: 4px solid #28a745; padding: 10px 14px; margin: 16px 0; border-radius: 4px; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 28px 0; }
+  table { border-collapse: collapse; margin: 12px 0; }
+  td, th { border: 1px solid #d0d0d0; padding: 6px 12px; text-align: left; font-size: 0.9rem; }
+  th { background: #edf2f7; }
+  .fileblock { background: #f0f4f8; border: 1px solid #cbd5e0; border-radius: 6px; padding: 2px 14px 10px 14px; margin: 12px 0; }
+  .fileblock .filename { font-family: 'SF Mono', monospace; font-size: 0.85rem; font-weight: bold; color: #2b6cb0; margin-top: 8px; margin-bottom: 4px; }
+  .verdict { background: #d4edda; border-left: 4px solid #28a745; padding: 8px 14px; margin: 8px 0; border-radius: 4px; font-size: 0.9rem; }
+  .verdict.bad { background: #f8d7da; border-left-color: #dc3545; }
+  .verdict.warn { background: #fff3cd; border-left-color: #ffc107; }
+</style>
+</head>
+<body>
+
+<h1>UPC Label → Poly Bagger Printer Workflow v3</h1>
+<p class="meta">
+  Source: .docx → ZPL → Zebra ZTC 110Xi4-203dpi ZPL (203 DPI thermal transfer)<br>
+  Last updated: 2026-07-24
+</p>
+
+<div class="danger">
+<strong>CRITICAL LESSONS LEARNED (v2 → v3):</strong>
+<ol>
+  <li><strong>DO NOT use <code>^PON</code> or <code>^FWN</code></strong> — on this printer, these commands cause "Zebra is not ready" / printer rejects the job. Instead, <strong>rotate the image 180° in Python</strong> if the label prints upside down.</li>
+  <li><strong>Printer goes "not ready" after bad ZPL</strong> — reboot the printer to clear the error state. CUPS re-enable won't fix it.</li>
+  <li><strong>Bit ordering in <code>^GFA</code>:</strong> use <code>byte_val = (byte_val &lt;&lt; 1) | bit</code> with <code>bit = 0 if px else 1</code>. First pixel = MSB = leftmost dot. Do NOT reverse this.</li>
+  <li><strong>"Flip" = 180° rotation</strong> (upside down / right-side up). Never mirror (left-right reversal).</li>
+  <li><strong>Scale=4</strong> is the standard size (772x200 dots = 3.80" x 0.99"). Scale=3 = 579x150, Scale=5 = 965x250.</li>
+</ol>
+</div>
+
+<div class="tip">
+<strong>Verified labels:</strong>
+<ul>
+  <li><strong>AKV PLUM</strong> (barcode 51655106437): No rotation, no <code>^PON</code>/<code>^FWN</code> — worked at scale=4</li>
+  <li><strong>AK47 G2 Ribbed PLUM</strong>: 180° rotation in Python, no <code>^PON</code>/<code>^FWN</code>, scale=4 — fixed upside-down issue</li>
+  <li><strong>AKV GRAY</strong>: Extracted but not fully validated</li>
+</ul>
+</div>
+
+<hr>
+
+<h2>One-Step Automated Script</h2>
+<p>Use <code>print_label.py</code> — it does everything in one command:</p>
+<pre><code>python3 print_label.py "UPC Labels/AK47 G2 Ribbed PLUM - PSA RETAIL.docx" --rotate 180</code></pre>
+<p>Or for labels that don't need rotation:</p>
+<pre><code>python3 print_label.py "UPC Labels/AKV PLUM - PSA RETAIL.docx"</code></pre>
+
+<div class="fileblock">
+<div class="filename">print_label.py</div>
+<pre><code>#!/usr/bin/env python3
+"""One-step label printer for Zebra ZTC 110Xi4-203dpi ZPL."""
+import argparse, os, subprocess, sys, tempfile
+from zipfile import ZipFile
+from pathlib import Path
+from PIL import Image
+
+def extract_image(docx_path):
+    with ZipFile(docx_path) as z:
+        image_name = next(n for n in z.namelist() if n.startswith("word/media/"))
+        with z.open(image_name) as f:
+            return Image.open(f).convert("RGB")
+
+def generate_zpl(img, scale=4, rotate=0):
+    if rotate:
+        img = img.rotate(rotate, expand=True)
+    img = img.convert("1")
+    w, h = img.size
+    img = img.resize((w * scale, h * scale), Image.NEAREST)
+    w, h = img.size
+    bpr = (w + 7) // 8
+    pixels = list(img.getdata())
+    rows = []
+    for y in range(h):
+        row = []
+        for bx in range(bpr):
+            bv = 0
+            for bi in range(8):
+                idx = y * w + bx * 8 + bi
+                if idx < y * w + w:
+                    p = pixels[idx]
+                    bv = (bv << 1) | (0 if p else 1)
+                else:
+                    bv <<= 1
+            row.append(bv)
+        rows.append("".join(f"{b:02X}" for b in row))
+    data = "".join(rows)
+    tb = bpr * h
+    lp = 80
+    sp = 120
+    tm = 30
+    lm = 60
+    return f"^XA\n^LL{h+lp}\n^PW{w+sp}\n^LS0\n^FO{lm},{tm}^GFA,{tb},{tb},{bpr},{data}^FS\n^XZ"
+
+def send_to_printer(zpl):
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".zpl", delete=False) as f:
+        f.write(zpl)
+        tmp = f.name
+    try:
+        r = subprocess.run(
+            ["lp", "-d", "Zebra", "-o", "raw", tmp],
+            capture_output=True, text=True, timeout=30
+        )
+        if r.returncode != 0:
+            print(f"ERROR: {r.stderr.strip()}")
+            return False
+        print(f"Sent: {r.stdout.strip()}")
+        return True
+    except subprocess.TimeoutExpired:
+        print("ERROR: lp command timed out")
+        return False
+    finally:
+        os.unlink(tmp)
+
+def main():
+    ap = argparse.ArgumentParser(description="Print a label from a .docx to the Zebra printer")
+    ap.add_argument("docx", help="Path to the .docx file")
+    ap.add_argument("--scale", type=int, default=4, choices=[3, 4, 5],
+                    help="Scale factor (3=2.85\", 4=3.80\", 5=4.75\")")
+    ap.add_argument("--rotate", type=int, default=0,
+                    help="Rotate image by degrees (180 for upside-down fix)")
+    ap.add_argument("--no-print", action="store_true",
+                    help="Only generate ZPL, don't send to printer")
+    args = ap.parse_args()
+
+    if not os.path.exists(args.docx):
+        print(f"File not found: {args.docx}")
+        sys.exit(1)
+
+    print(f"Extracting image from {Path(args.docx).name}...")
+    img = extract_image(args.docx)
+    print(f"  Image size: {img.size[0]}x{img.size[1]} pixels")
+
+    if args.rotate:
+        print(f"  Rotating {args.rotate} degrees...")
+
+    print(f"Generating ZPL (scale={args.scale})...")
+    zpl = generate_zpl(img, args.scale, args.rotate)
+
+    output_name = Path(args.docx).stem.replace(" ", "_") + ".zpl"
+    output_path = Path("UPC Labels") / output_name if Path("UPC Labels").exists() else Path(output_name)
+    with open(output_path, "w") as f:
+        f.write(zpl)
+    print(f"  Saved: {output_path}")
+
+    if not args.no_print:
+        print("Sending to printer...")
+        if send_to_printer(zpl):
+            print("  Done! Check the printout.")
+        else:
+            print("  FAILED. Try: reboot the printer, then run again.")
+    else:
+        print("  (--no-print: not sent)")
+
+if __name__ == "__main__":
+    main()</code></pre>
+</div>
+
+<hr>
+
+<h2>Manual Steps (if not using the script)</h2>
+
+<h3>1. Install dependencies</h3>
+<pre><code>pip3 install Pillow</code></pre>
+
+<h3>2. Extract image from .docx</h3>
+<pre><code>python3 -c "
+from zipfile import ZipFile; from PIL import Image
+with ZipFile('UPC Labels/your_label.docx') as z:
+    img = next(n for n in z.namelist() if n.startswith('word/media/'))
+    with z.open(img) as f: Image.open(f).convert('RGB').save('UPC Labels/your_label.png')
+print('Done')
+"</code></pre>
+
+<h3>3. Rotate if needed (180 = fix upside down)</h3>
+<pre><code>python3 -c "
+from PIL import Image
+Image.open('UPC Labels/your_label.png').rotate(180, expand=True).save('UPC Labels/your_label_rotated.png')
+print('Rotated')
+"</code></pre>
+
+<h3>4. Generate ZPL</h3>
+<pre><code>python3 -c "
+from PIL import Image; from pathlib import Path
+scale = 4
+img = Image.open('UPC Labels/your_label.png').convert('1')
+w, h = img.size
+img = img.resize((w * scale, h * scale), Image.NEAREST)
+w, h = img.size
+bpr = (w + 7) // 8
+pixels = list(img.getdata())
+rows = []
+for y in range(h):
+    row = []
+    for bx in range(bpr):
+        bv = 0
+        for bi in range(8):
+            idx = y * w + bx * 8 + bi
+            if idx < y * w + w:
+                bv = (bv << 1) | (0 if pixels[idx] else 1)
+            else:
+                bv <<= 1
+        row.append(bv)
+    rows.append(''.join(f'{b:02X}' for b in row))
+data = ''.join(rows)
+zpl = f'^XA\n^LL{h+80}\n^PW{w+120}\n^LS0\n^FO60,30^GFA,{bpr*h},{bpr*h},{bpr},{data}^FS\n^XZ'
+Path('UPC Labels/your_label.zpl').write_text(zpl)
+print(f'Saved ({w}x{h} dots)')
+"</code></pre>
+
+<h3>5. Send to printer</h3>
+<pre><code>lp -d Zebra -o raw "UPC Labels/your_label.zpl"</code></pre>
+
+<h3>6. Verify</h3>
+<pre><code>lpq -P Zebra</code></pre>
+
+<hr>
+
+<h2>Setup (one-time)</h2>
+
+<h3>Connect printer via USB</h3>
+<p>USB-B to USB-A cable (or USB-C adapter). Port is on the back.</p>
+
+<h3>Create print queue (one-time)</h3>
+<pre><code>lpadmin -p Zebra -E \
+  -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
+  -o printer-is-shared=false</code></pre>
+
+<h3>Verify detection</h3>
+<pre><code>lpinfo -v | grep -i zebra</code></pre>
+
+<hr>
+
+<h2>ZPL Format (minimal — this works)</h2>
+<pre><code>^XA
+^LL280
+^PW892
+^LS0
+^FO60,30^GFA,19400,19400,97,[HEX_DATA]^FS
+^XZ</code></pre>
+
+<div class="danger">
+<strong>DO NOT ADD:</strong> <code>^PON</code>, <code>^FWN</code>, or any other orientation commands — they cause the printer to reject the job on this model.
+</div>
+
+<h3>Label dimensions</h3>
+<table>
+  <tr><th>Scale</th><th>Image dots</th><th>Physical size</th><th>Label area with padding</th></tr>
+  <tr><td>3×</td><td>579×150</td><td>2.85" × 0.74"</td><td>699×230</td></tr>
+  <tr><td>4×</td><td>772×200</td><td>3.80" × 0.99"</td><td>892×280</td></tr>
+  <tr><td>5×</td><td>965×250</td><td>4.75" × 1.23"</td><td>1085×330</td></tr>
+</table>
+
+<hr>
+
+<h2>Troubleshooting (v3 updates)</h2>
+
+<table>
+  <tr><th>Issue</th><th>Fix</th></tr>
+  <tr><td>ZPL causes "not ready"</td><td>Remove <code>^PON</code>/<code>^FWN</code>. Reboot printer. Resend clean ZPL.</td></tr>
+  <tr><td>Label upside down</td><td>Rotate image 180° in Python, regenerate ZPL, resend.</td></tr>
+  <tr><td>Label mirrored</td><td>Use <code>byte_val = (byte_val &lt;&lt; 1) | bit</code> (NOT reversed bit order).</td></tr>
+  <tr><td>Garbled / unreadable</td><td>Wrong bit ordering or printer in bad state. Reboot printer. Use original <code>&lt;&lt; 1</code> bit shift.</td></tr>
+  <tr><td>Printer stays "not ready"</td><td><strong>Reboot the printer</strong> (power cycle). CUPS commands won't clear this.</td></tr>
+  <tr><td>Bottom cut off</td><td>Increase bottom_padding (80→120+)</td></tr>
+  <tr><td>Sides cut off</td><td>Increase side_padding (120→160+) or left_margin</td></tr>
+  <tr><td>Label too large/small</td><td>Change scale (3, 4, or 5)</td></tr>
+  <tr><td>Garbled text (not image)</td><td>Forgot <code>-o raw</code>. macOS converts ZPL to raster.</td></tr>
+</table>
+
+<hr>
+
+<h2>DIY Controller (Arduino / ESP32 / Raspberry Pi)</h2>
+
+<h3>.docx Format (for parsing on-device)</h3>
+<p>A .docx file is a standard ZIP archive. The label image is always at a fixed path inside:</p>
+<table>
+  <tr><th>Path inside .docx</th><th>Content</th></tr>
+  <tr><td><code>word/media/image1.png</code></td><td>The label image (PNG format)</td></tr>
+  <tr><td><code>word/document.xml</code></td><td>Word document XML (not needed — just extract the PNG)</td></tr>
+  <tr><td><code>[Content_Types].xml</code></td><td>Content type manifest (not needed)</td></tr>
+</table>
+<pre><code># Pseudocode: extract PNG from .docx
+Open file as ZIP
+Find first entry starting with "word/media/"
+Extract raw bytes → save as PNG
+Close ZIP</code></pre>
+<p>The label images are 193×50 pixel RGB PNGs. Different labels may have different dimensions — the script auto-detects.</p>
+
+<h3>RGB → 1-bit Conversion</h3>
+<pre><code># Pseudocode: convert RGB pixel to black/white
+For each pixel (R, G, B):
+    luminance = (R + G + B) / 3   # simple average
+    if luminance < 128:
+        output = 0   # black
+    else:
+        output = 255 # white</code></pre>
+
+<h3>ZPL ^GFA Encoding (exact byte format)</h3>
+<pre><code># Pseudocode: encode 1-bit image as ^GFA hex
+Input: width W, height H, 1-bit pixel data (0=black, 255=white)
+Scale: multiply W and H by scale_factor (4 is standard)
+
+bpr = (W + 7) / 8         # bytes per row (rounded up)
+hex_string = ""
+
+For each row y from 0 to H-1:
+    For each byte bx from 0 to bpr-1:
+        byte_val = 0
+        For each bit bi from 0 to 7:
+            pixel_idx = y * W + bx * 8 + bi
+            if pixel_idx &lt; y * W + W:
+                if pixel[pixel_idx] == black:
+                    bit = 1   # 1 = black dot (print)
+                else:
+                    bit = 0   # 0 = white dot (skip)
+                byte_val = (byte_val &lt;&lt; 1) | bit
+            else:
+                byte_val &lt;&lt;= 1  # pad remaining bits with 0
+        hex_string += format(byte_val, "02X")
+    # No newline between rows — continuous hex string
+
+total_bytes = bpr * H
+padding_bottom = 80
+padding_side = 120
+margin_top = 30
+margin_left = 60
+
+label_h = H + padding_bottom
+label_w = W + padding_side
+
+ZPL = "^XA\n" +
+      "^LL" + label_h + "\n" +
+      "^PW" + label_w + "\n" +
+      "^LS0\n" +
+      "^FO" + margin_left + "," + margin_top +
+      "^GFA," + total_bytes + "," + total_bytes + "," + bpr + "," + hex_string + "^FS\n" +
+      "^XZ"</code></pre>
+
+<h3>Communication Protocols</h3>
+
+<h4>TCP (Ethernet/WiFi)</h4>
+<p>Zebra printers listen on TCP port 9100 by default. Send raw ZPL bytes, then close the connection.</p>
+<pre><code># Pseudocode: TCP
+connect to printer_ip on port 9100
+send ZPL bytes
+close connection
+
+# Verification
+netcat (nc) also works: nc printer-ip 9100 &lt; label.zpl</code></pre>
+
+<h4>Serial (RS-232 / USB-Serial)</h4>
+<pre><code>Settings: 9600 baud, 8 data bits, no parity, 1 stop bit (9600 8N1)
+No flow control
+
+# Pseudocode: Serial (Arduino / ESP32)
+Serial.begin(9600, SERIAL_8N1);
+Serial.write(zpl_bytes, zpl_length);
+Serial.flush();</code></pre>
+
+<h4>USB (USB-B on printer)</h4>
+<p>USB on this printer uses the printer's <strong>USB CDC</strong> or vendor-specific class. On a Pi, it shows up as a serial device or CUPS queue. On ESP32/Arduino, USB host mode would be needed — TCP or serial is far simpler.</p>
+
+<h3>Recommendation by Platform</h3>
+<table>
+  <tr><th>Platform</th><th>Best protocol</th><th>Notes</th></tr>
+  <tr><td>Raspberry Pi</td><td>TCP (port 9100)</td><td>Can run Python/Pillow, full .docx parsing. Same as macOS workflow.</td></tr>
+  <tr><td>ESP32</td><td>TCP (WiFi) port 9100</td><td>Needs PNG decoder library (e.g., pngle or lodepng). Embed the label image as raw bytes or host a web UI for upload.</td></tr>
+  <tr><td>Arduino (Uno/Mega)</td><td>Serial 9600 8N1</td><td>Too little RAM for PNG decode. Pre-convert PNG → hex on PC, upload to SD, send from SD via serial.</td></tr>
+  <tr><td>Arduino + WiFi shield</td><td>TCP port 9100</td><td>Same RAM limits. Pre-encoded ZPL stored on SD card.</td></tr>
+</table>
+
+<hr>
+
+<h2>Windows / Alternative Methods</h2>
+
+<h3>No Admin Rights (COM port)</h3>
+<pre><code>mode COM4:9600,n,8,1
+copy /b label.zpl COM4:</code></pre>
+
+<h3>Network (if printer has IP)</h3>
+<pre><code>nc printer-ip 9100 &lt; label.zpl</code></pre>
+
+<h3>LabelView (T-1000 Bagger)</h3>
+<p>Windows-only licensed app from TEKLYNX. Recreate the label as .nlbl on the bagger. Cannot convert ZPL→.nlbl.</p>
+
+<hr>
+
+<h2>Print Queue Reference</h2>
+<pre><code># Check status
+lpstat -p Zebra
+# Check queue
+lpq -P Zebra
+# Cancel all jobs
+cancel -a Zebra
+# Re-enable
+cupsenable Zebra
+# Delete and recreate queue
+lpadmin -x Zebra
+lpadmin -p Zebra -E -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" -o printer-is-shared=false</code></pre>
+
+</body>
+</html>

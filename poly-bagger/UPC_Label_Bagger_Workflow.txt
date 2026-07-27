@@ -1,0 +1,243 @@
+UPC LABEL → POLY BAGGER PRINTER WORKFLOW
+==========================================
+Source: .docx (Word) → ZPL → Zebra printer
+Date: 2026-07-23
+Printer: Zebra ZTC 110Xi4-203dpi ZPL (203 DPI thermal transfer)
+
+
+=== THE WORKFLOW (macOS) ===
+
+STEP 1: EXTRACT THE LABEL FROM THE .DOCX
+-----------------------------------------
+Install Pillow (one time):
+  pip3 install Pillow
+
+Create a file called step1_extract.py with this content:
+
+--- step1_extract.py ---
+from zipfile import ZipFile
+with ZipFile("your_label.docx") as z:
+    with z.open("word/media/image1.png") as f:
+        data = f.read()
+with open("extracted_label.png", "wb") as out:
+    out.write(data)
+print("Saved extracted_label.png")
+-------------------------
+
+Run it:
+  python3 step1_extract.py
+
+Result: extracts the label image to extracted_label.png
+
+
+STEP 2: SCALE AND GENERATE ZPL
+-------------------------------
+Create a file called step2_generate_zpl.py with this content.
+Change "scale = 4" to 3, 4, or 5 depending on desired size.
+
+--- step2_generate_zpl.py ---
+from PIL import Image
+
+scale = 4
+img = Image.open("extracted_label.png").convert("1")
+w, h = img.size
+img = img.resize((w * scale, h * scale), Image.NEAREST)
+w, h = img.size
+
+bytes_per_row = (w + 7) // 8
+pixels = list(img.getdata())
+hex_rows = []
+for y in range(h):
+    row_bytes = []
+    for byte_idx in range(bytes_per_row):
+        byte_val = 0
+        for bit_idx in range(8):
+            px_idx = y * w + byte_idx * 8 + bit_idx
+            if px_idx < y * w + w:
+                px = pixels[px_idx]
+                if isinstance(px, bool):
+                    bit = 0 if px else 1
+                else:
+                    bit = 1 if px < 128 else 0
+                byte_val = (byte_val << 1) | bit
+            else:
+                byte_val <<= 1
+        row_bytes.append(byte_val)
+    hex_rows.append("".join(f"{b:02X}" for b in row_bytes))
+hex_str = "".join(hex_rows)
+total_bytes = bytes_per_row * h
+
+# Padding values — adjust these if label is cut off:
+bottom_padding = 80
+side_padding = 120
+top_margin = 30
+left_margin = 60
+
+label_h = h + bottom_padding
+label_w = w + side_padding
+
+zpl = f"^XA\n^LL{label_h}\n^PW{label_w}\n^LS0\n^FO{left_margin},{top_margin}^GFA,{total_bytes},{total_bytes},{bytes_per_row},{hex_str}^FS\n^XZ"
+
+with open("label.zpl", "w") as f:
+    f.write(zpl)
+
+print(f"Saved label.zpl  ({w}x{h} dots = {w/203:.2f}\" x {h/203:.2f}\" at 203 DPI)")
+print(f"Label area: {label_w}x{label_h} dots with padding")
+-------------------------
+
+Run it:
+  python3 step2_generate_zpl.py
+
+Result: creates label.zpl (the file to send to the printer)
+
+
+STEP 3: CONNECT PRINTER VIA USB
+--------------------------------
+Cable: USB-B to USB-A (or USB-C adapter).
+The printer has a USB-B port on the back panel.
+
+STEP 4: CHECK THE PRINTER IS DETECTED
+--------------------------------------
+Open Terminal and run:
+  lpinfo -v | grep -i zebra
+
+Expected output (serial number will differ):
+  direct usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932
+
+
+STEP 5: CREATE A RAW PRINT QUEUE (ONE-TIME SETUP)
+--------------------------------------------------
+In Terminal run:
+  lpadmin -p Zebra -E \
+    -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
+    -o printer-is-shared=false
+
+No output means it worked.
+
+STEP 6: SEND THE ZPL FILE TO THE PRINTER
+-----------------------------------------
+In Terminal run:
+  lp -d Zebra -o raw label.zpl
+
+IMPORTANT: The -o raw flag is critical. Without it, macOS will convert the
+ZPL to a raster image (garbled output). -o raw sends raw ZPL bytes.
+
+STEP 7: VERIFY
+--------------
+  lpq -P Zebra
+Shows: "Zebra is ready / no entries"
+
+To reprint: just run Step 6 again.
+
+
+STEP 8: ADJUST SIZE (IF NEEDED)
+-------------------------------
+If the label is cut off or has too much whitespace, edit step2_generate_zpl.py
+and change the padding values at the top of the script:
+
+  bottom_padding = 80    # increase if bottom is cut off
+  side_padding  = 120    # increase if sides are cut off
+  top_margin    = 30     # increase to push image down
+  left_margin   = 60     # increase to push image right
+
+Then re-run: python3 step2_generate_zpl.py, then re-send: lp -d Zebra -o raw label.zpl
+
+If the label is too small overall, change scale and regenerate:
+  scale = 4   → try 5 for bigger, 3 for smaller
+  Size at 203 DPI:
+    Scale 3x: 2.85" x 0.74" (579x150 dots)
+    Scale 4x: 3.80" x 0.99" (772x200 dots)
+    Scale 5x: 4.75" x 1.23" (965x250 dots)
+
+
+=== THE ZPL COMMANDS EXPLAINED ===
+
+^XA / ^XZ     - Start / end of ZPL label format
+^LLnnn        - Label length in dots (prevents bottom cutoff)
+^PWnnn        - Print width in dots
+^LS0          - Label shift (0 = no shift)
+^FOx,y        - Field origin (position of the graphic in dots from top-left)
+^GFA,...data  - Graphic field (ASCII hex encoded monochrome image)
+^FS           - End of field
+
+
+=== ALTERNATIVE: WINDOWS MACHINE (NO ADMIN RIGHTS) ===
+
+If the printer is on a COM port (shows under "Ports (COM & LPT)" in Device
+Manager), you can send ZPL directly from the command line without installing
+any software or needing admin rights:
+
+  mode COM4:9600,n,8,1
+  copy /b label.zpl COM4:
+
+If the printer appears as a USB device but NOT on a COM port:
+  - You need the printer driver, which requires admin.
+  - Try Control Panel > Devices and Printers > Add a printer.
+  - Sometimes Windows auto-downloads the driver without admin.
+
+
+=== ALTERNATIVE: ZEBRA SETUP UTILITIES (WINDOWS, REQUIRES ADMIN) ===
+
+Zebra Setup Utilities is the official Zebra tool for sending ZPL to printers.
+It requires admin rights to install.
+
+Once installed:
+  1. Open Zebra Setup Utilities
+  2. The printer should be detected if the driver is installed
+  3. Go to the "Send File" tab
+  4. Browse to your .zpl file and click "Send"
+
+Zebra drivers for this printer:
+  - Zebra ZT-10Xi4 (203 dpi)
+  - ZPL driver (not the "Designer" driver which converts to image)
+
+
+=== ALTERNATIVE: LABELVIEW (TEKLYNX, WINDOWS, LICENSED) ===
+
+LabelView is the software most commonly used with Advanced Poly baggers (T-1000).
+It is a Windows-only application.
+
+Workflow with LabelView:
+  1. Open LabelView on a Windows machine
+  2. Import extracted_label.png as a reference image
+  3. Rebuild the label layout (size, barcode, text) within LabelView
+  4. Save as .nlbl (LabelView label format)
+  5. Send to the printer using LabelView's print function
+  6. On the T-1000 touchscreen: Printer > Stored Labels > Load the label
+
+LabelView produces .nlbl files (see examples in the UPC Labels folder).
+
+Converting ZPL to LabelView: Not possible directly. You must recreate the
+label inside LabelView using the PNG as a reference image.
+
+
+=== TROUBLESHOOTING ===
+
+Label prints as garbled text/symbols
+  You forgot -o raw. macOS intercepted the ZPL and tried to convert it.
+
+Nothing happens after sending
+  - Check USB connection
+  - Verify queue: lpstat -p Zebra
+  - Check printer is on / has media / no errors on the screen
+
+Label is cut off at the bottom
+  - Increase bottom_padding in step2_generate_zpl.py
+  - Or increase ^LL in the ZPL directly
+
+Label is cut off on the sides
+  - Increase side_padding or left_margin in step2_generate_zpl.py
+
+Label is wrong size
+  - Adjust the scale factor and regenerate
+
+Printer not detected on Mac
+  - Try a different USB cable
+  - Try a different USB port
+  - Check System Information > USB for the device
+
+Printer not detected on Windows
+  - Open Device Manager and check which category
+  - Ports (COM & LPT): use copy /b (no admin)
+  - Other devices: needs driver install (admin required)
+  - Printers: add as Generic / Text Only if possible

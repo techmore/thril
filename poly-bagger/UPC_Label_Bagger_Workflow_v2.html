@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UPC Label → Poly Bagger Printer Workflow</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 24px;
+    line-height: 1.7;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 {
+    font-size: 1.6rem;
+    border-bottom: 3px solid #2b6cb0;
+    padding-bottom: 10px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin-top: 32px;
+    color: #2b6cb0;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 4px;
+  }
+  h3 {
+    font-size: 1rem;
+    margin-top: 22px;
+    color: #444;
+  }
+  pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 14px 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    background: #edf2f7;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre code {
+    background: transparent;
+    padding: 0;
+  }
+  .meta {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+  .note {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 10px 14px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .note strong {
+    color: #856404;
+  }
+  .tip {
+    background: #e6ffed;
+    border-left: 4px solid #28a745;
+    padding: 10px 14px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 28px 0;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  td, th {
+    border: 1px solid #d0d0d0;
+    padding: 6px 12px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  th {
+    background: #edf2f7;
+  }
+  .fileblock {
+    background: #f0f4f8;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 2px 14px 10px 14px;
+    margin: 12px 0;
+  }
+  .fileblock .filename {
+    font-family: 'SF Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #2b6cb0;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+<h1>UPC Label → Poly Bagger Printer Workflow</h1>
+<p class="meta">
+  Source: .docx &rarr; ZPL &rarr; Zebra ZTC 110Xi4-203dpi ZPL (203 DPI thermal transfer)<br>
+  Date: 2026-07-24
+</p>
+
+<div class="tip">
+<strong>Verified AKV PLUM label:</strong> barcode <code>51655106437</code>. The printer’s 180&deg; image version printed upside down, so use the original artwork with explicit normal ZPL orientation (<code>^PON</code> and <code>^FWN</code>). Test job <code>Zebra-53</code> completed.
+</div>
+
+<!-- ============================================================ -->
+<h2>The Workflow (macOS)</h2>
+
+<h3>Step 1: Extract the label from the .docx</h3>
+<div class="note">
+<strong>AKV PLUM:</strong> Keep the source artwork as-is. The printer was applying the wrong orientation to the rotated image, so the ZPL below explicitly sets normal print and field orientation.
+</div>
+<p>First install Pillow (one time):</p>
+<pre><code>pip3 install Pillow</code></pre>
+
+<p>Create a file called <strong>step1_extract.py</strong> with this content:</p>
+<div class="fileblock">
+<div class="filename">step1_extract.py</div>
+<pre><code>from zipfile import ZipFile
+from pathlib import Path
+from PIL import Image
+
+source = Path("UPC Labels/AKV PLUM - PSA RETAIL.docx")
+output = Path("UPC Labels/AKV_PLUM_PSA_RETAIL_upright.png")
+
+with ZipFile(source) as z:
+    image_name = next(name for name in z.namelist() if name.startswith("word/media/"))
+    with z.open(image_name) as f:
+        image = Image.open(f).convert("RGB")
+
+image.save(output)
+print(f"Saved {output}")</code></pre>
+</div>
+
+<p>Run it:</p>
+<pre><code>python3 step1_extract.py</code></pre>
+<p>Run it from the project folder. Result: creates <strong>UPC Labels/AKV_PLUM_PSA_RETAIL_upright.png</strong>.</p>
+
+<h3>Step 2: Scale and generate ZPL</h3>
+<p>Create a file called <strong>step2_generate_zpl.py</strong>. This version reads the original PLUM artwork and writes normal-orientation ZPL beside it. Change <code>scale = 4</code> to 3, 4, or 5 if needed.</p>
+<div class="fileblock">
+<div class="filename">step2_generate_zpl.py</div>
+<pre><code>from PIL import Image
+from pathlib import Path
+
+scale = 4
+input_path = Path("UPC Labels/AKV_PLUM_PSA_RETAIL_upright.png")
+output_path = Path("UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl")
+img = Image.open(input_path).convert("1")
+w, h = img.size
+img = img.resize((w * scale, h * scale), Image.NEAREST)
+w, h = img.size
+
+bytes_per_row = (w + 7) // 8
+pixels = list(img.getdata())
+hex_rows = []
+for y in range(h):
+    row_bytes = []
+    for byte_idx in range(bytes_per_row):
+        byte_val = 0
+        for bit_idx in range(8):
+            px_idx = y * w + byte_idx * 8 + bit_idx
+            if px_idx &lt; y * w + w:
+                px = pixels[px_idx]
+                bit = 0 if px else 1
+                byte_val = (byte_val &lt;&lt; 1) | bit
+            else:
+                byte_val &lt;&lt;= 1
+        row_bytes.append(byte_val)
+    hex_rows.append("".join(f"{b:02X}" for b in row_bytes))
+hex_str = "".join(hex_rows)
+total_bytes = bytes_per_row * h
+
+# --- PADDING SETTINGS ---
+# Adjust these if the label is cut off or has too much whitespace:
+bottom_padding = 80
+side_padding   = 120
+top_margin     = 30
+left_margin    = 60
+
+label_h = h + bottom_padding
+label_w = w + side_padding
+
+zpl = f"^XA\n^PON\n^FWN\n^LL{label_h}\n^PW{label_w}\n^LS0\n^FO{left_margin},{top_margin}^GFA,{total_bytes},{total_bytes},{bytes_per_row},{hex_str}^FS\n^XZ"
+
+with open(output_path, "w") as f:
+    f.write(zpl)
+
+print(f"Saved {output_path}  ({w}x{h} dots = {w/203:.2f}\" x {h/203:.2f}\" at 203 DPI)")
+print(f"Label area: {label_w}x{label_h} dots with padding")</code></pre>
+</div>
+
+<p>Run it:</p>
+<pre><code>python3 step2_generate_zpl.py</code></pre>
+<p>Result: creates <strong>UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl</strong>.</p>
+
+<h3>Step 3: Connect printer via USB</h3>
+<p>USB-B to USB-A cable (or USB-C adapter). Port is on the back of the printer.</p>
+
+<h3>Step 4: Check the printer is detected</h3>
+<p>In Terminal, run:</p>
+<pre><code>lpinfo -v | grep -i zebra</code></pre>
+<p>Expected output:</p>
+<pre><code>direct usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932</code></pre>
+
+<h3>Step 5: Create a raw print queue (one-time)</h3>
+<p>In Terminal, run:</p>
+<pre><code>lpadmin -p Zebra -E \
+  -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
+  -o printer-is-shared=false</code></pre>
+<p>No output means it worked.</p>
+
+<h3>Step 6: Send the ZPL file</h3>
+<div class="note">
+<strong>IMPORTANT:</strong> The <code>-o raw</code> flag is critical. Without it, macOS converts the ZPL to a raster image (garbled output).
+</div>
+<p>In Terminal, run:</p>
+<pre><code>lp -d Zebra -o raw "UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl"</code></pre>
+
+<h3>Step 7: Verify</h3>
+<pre><code>lpq -P Zebra</code></pre>
+<p>Shows: "Zebra is ready / no entries"</p>
+
+<h3>Step 8: Adjust size (if needed)</h3>
+<p>Open <strong>step2_generate_zpl.py</strong>, change the padding values, re-run, re-send:</p>
+<pre><code>bottom_padding = 80    # increase if bottom is cut off
+side_padding   = 120   # increase if sides are cut off
+top_margin     = 30    # increase to push image down
+left_margin    = 60    # increase to push image right</code></pre>
+<p>Then:</p>
+<pre><code>python3 step2_generate_zpl.py
+lp -d Zebra -o raw "UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl"</code></pre>
+
+<p>Size reference at 203 DPI:</p>
+<table>
+  <tr><th>Scale</th><th>Size</th></tr>
+  <tr><td>3&times;</td><td>2.85" &times; 0.74" (579&times;150 dots)</td></tr>
+  <tr><td>4&times;</td><td>3.80" &times; 0.99" (772&times;200 dots)</td></tr>
+  <tr><td>5&times;</td><td>4.75" &times; 1.23" (965&times;250 dots)</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>ZPL Commands Explained</h2>
+
+<table>
+  <tr><th>Command</th><th>Purpose</th></tr>
+  <tr><td><code>^XA / ^XZ</code></td><td>Start / end of label format</td></tr>
+  <tr><td><code>^LLnnn</code></td><td>Label length in dots (prevents bottom cutoff)</td></tr>
+  <tr><td><code>^PWnnn</code></td><td>Print width in dots</td></tr>
+  <tr><td><code>^LS0</code></td><td>Label shift (0 = no shift)</td></tr>
+  <tr><td><code>^FOx,y</code></td><td>Field origin (position from top-left in dots)</td></tr>
+  <tr><td><code>^GFA,...</code></td><td>Graphic field (ASCII hex monochrome image)</td></tr>
+  <tr><td><code>^FS</code></td><td>End of field</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>Windows (No Admin Rights)</h2>
+<p>If the printer appears under <strong>Ports (COM &amp; LPT)</strong> in Device Manager:</p>
+<pre><code>mode COM4:9600,n,8,1
+copy /b "UPC Labels\AKV_PLUM_PSA_RETAIL_normal.zpl" COM4:</code></pre>
+<p>Replace <code>COM4</code> with your actual COM port number.</p>
+
+<!-- ============================================================ -->
+<h2>Zebra Setup Utilities (Windows, Admin Required)</h2>
+<p>Official free Zebra tool for sending ZPL files and configuring printers.</p>
+
+<p><strong>Download:</strong>
+<a href="https://www.zebra.com/us/en/support-downloads/software/printer-software/printer-setup-utilities.html" target="_blank">Zebra Printer Setup Utilities (official page)</a>
+&mdash; also available on the <a href="https://apps.apple.com/us/app/zebra-printer-setup-utility/id1454308745" target="_blank">iOS App Store</a> and <a href="https://play.google.com/store/apps/details?id=com.zebra.printersetup" target="_blank">Google Play</a>.</p>
+
+<ol>
+  <li>Download and install (requires admin rights)</li>
+  <li>Open &rarr; printer should auto-detect</li>
+  <li>Click "Send File" tab &rarr; browse to <code>AKV_PLUM_PSA_RETAIL_normal.zpl</code> &rarr; Send</li>
+</ol>
+<p><strong>Driver needed:</strong> Zebra ZT-10Xi4 (203 dpi) ZPL driver — use the ZPL driver, not the "Designer" driver (which converts to images instead of sending raw ZPL).</p>
+
+<!-- ============================================================ -->
+<h2>LabelView (TEKLYNX, Windows, Licensed)</h2>
+<p>LabelView is the industry-standard label-design software used with Advanced Poly T-1000 baggers. It is a licensed Windows-only application from TEKLYNX and creates <code>.nlbl</code> files.</p>
+<p><strong>Note:</strong> LabelView is <em>not free</em> — you need a license from TEKLYNX or Advanced Poly. It typically ships with the T-1000 bagger or is available through your Advanced Poly sales rep.</p>
+<ol>
+  <li>Open LabelView on a Windows machine</li>
+  <li>Import <code>AKV_PLUM_PSA_RETAIL_upright.png</code> as a reference image</li>
+  <li>Rebuild the label layout from scratch in LabelView (set label dimensions, add barcode as a proper barcode object, add text fields)</li>
+  <li>Save as <code>.nlbl</code></li>
+  <li>Send to printer via LabelView's built-in print function</li>
+  <li>On the T-1000 touchscreen: Printer &rarr; Stored Labels &rarr; Load the saved label</li>
+</ol>
+<p><strong>Important:</strong> You <em>cannot</em> convert ZPL or PNG into LabelView's <code>.nlbl</code> format. You must recreate the label inside LabelView using the PNG as a visual reference.</p>
+
+<!-- ============================================================ -->
+<h2>Linux / Unix Systems</h2>
+<p>Same approach as macOS — use CUPS (<code>lp</code>) to send raw ZPL:</p>
+<pre><code># One-time: add raw queue
+lpadmin -p Zebra -E -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" -o printer-is-shared=false
+
+# Send ZPL (raw flag required)
+lp -d Zebra -o raw "UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl"</code></pre>
+<p>Or send directly over the network if the printer has an IP:</p>
+<pre><code>nc printer-ip 9100 &lt; "UPC Labels/AKV_PLUM_PSA_RETAIL_normal.zpl"</code></pre>
+<p>Zebra printers listen on TCP port 9100 (raw printing). This works on any OS without any driver.</p>
+
+<!-- ============================================================ -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Issue</th><th>Fix</th></tr>
+  <tr><td>Garbled text</td><td>Forgot <code>-o raw</code>. macOS converted the ZPL.</td></tr>
+  <tr><td>Nothing happens</td><td>Check USB, verify queue (<code>lpstat -p Zebra</code>), check printer screen.</td></tr>
+  <tr><td>Bottom cut off</td><td>Increase <code>bottom_padding</code> in step2_generate_zpl.py, re-run, re-send.</td></tr>
+  <tr><td>Sides cut off</td><td>Increase <code>side_padding</code> or <code>left_margin</code>, re-run, re-send.</td></tr>
+  <tr><td>Too much whitespace</td><td>Decrease padding values, re-run, re-send.</td></tr>
+  <tr><td>Label too small/big</td><td>Change <code>scale</code> in step2_generate_zpl.py, re-run, re-send.</td></tr>
+  <tr><td>Not detected on Mac</td><td>Try different cable, port, or check System Information &gt; USB.</td></tr>
+  <tr><td>Not detected on Windows</td><td>Check Device Manager category to determine the fix.</td></tr>
+</table>
+
+</body>
+</html>
