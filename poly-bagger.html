@@ -201,8 +201,8 @@
 
   <header class="hero">
     <div class="container">
-      <h1>Poly Bagger &mdash; label printing &amp; setup<span>.</span></h1>
-      <p>Complete guide for the Advanced Poly T-1000 bagger: Mac configuration, label printing workflow, compressor setup, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
+      <h1>Poly Bagger &mdash; machine setup &amp; label printing<span>.</span></h1>
+      <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor engagement, label printing workflow, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
     </div>
   </header>
 
@@ -211,9 +211,8 @@
       <nav>
         <div class="toc-group">
           <div class="toc-label">Guide</div>
-          <a href="#setup"><i class="ti ti-settings"></i>Setup &amp; Mac config</a>
-          <a href="#usage"><i class="ti ti-printer"></i>Usage &amp; workflow</a>
-          <a href="#compressor"><i class="ti ti-wind"></i>Compressor &amp; air supply</a>
+          <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup &amp; startup</a>
+          <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
           <a href="#qr-print"><i class="ti ti-qrcode"></i>QR code &amp; print</a>
@@ -234,44 +233,80 @@
 
       <a href="index.html" class="back-link"><i class="ti ti-arrow-left"></i> Back to QMS Wiki</a>
 
-      <!-- ═══ Setup ═══ -->
-      <section id="setup">
+      <!-- ═══ Machine Setup ═══ -->
+      <section id="machine-setup">
         <p class="section-label">Getting started</p>
-        <h2 class="section-title">Initial setup &amp; Mac configuration</h2>
-        <p class="section-sub">One-time printer setup for macOS: connect the Zebra printer, create the CUPS queue, and install dependencies. This is the only section that requires admin access.</p>
+        <h2 class="section-title">Machine setup &amp; startup</h2>
+        <p class="section-sub">Physical controls, compressor engagement, and step-by-step startup procedure for the Advanced Poly T-1000 bagger. Perform these steps every time the machine is started.</p>
 
         <div class="poly-sub">
-          <h3>Connect printer</h3>
+          <h3>Control panel overview</h3>
+          <p class="desc">The T-1000 control panel is located on the front-right side of the machine. Familiarize yourself with these controls before startup:</p>
+          <table class="poly-tbl" style="max-width:600px;">
+            <thead><tr><th>Control</th><th>Type</th><th>Function</th></tr></thead>
+            <tbody>
+              <tr><td>Main power switch</td><td>Toggle (red)</td><td>Master power on/off — located on the back panel</td></tr>
+              <tr><td>Start button</td><td>Momentary (green)</td><td>Initiates bag feed and seal cycle</td></tr>
+              <tr><td>Stop / E-stop</td><td>Push-lock (red)</td><td>Emergency stop — twist to release</td></tr>
+              <tr><td>Film tension dial</td><td>Rotary</td><td>Adjusts film unwind tension (1&ndash;10 scale)</td></tr>
+              <tr><td>Seal temp dial</td><td>Rotary</td><td>Sets sealing bar temperature for film type</td></tr>
+              <tr><td>Bag length dial</td><td>Rotary</td><td>Sets bag cut length in 1/4" increments</td></tr>
+              <tr><td>Cycle mode selector</td><td>3-position switch</td><td>Manual / Semi-auto / Auto cycle modes</td></tr>
+              <tr><td>Air pressure gauge</td><td>Dial gauge</td><td>Displays regulated air pressure at machine inlet</td></tr>
+              <tr><td>Counter display</td><td>LCD</td><td>Running total of bags produced (press reset to zero)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Startup sequence</h3>
+          <p class="desc">Follow these steps in order each time the machine is started from cold:</p>
+          <ol class="poly-steps">
+            <li><strong>Compressor check</strong> &mdash; verify compressor tank is drained, ball valve is open, and regulator is set to 80&ndash;90 PSI</li>
+            <li><strong>Connect air</strong> &mdash; attach air hose to the T-1000 quick-disconnect on the rear panel. Listen for the coupling to seat</li>
+            <li><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</li>
+            <li><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads at least 80 PSI</li>
+            <li><strong>Set film tension</strong> &mdash; adjust film tension dial to 4&ndash;5 for standard poly film</li>
+            <li><strong>Set seal temperature</strong> &mdash; adjust seal temp dial based on film type (see film roll label for spec)</li>
+            <li><strong>Set bag length</strong> &mdash; adjust bag length dial to match the product being bagged</li>
+            <li><strong>Load film roll</strong> &mdash; place film roll on unwind spindle, thread through rollers per the diagram inside the film guard</li>
+            <li><strong>Cycle mode</strong> &mdash; set cycle mode selector to Manual for setup, or Semi-auto for production</li>
+            <li><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</li>
+          </ol>
+
+          <div class="callout danger">
+            <strong>Do not operate without compressed air.</strong> Running the T-1000 below 60 PSI will cause incomplete seals, jammed film, and potential damage to the sealing mechanism. Always verify the pressure gauge before starting production.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Label Printing ═══ -->
+      <section id="label-printing">
+        <p class="section-label">Label printing</p>
+        <h2 class="section-title">Mac setup &amp; label printing workflow</h2>
+        <p class="section-sub">One-time Mac configuration to connect the Zebra printer, plus the daily workflow for printing UPC barcode labels from .docx source files.</p>
+
+        <div class="poly-sub">
+          <h3>Printer connection (one-time Mac setup)</h3>
+          <p class="desc">These steps only need to be done once per Mac workstation:</p>
+
+          <h4>Connect the Zebra printer</h4>
           <p class="desc">Connect the Zebra ZTC 110Xi4-203dpi printer via USB-B to USB-A cable (or USB-C adapter). The port is on the back of the printer.</p>
 
-          <h4>Create CUPS print queue (one-time)</h4>
-          <p class="desc">Run this once to register the printer queue on macOS. You only need to do this when first connecting the printer:</p>
+          <h4>Create CUPS print queue</h4>
+          <p class="desc">Register the printer queue on macOS:</p>
           <div class="cmd">lpadmin -p Zebra -E \
   -v "usb://Zebra%20Technologies/ZTC%20110Xi4-203dpi%20ZPL?serial=JJL100932" \
   -o printer-is-shared=false</div>
 
           <h4>Verify detection</h4>
-          <p class="desc">Confirm the printer is visible to the system:</p>
           <div class="cmd">lpinfo -v | grep -i zebra</div>
 
           <h4>Install dependencies</h4>
           <p class="desc">The Python label script requires <code>Pillow</code> for image processing:</p>
           <div class="cmd">pip3 install Pillow</div>
 
-          <h4>Critical: always use <code>-o raw</code></h4>
-          <div class="callout danger">Without <code>-o raw</code>, macOS converts the ZPL to a raster image, producing garbled output. Always pass <code>-o raw</code> when sending ZPL via <code>lp</code>.</div>
-          <div class="callout tip">The one-step script (<code>print_label.py</code>) handles <code>-o raw</code> automatically. You only need to worry about this when sending ZPL files directly.</div>
-        </div>
-      </section>
+          <div class="callout danger">Without <code>-o raw</code>, macOS converts the ZPL to a raster image, producing garbled output. Always pass <code>-o raw</code> when sending ZPL via <code>lp</code>. The one-step script handles this automatically.</div>
 
-      <!-- ═══ Usage ═══ -->
-      <section id="usage">
-        <p class="section-label">Daily operation</p>
-        <h2 class="section-title">Usage &amp; workflow</h2>
-        <p class="section-sub">Print UPC barcode labels from .docx source files using the one-step Python script or the manual ZPL workflow.</p>
-
-        <div class="poly-sub">
-          <h3>One-step automated script</h3>
+          <h3 style="margin-top:28px;">One-step label printing</h3>
           <p class="desc">From the <code>poly-bagger/</code> directory, run <code>print_label.py</code> to extract the image, generate ZPL, and print in one command:</p>
           <div class="cmd">python3 print_label.py "UPC Labels/AKV PLUM - PSA RETAIL.docx"</div>
           <p class="desc">If the label prints upside down, add <code>--rotate 180</code>:</p>
@@ -320,50 +355,6 @@
 
           <div class="callout danger">
             <strong>Never</strong> use <code>^PON</code> or <code>^FWN</code> in ZPL &mdash; these commands cause the printer to reject the job with a "not ready" error. Always rotate the image in Python instead.
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ Compressor ═══ -->
-      <section id="compressor">
-        <p class="section-label">Infrastructure</p>
-        <h2 class="section-title">Compressor &amp; air supply setup</h2>
-        <p class="section-sub">The T-1000 bagger uses compressed air for bag-opening jets and film sealing. Proper air supply is critical for consistent operation.</p>
-
-        <div class="poly-sub">
-          <h3>Compressor requirements</h3>
-          <table class="poly-tbl" style="max-width:480px;">
-            <thead><tr><th>Parameter</th><th>Requirement</th><th>Notes</th></tr></thead>
-            <tbody>
-              <tr><td>Minimum pressure</td><td>80 PSI</td><td>Regulated at the machine inlet</td></tr>
-              <tr><td>Recommended flow</td><td>6&ndash;10 CFM @ 90 PSI</td><td>Higher CFM reduces cycle-time lag</td></tr>
-              <tr><td>Air line fitting</td><td>1/4" NPT quick-disconnect</td><td>Standard industrial coupler</td></tr>
-              <tr><td>Air hose</td><td>3/8" ID minimum</td><td>1/4" ID causes pressure drop on long runs</td></tr>
-              <tr><td>Filter / dryer</td><td>Water separator + coalescing filter</td><td>Moisture causes seal failures</td></tr>
-            </tbody>
-          </table>
-
-          <h3 style="margin-top:28px;">Connection &amp; startup</h3>
-          <ol class="poly-steps">
-            <li>Ensure compressor tank is drained of condensate (open petcock until dry)</li>
-            <li>Verify regulator is set to 80&ndash;90 PSI at the machine inlet</li>
-            <li>Connect air hose to the T-1000 quick-disconnect on the rear panel</li>
-            <li>Open the compressor ball valve &mdash; listen for air flow</li>
-            <li>Cycle the bagger once manually to purge any moisture from the lines</li>
-            <li>Check the pressure gauge on the machine &mdash; should hold steady during a cycle</li>
-          </ol>
-
-          <h3 style="margin-top:28px;">Daily operator checks</h3>
-          <ol class="poly-steps">
-            <li>Drain compressor tank (moisture accumulates overnight)</li>
-            <li>Check regulator pressure &mdash; adjust if below 80 PSI at idle</li>
-            <li>Inspect air hose for kinks, cuts, or loose fittings</li>
-            <li>Listen for air leaks while machine is idle &mdash; hissing indicates a leak</li>
-            <li>Verify the water separator bowl isn't full &mdash; drain if needed</li>
-          </ol>
-
-          <div class="callout warn">
-            <strong>Low air pressure</strong> is the most common cause of poor seals, misaligned bags, and inconsistent label placement. Always check the regulator pressure first when troubleshooting bag quality issues.
           </div>
         </div>
       </section>
@@ -541,9 +532,8 @@
         </div>
 
         <div class="quick-links">
-          <a href="#setup"><i class="ti ti-settings"></i>Setup</a>
-          <a href="#usage"><i class="ti ti-printer"></i>Usage</a>
-          <a href="#compressor"><i class="ti ti-wind"></i>Compressor</a>
+          <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup</a>
+          <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
         </div>
