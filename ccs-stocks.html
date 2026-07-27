@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCS Stocks — Assembly Devices &amp; Pricing</title>
+  <meta name="description" content="CCS Stock assembly devices: manual bottom-stock jigs and digital precision equipment with pricing and build lists for each model.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --molten-lava: #780000;
+      --flag-red: #C1121F;
+      --papaya-whip: #FDF0D5;
+      --deep-space-blue: #003049;
+      --steel-blue: #669BBC;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f8f6f2;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #5a5a5a;
+      --color-border: #e5e0d8;
+      --sidebar-width: 220px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 68px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    nav {
+      background: var(--deep-space-blue); padding: 12px 0;
+      position: sticky; top: 0; z-index: 100; height: 56px;
+    }
+    nav .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 22px; font-weight: 800; color: var(--papaya-whip); letter-spacing: -0.5px; }
+    .logo span { color: var(--flag-red); }
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      color: rgba(253,240,213,.7); font-size: 13px; font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--papaya-whip); }
+    .nav-links a.active { color: var(--papaya-whip); border-bottom: 2px solid var(--steel-blue); }
+
+    .page-wrap { display: flex; max-width: 1360px; margin: 0 auto; padding: 0 24px; gap: 32px; }
+    .sidebar {
+      width: var(--sidebar-width); flex-shrink: 0;
+      position: sticky; top: 80px; align-self: start;
+      max-height: calc(100vh - 96px); overflow-y: auto;
+      padding: 16px 0; display: none;
+    }
+    .sidebar.visible { display: block; }
+    .sidebar nav a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 6px;
+      font-size: 13px; color: #5a5a5a; transition: all .15s;
+    }
+    .sidebar nav a:hover, .sidebar nav a.active {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+    }
+    .sidebar nav a i { font-size: 16px; width: 20px; color: var(--steel-blue); }
+    .sidebar .toc-group { margin-bottom: 16px; }
+    .sidebar .toc-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+      color: #999; padding: 0 12px; margin-bottom: 6px;
+    }
+    .main-content { flex: 1; min-width: 0; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--deep-space-blue) 0%, #1a3a4a 50%, var(--steel-blue) 100%);
+      color: var(--papaya-whip); padding: 48px 0 40px;
+    }
+    .hero .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .hero h1 {
+      font-size: clamp(28px,4vw,42px); font-weight: 800; line-height: 1.1; margin-bottom: 10px;
+    }
+    .hero h1 span { color: var(--steel-blue); }
+    .hero p { font-size: 15px; max-width: 640px; opacity: .85; }
+
+    section { padding: 40px 0; border-bottom: 1px solid var(--color-border); }
+    section:last-of-type { border-bottom: none; }
+    .section-label {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 1.8px;
+      font-weight: 600; color: var(--flag-red); margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(22px,2.5vw,30px); font-weight: 700; margin-bottom: 8px;
+      color: var(--deep-space-blue);
+    }
+    .section-sub {
+      font-size: 14px; color: var(--color-text-secondary); margin-bottom: 24px; max-width: 680px;
+    }
+
+    .device-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px,1fr)); gap: 20px; }
+    .device-card {
+      background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 12px;
+      overflow: hidden; transition: box-shadow .2s;
+    }
+    .device-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .device-head {
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .device-head.m annual { background: var(--papaya-whip); }
+    .device-head.digital { background: #e8edf0; }
+    .device-head i { font-size: 22px; }
+    .device-head h3 { font-size: 16px; font-weight: 600; }
+    .device-head .device-tag {
+      font-size: 10px; padding: 2px 10px; border-radius: 20px; margin-left: auto; font-weight: 500;
+    }
+    .device-tag.manual { background: var(--flag-red); color: #fff; }
+    .device-tag.digital { background: var(--deep-space-blue); color: var(--papaya-whip); }
+    .device-body { padding: 16px 20px 20px; }
+    .device-body .desc { font-size: 13px; color: #555; margin-bottom: 12px; line-height: 1.5; }
+
+    .build-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .build-tbl th {
+      text-align: left; padding: 6px 8px; background: var(--color-bg-soft);
+      font-weight: 600; font-size: 11px; color: #555; border-bottom: 2px solid var(--color-border);
+    }
+    .build-tbl td { padding: 6px 8px; border-bottom: 1px solid var(--color-border); }
+    .build-tbl tr:hover td { background: var(--papaya-whip); }
+    .build-tbl .qty { text-align: center; }
+    .build-tbl .price { text-align: right; font-variant-numeric: tabular-nums; }
+    .build-tbl .subtotal { text-align: right; font-weight: 600; }
+    .build-tbl .total-row td { border-top: 2px solid var(--deep-space-blue); font-weight: 700; color: var(--deep-space-blue); }
+
+    .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+    .callout.info { background: #e8edf0; border-left: 4px solid var(--steel-blue); color: #003049; }
+    .callout.warn { background: #fff3d6; border-left: 4px solid #ffc107; color: #856404; }
+
+    .quick-links {
+      display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0;
+    }
+    .quick-links a {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+      padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px; transition: background .2s;
+    }
+    .quick-links a:hover { background: #f0e0c0; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--steel-blue); font-weight: 500; margin-bottom: 16px;
+    }
+    .back-link:hover { color: var(--deep-space-blue); }
+
+    @media print {
+      nav, .sidebar, .hero, .quick-links, .back-link { display: none !important; }
+      .page-wrap { display: block; max-width: 100%; padding: 0; }
+      .main-content { max-width: 100%; }
+      section { break-inside: auto; padding: 12px 0; border: none; }
+      .device-card { break-inside: avoid; page-break-inside: avoid; }
+    }
+
+    @media (min-width: 1024px) { .sidebar.visible { display: block; } }
+    @media (max-width: 768px) {
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 11px; }
+      .hero { padding: 32px 0 28px; }
+      section { padding: 24px 0; }
+      .page-wrap { padding: 0 16px; gap: 0; }
+      .device-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">THRIL<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">QMS Wiki</a></li>
+        <li><a href="poly-bagger.html">Bagger</a></li>
+        <li><a href="ccs-stocks.html" class="active">CCS Stocks</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>CCS Stocks &mdash; assembly devices &amp; pricing<span>.</span></h1>
+      <p>Assembly device specifications and build-of-materials for CCS stock production. Covers 2 manual bottom-stock assembly stations and 2 digital precision devices with full pricing and parts lists.</p>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <aside class="sidebar visible">
+      <nav>
+        <div class="toc-group">
+          <div class="toc-label">Manual devices</div>
+          <a href="#manual-a"><i class="ti ti-tool"></i>Manual Jig A — bottom stock</a>
+          <a href="#manual-b"><i class="ti ti-tool"></i>Manual Jig B — bottom stock</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Digital devices</div>
+          <a href="#digital-a"><i class="ti ti-device-laptop"></i>Digital Station A</a>
+          <a href="#digital-b"><i class="ti ti-device-laptop"></i>Digital Station B</a>
+        </div>
+        <div class="toc-group">
+          <div class="toc-label">Back to</div>
+          <a href="index.html"><i class="ti ti-home"></i>QMS Wiki home</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-content">
+
+      <a href="index.html" class="back-link"><i class="ti ti-arrow-left"></i> Back to QMS Wiki</a>
+
+      <section id="overview">
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">CCS stock production line</h2>
+        <p class="section-sub">The CCS (Compact Chassis System) stock line uses 4 dedicated assembly devices &mdash; 2 manual jigs for bottom-stock assembly and 2 digital stations for precision work. Each device has a documented build-of-materials with pricing for re-procurement and maintenance planning.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;">
+          <div style="background:var(--papaya-whip);border-radius:10px;padding:16px;text-align:center;">
+            <div style="font-size:24px;font-weight:700;color:var(--flag-red);">2</div>
+            <div style="font-size:12px;color:#555;margin-top:2px;">Manual devices<br><small style="color:#888;">(bottom-stock jigs)</small></div>
+          </div>
+          <div style="background:#e8edf0;border-radius:10px;padding:16px;text-align:center;">
+            <div style="font-size:24px;font-weight:700;color:var(--deep-space-blue);">2</div>
+            <div style="font-size:12px;color:#555;margin-top:2px;">Digital devices<br><small style="color:#888;">(precision stations)</small></div>
+          </div>
+          <div style="background:var(--color-bg-soft);border:1px solid var(--color-border);border-radius:10px;padding:16px;text-align:center;">
+            <div style="font-size:24px;font-weight:700;color:var(--steel-blue);">4</div>
+            <div style="font-size:12px;color:#555;margin-top:2px;">Total stations<br><small style="color:#888;">line builds</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Manual Devices ═══ -->
+      <section id="manual-devices">
+        <p class="section-label">Manual assembly</p>
+        <h2 class="section-title">Manual bottom-stock devices</h2>
+        <p class="section-sub">These manual assembly jigs are purpose-built for bottom-stock assembly operations. Both stations use mechanical fixturing and operator-assisted processes — no CNC or digital control. Only jigs in this category are used for bottom-stock work.</p>
+
+        <div class="device-grid">
+
+          <!-- Manual A -->
+          <div class="device-card" id="manual-a">
+            <div class="device-head manual">
+              <i class="ti ti-tool" style="color:var(--flag-red);"></i>
+              <h3>Manual Jig A — bottom stock</h3>
+              <span class="device-tag manual">Manual</span>
+            </div>
+            <div class="device-body">
+              <p class="desc">Primary manual assembly jig for CCS bottom-stock production. Handles stock blank fixturing, inletting guide alignment, and buttpad drilling template. Operator feeds pre-cut stock blanks and completes all operations with hand tools guided by the jig.</p>
+              <h4 style="font-size:13px;font-weight:600;color:var(--molten-lava);margin-bottom:6px;">Build list &amp; pricing</h4>
+              <table class="build-tbl">
+                <thead>
+                  <tr><th>Part #</th><th>Description</th><th style="width:40px;" class="qty">Qty</th><th style="width:80px;" class="price">Unit price</th><th style="width:80px;" class="price">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>CCS-JA-001</td><td>Base plate — 6061 aluminum, machined</td><td class="qty">1</td><td class="price">$185.00</td><td class="price">$185.00</td></tr>
+                  <tr><td>CCS-JA-002</td><td>Stock blank clamp — quick-release vise</td><td class="qty">1</td><td class="price">$92.00</td><td class="price">$92.00</td></tr>
+                  <tr><td>CCS-JA-003</td><td>Inletting guide rail — hardened steel</td><td class="qty">2</td><td class="price">$44.00</td><td class="price">$88.00</td></tr>
+                  <tr><td>CCS-JA-004</td><td>Buttpad drilling template — laser-cut steel</td><td class="qty">1</td><td class="price">$67.00</td><td class="price">$67.00</td></tr>
+                  <tr><td>CCS-JA-005</td><td>Locating pins — O1 tool steel, ground</td><td class="qty">4</td><td class="price">$8.50</td><td class="price">$34.00</td></tr>
+                  <tr><td>CCS-JA-006</td><td>Hardware kit — bolts, washers, T-nuts</td><td class="qty">1</td><td class="price">$28.00</td><td class="price">$28.00</td></tr>
+                  <tr><td>CCS-JA-007</td><td>Operator guide — laminated setup card</td><td class="qty">1</td><td class="price">$12.00</td><td class="price">$12.00</td></tr>
+                  <tr class="total-row"><td colspan="4" style="text-align:right;">Jig A total</td><td class="price">$506.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Manual B -->
+          <div class="device-card" id="manual-b">
+            <div class="device-head manual">
+              <i class="ti ti-tool" style="color:var(--flag-red);"></i>
+              <h3>Manual Jig B — bottom stock</h3>
+              <span class="device-tag manual">Manual</span>
+            </div>
+            <div class="device-body">
+              <p class="desc">Secondary manual jig for bottom-stock finishing operations. Used for final sanding guide, sling-swivel hole drilling, and recoil-pad contouring. Complements Jig A for higher-volume bottom-stock production runs.</p>
+              <h4 style="font-size:13px;font-weight:600;color:var(--molten-lava);margin-bottom:6px;">Build list &amp; pricing</h4>
+              <table class="build-tbl">
+                <thead>
+                  <tr><th>Part #</th><th>Description</th><th style="width:40px;" class="qty">Qty</th><th style="width:80px;" class="price">Unit price</th><th style="width:80px;" class="price">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>CCS-JB-001</td><td>Base plate — 6061 aluminum, machined</td><td class="qty">1</td><td class="price">$175.00</td><td class="price">$175.00</td></tr>
+                  <tr><td>CCS-JB-002</td><td>Stock blank clamp — cam-action lever</td><td class="qty">1</td><td class="price">$105.00</td><td class="price">$105.00</td></tr>
+                  <tr><td>CCS-JB-003</td><td>Contour template set — 3 profiles (A/B/C)</td><td class="qty">1</td><td class="price">$135.00</td><td class="price">$135.00</td></tr>
+                  <tr><td>CCS-JB-004</td><td>Sling-swivel drill jig — spring-loaded bushing</td><td class="qty">1</td><td class="price">$58.00</td><td class="price">$58.00</td></tr>
+                  <tr><td>CCS-JB-005</td><td>Sanding block guide rails — nylon</td><td class="qty">2</td><td class="price">$22.00</td><td class="price">$44.00</td></tr>
+                  <tr><td>CCS-JB-006</td><td>Recoil-pad contour fixture — delrin</td><td class="qty">1</td><td class="price">$73.00</td><td class="price">$73.00</td></tr>
+                  <tr><td>CCS-JB-007</td><td>Hardware kit — bolts, washers, threaded inserts</td><td class="qty">1</td><td class="price">$31.00</td><td class="price">$31.00</td></tr>
+                  <tr class="total-row"><td colspan="4" style="text-align:right;">Jig B total</td><td class="price">$621.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="callout info">
+          <strong>Bottom-stock only:</strong> Only Manual Jig A and Manual Jig B are used for bottom-stock assembly. The digital devices below are used for precision measurement and CNC work on other stock components.
+        </div>
+      </section>
+
+      <!-- ═══ Digital Devices ═══ -->
+      <section id="digital-devices">
+        <p class="section-label">Digital precision</p>
+        <h2 class="section-title">Digital devices</h2>
+        <p class="section-sub">CNC and digital measurement stations used for precision work on CCS stock components. These devices are not used for bottom-stock assembly — they handle upper-stock profiling, serialized engraving, and QC verification.</p>
+
+        <div class="device-grid">
+
+          <!-- Digital A -->
+          <div class="device-card" id="digital-a">
+            <div class="device-head digital">
+              <i class="ti ti-device-laptop" style="color:var(--deep-space-blue);"></i>
+              <h3>Digital Station A</h3>
+              <span class="device-tag digital">Digital</span>
+            </div>
+            <div class="device-body">
+              <p class="desc">CNC profiling station for upper-stock contouring and cheek-riser cutouts. 3-axis CNC with vacuum fixturing and tool-length probe. Runs from DXF toolpath files generated from CCS stock CAD models.</p>
+              <h4 style="font-size:13px;font-weight:600;color:var(--molten-lava);margin-bottom:6px;">Build list &amp; pricing</h4>
+              <table class="build-tbl">
+                <thead>
+                  <tr><th>Part #</th><th>Description</th><th style="width:40px;" class="qty">Qty</th><th style="width:80px;" class="price">Unit price</th><th style="width:80px;" class="price">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>CCS-DA-001</td><td>CNC router — 3-axis, 24"×18" work area</td><td class="qty">1</td><td class="price">$3,850.00</td><td class="price">$3,850.00</td></tr>
+                  <tr><td>CCS-DA-002</td><td>Vacuum hold-down table — slotted phenolic</td><td class="qty">1</td><td class="price">$425.00</td><td class="price">$425.00</td></tr>
+                  <tr><td>CCS-DA-003</td><td>Vacuum pump — 4 CFM regenerative</td><td class="qty">1</td><td class="price">$310.00</td><td class="price">$310.00</td></tr>
+                  <tr><td>CCS-DA-004</td><td>Tool set — 1/8", 1/4", 3/8" end mills + ball mills</td><td class="qty">1</td><td class="price">$185.00</td><td class="price">$185.00</td></tr>
+                  <tr><td>CCS-DA-005</td><td>Tool-length probe — electronic touch-off</td><td class="qty">1</td><td class="price">$95.00</td><td class="price">$95.00</td></tr>
+                  <tr><td>CCS-DA-006</td><td>Dust collection hood — 4" port + hose</td><td class="qty">1</td><td class="price">$140.00</td><td class="price">$140.00</td></tr>
+                  <tr><td>CCS-DA-007</td><td>Controller + enclosure — Ethernet, USB, pendant</td><td class="qty">1</td><td class="price">$680.00</td><td class="price">$680.00</td></tr>
+                  <tr><td>CCS-DA-008</td><td>Operator workstation — PC + 24" monitor</td><td class="qty">1</td><td class="price">$1,200.00</td><td class="price">$1,200.00</td></tr>
+                  <tr class="total-row"><td colspan="4" style="text-align:right;">Digital A total</td><td class="price">$6,885.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Digital B -->
+          <div class="device-card" id="digital-b">
+            <div class="device-head digital">
+              <i class="ti ti-device-laptop" style="color:var(--deep-space-blue);"></i>
+              <h3>Digital Station B</h3>
+              <span class="device-tag digital">Digital</span>
+            </div>
+            <div class="device-body">
+              <p class="desc">Digital measurement and QC station. Laser scanning for dimensional verification, serialized engraving, and pass/fail logging. Generates inspection reports linked to each CCS stock serial number.</p>
+              <h4 style="font-size:13px;font-weight:600;color:var(--molten-lava);margin-bottom:6px;">Build list &amp; pricing</h4>
+              <table class="build-tbl">
+                <thead>
+                  <tr><th>Part #</th><th>Description</th><th style="width:40px;" class="qty">Qty</th><th style="width:80px;" class="price">Unit price</th><th style="width:80px;" class="price">Total</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>CCS-DB-001</td><td>Laser scanner — structured light, 0.001" accuracy</td><td class="qty">1</td><td class="price">$2,450.00</td><td class="price">$2,450.00</td></tr>
+                  <tr><td>CCS-DB-002</td><td>Rotary turntable — 12" dia., indexed</td><td class="qty">1</td><td class="price">$520.00</td><td class="price">$520.00</td></tr>
+                  <tr><td>CCS-DB-003</td><td>Fiber laser engraver — 30W, 4"×4" work area</td><td class="qty">1</td><td class="price">$3,100.00</td><td class="price">$3,100.00</td></tr>
+                  <tr><td>CCS-DB-004</td><td>Fume extractor — HEPA + carbon filter</td><td class="qty">1</td><td class="price">$380.00</td><td class="price">$380.00</td></tr>
+                  <tr><td>CCS-DB-005</td><td>QC workstation — PC + 27" monitor + barcode scanner</td><td class="qty">1</td><td class="price">$1,450.00</td><td class="price">$1,450.00</td></tr>
+                  <tr><td>CCS-DB-006</td><td>Inspection fixture — delrin, adjustable positioners</td><td class="qty">1</td><td class="price">$215.00</td><td class="price">$215.00</td></tr>
+                  <tr><td>CCS-DB-007</td><td>Calibration kit — certified gauge blocks + sphere</td><td class="qty">1</td><td class="price">$340.00</td><td class="price">$340.00</td></tr>
+                  <tr class="total-row"><td colspan="4" style="text-align:right;">Digital B total</td><td class="price">$8,455.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="summary">
+        <p class="section-label">Summary</p>
+        <h2 class="section-title">Line totals</h2>
+        <p class="section-sub">Combined build-of-materials pricing for all 4 CCS stock assembly devices.</p>
+
+        <table class="build-tbl" style="max-width:500px;">
+          <thead>
+            <tr><th>Device</th><th style="width:100px;" class="price">Category</th><th style="width:100px;" class="price">Total</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Manual Jig A — bottom stock</td><td class="price" style="color:var(--flag-red);">Manual</td><td class="price">$506.00</td></tr>
+            <tr><td>Manual Jig B — bottom stock</td><td class="price" style="color:var(--flag-red);">Manual</td><td class="price">$621.00</td></tr>
+            <tr><td>Digital Station A</td><td class="price" style="color:var(--deep-space-blue);">Digital</td><td class="price">$6,885.00</td></tr>
+            <tr><td>Digital Station B</td><td class="price" style="color:var(--deep-space-blue);">Digital</td><td class="price">$8,455.00</td></tr>
+            <tr class="total-row"><td colspan="2" style="text-align:right;">Grand total (all devices)</td><td class="price">$16,467.00</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout warn">
+          <strong>Pricing notes:</strong> Prices are BOM costs for device construction and do not include labor, shipping, or taxes. Update pricing as supplier contracts change. See procurement records for latest supplier quotes.
+        </div>
+
+        <div class="quick-links">
+          <a href="index.html"><i class="ti ti-home"></i>QMS Wiki home</a>
+          <a href="poly-bagger.html"><i class="ti ti-printer"></i>Poly bagger guide</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer style="background:#001a2b;color:rgba(253,240,213,.55);padding:28px 0;font-size:13px;text-align:center;">
+    <div class="container" style="max-width:1120px;margin:0 auto;padding:0 24px;">
+      <p>&copy; 2026 Thril. <a href="index.html" style="color:var(--steel-blue);">Back to QMS Wiki</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const tocLinks = document.querySelectorAll('.sidebar nav a[href^="#"]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const id = e.target.id;
+          tocLinks.forEach(l => { if (l.getAttribute('href') === '#' + id) l.classList.add('active'); });
+        }
+      });
+    }, { rootMargin: '-100px 0 -60% 0' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
