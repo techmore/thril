@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2/dist/tabler-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <style>
     :root {
       --molten-lava: #780000;
@@ -146,6 +147,35 @@
     }
     .qr-print-link { font-size: 12px; color: var(--flag-red); font-weight: 500; cursor: pointer; }
 
+    .qr-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px; margin: 24px 0;
+    }
+    .qr-card {
+      background: #fff; border: 1px solid var(--color-border); border-radius: 12px;
+      padding: 16px; text-align: center; break-inside: avoid;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .qr-card h4 { font-size: 14px; font-weight: 600; color: var(--deep-space-blue); margin-bottom: 4px; }
+    .qr-card p { font-size: 11px; color: #888; margin-bottom: 10px; word-break: break-all; }
+    .qr-card img { width: 160px; height: 160px; border-radius: 8px; margin-bottom: 10px; }
+    .qr-card-actions { display: flex; gap: 8px; justify-content: center; }
+    .qr-card-actions a {
+      font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+    .qr-card-actions .btn-download { background: var(--deep-space-blue); color: #fff; }
+    .qr-card-actions .btn-print { background: var(--papaya-whip); color: var(--deep-space-blue); }
+    .qr-print-all { text-align: center; margin: 8px 0 24px; }
+    .qr-print-all button {
+      background: var(--flag-red); color: #fff; border: none; font-size: 13px; font-weight: 600;
+      padding: 10px 22px; border-radius: 8px; cursor: pointer; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .qr-print-all button:hover { background: var(--molten-lava); }
+
+    .qr-all-print-sheet { display: none; }
+
     .quick-links {
       display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0;
     }
@@ -172,6 +202,10 @@
       .callout { border: 1px solid #999; }
       .cmd { border: 1px solid #ccc; white-space: pre-wrap; word-break: break-all; }
       .poly-tbl td, .poly-tbl th { border: 1px solid #999; }
+      .qr-all-print-sheet { display: block; }
+      body.printing-qr nav, body.printing-qr .sidebar, body.printing-qr .hero,
+      body.printing-qr .main-content, body.printing-qr footer { display: none !important; }
+      .qr-all-print-sheet .qr-card { border: 1px solid #000; }
     }
 
     @media (min-width: 1024px) { .sidebar.visible { display: block; } }
@@ -202,7 +236,7 @@
   <header class="hero">
     <div class="container">
       <h1>Poly Bagger &mdash; machine setup &amp; label printing<span>.</span></h1>
-      <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor engagement, operator certification checklist, label printing workflow, rebagging procedure, and a dedicated troubleshooting section for label placement variance.</p>
+      <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor setup, film change, end-of-day shutdown, operator certification checklist, label printing workflow, rebagging procedure, and dedicated troubleshooting for seals and label placement.</p>
     </div>
   </header>
 
@@ -212,11 +246,15 @@
         <div class="toc-group">
           <div class="toc-label">Guide</div>
           <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup &amp; startup</a>
+          <a href="#compressor-setup"><i class="ti ti-wind"></i>Compressor setup</a>
+          <a href="#change-bag"><i class="ti ti-replace"></i>Change bag &amp; film roll</a>
+          <a href="#end-of-day"><i class="ti ti-sunset"></i>End of day shutdown</a>
           <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
           <a href="#certification"><i class="ti ti-certificate"></i>Operator certification</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
-          <a href="#qr-print"><i class="ti ti-qrcode"></i>QR code &amp; print</a>
+          <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting</a>
+          <a href="#qr-codes"><i class="ti ti-qrcode"></i>Section QR codes</a>
         </div>
         <div class="toc-group">
           <div class="toc-label">Resources</div>
@@ -275,6 +313,125 @@
 
           <div class="callout danger">
             <strong>Do not operate without compressed air.</strong> Running the T-1000 below 60 PSI will cause incomplete seals, jammed film, and potential damage to the sealing mechanism. Always verify the pressure gauge before starting production.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Compressor Setup ═══ -->
+      <section id="compressor-setup">
+        <p class="section-label">Air supply</p>
+        <h2 class="section-title">Compressor setup</h2>
+        <p class="section-sub">The T-1000 runs on compressed air. Correct compressor configuration protects the sealer and keeps seal quality consistent. Set up the air supply before every startup.</p>
+
+        <div class="poly-sub">
+          <h3>Required air supply</h3>
+          <table class="poly-tbl" style="max-width:520px;">
+            <thead><tr><th>Parameter</th><th>Setting</th></tr></thead>
+            <tbody>
+              <tr><td>Operating pressure</td><td>80&ndash;90 PSI at the machine inlet</td></tr>
+              <tr><td>Minimum safe pressure</td><td>60 PSI &mdash; never run below this</td></tr>
+              <tr><td>Regulator</td><td>Compressor side, set to 85 PSI</td></tr>
+              <tr><td>Ball valve</td><td>Open during operation, closed at shutdown</td></tr>
+              <tr><td>Hose connection</td><td>Quick-disconnect on the T-1000 rear panel</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Compressor startup sequence</h3>
+          <ol class="poly-steps">
+            <li><strong>Drain the tank</strong> &mdash; open the compressor drain valve until water stops flowing, then close it</li>
+            <li><strong>Open the ball valve</strong> &mdash; on the compressor outlet before connecting air</li>
+            <li><strong>Set the regulator</strong> &mdash; adjust to 85 PSI at the compressor side</li>
+            <li><strong>Connect the air hose</strong> &mdash; attach to the T-1000 quick-disconnect on the rear panel; listen for the coupling to seat</li>
+            <li><strong>Verify pressure</strong> &mdash; check the T-1000 gauge reads at least 80 PSI before starting production</li>
+            <li><strong>Check the water separator</strong> &mdash; if present, drain any accumulated moisture from the filter bowl</li>
+          </ol>
+
+          <h3 style="margin-top:28px;">Daily compressor checks</h3>
+          <table class="poly-tbl" style="max-width:560px;">
+            <thead><tr><th>Check</th><th>Frequency</th></tr></thead>
+            <tbody>
+              <tr><td>Drain water from the compressor tank</td><td>Start of every shift</td></tr>
+              <tr><td>Verify regulator reads 80&ndash;90 PSI</td><td>Every startup</td></tr>
+              <tr><td>Inspect air hose for cracks or loose fittings</td><td>Daily</td></tr>
+              <tr><td>Drain the water separator bowl</td><td>Daily, or when moisture is visible</td></tr>
+              <tr><td>Run a test seal and inspect quality</td><td>Every startup</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout tip">
+            <strong>Cold startup:</strong> Compressors build more water in cold weather. If the machine has been idle overnight, always drain the tank first &mdash; moisture in the line drops effective pressure and weakens seals.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Change Bag / Film Roll ═══ -->
+      <section id="change-bag">
+        <p class="section-label">Production</p>
+        <h2 class="section-title">Change bag &amp; film roll</h2>
+        <p class="section-sub">Change the film roll when the core becomes visible or when switching to a different film gauge. A clean changeover prevents misaligned labels and weak seals.</p>
+
+        <div class="poly-sub">
+          <h3>When to change the film roll</h3>
+          <ul class="poly-steps">
+            <li>Film core becomes visible on the unwind spindle</li>
+            <li>Switching to a different film width or gauge</li>
+            <li>Film is creased, torn, or misfeeding</li>
+            <li>Seal quality degrades on a nearly-empty roll</li>
+          </ul>
+
+          <h3 style="margin-top:28px;">Changeover steps</h3>
+          <ol class="poly-steps">
+            <li><strong>Stop the machine</strong> &mdash; complete the pending cycle, then press E-stop</li>
+            <li><strong>Open the film guard</strong> &mdash; release the latch and lift the guard</li>
+            <li><strong>Remove the empty core</strong> &mdash; slide it off the unwind spindle and discard</li>
+            <li><strong>Load the new roll</strong> &mdash; slide it onto the unwind spindle, matching the film direction shown in the threading diagram inside the guard</li>
+            <li><strong>Thread the film</strong> &mdash; route film through the rollers exactly per the diagram; keep tension even and avoid wrinkles</li>
+            <li><strong>Close the film guard</strong> &mdash; ensure it seats fully before running</li>
+            <li><strong>Reset tension</strong> &mdash; adjust film tension dial to 4&ndash;5 for standard poly film</li>
+            <li><strong>Test cycle</strong> &mdash; run one test bag, verify seal quality and bag length, then resume production</li>
+          </ol>
+
+          <h3 style="margin-top:28px;">After every changeover</h3>
+          <ul class="poly-steps">
+            <li>Re-bag any products bagged during the transition (see <a href="#rebagging" style="color:var(--steel-blue);text-decoration:underline;">Rebagging procedure</a>)</li>
+            <li>Confirm the label prints upright and on-center on the first new bag</li>
+            <li>Log the roll change and film type in the production log</li>
+          </ul>
+
+          <div class="callout warn">
+            <strong>Film direction matters.</strong> Loading the film backwards or mis-threading a roller is the #1 cause of jams after a changeover. When in doubt, refer to the threading diagram inside the film guard.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ End of Day ═══ -->
+      <section id="end-of-day">
+        <p class="section-label">Shutdown</p>
+        <h2 class="section-title">End of day shutdown</h2>
+        <p class="section-sub">Complete shutdown keeps the sealer bar, film path, and compressor ready for the next startup. Perform these steps at the end of every shift.</p>
+
+        <div class="poly-sub">
+          <h3>Shutdown sequence</h3>
+          <ol class="poly-steps">
+            <li><strong>Complete the pending cycle</strong> &mdash; let the machine finish the current bag</li>
+            <li><strong>Press E-stop</strong> &mdash; lock the machine out of cycling</li>
+            <li><strong>Close the compressor ball valve</strong> &mdash; isolates air at the source</li>
+            <li><strong>Power off the T-1000</strong> &mdash; flip the main power switch on the back panel to OFF</li>
+            <li><strong>Drain the compressor tank</strong> &mdash; open the drain valve until water stops flowing; leave it slightly open only if recommended by the compressor manual, otherwise close it</li>
+            <li><strong>Clean the sealer bar</strong> &mdash; once cool, wipe residue off the sealing bar with a lint-free cloth</li>
+            <li><strong>Log the shift</strong> &mdash; record bag count, film roll remaining, and any issues in the production log</li>
+          </ol>
+
+          <h3 style="margin-top:28px;">Weekly deeper closeout</h3>
+          <ul class="poly-steps">
+            <li>Inspect the film path for debris, dust, or stray film fragments</li>
+            <li>Check the water separator filter for buildup and replace if needed</li>
+            <li>Verify the compressor intake filter is clean</li>
+            <li>Wipe down the control panel and counter display</li>
+          </ul>
+
+          <div class="callout info">
+            <strong>Extended idle (30+ days):</strong> If the machine will sit idle, remove the film roll and store it sealed in a dry area &mdash; poly film degrades with heat and light. Operators must recertify before first use after a long idle (see <a href="#certification" style="color:var(--steel-blue);text-decoration:underline;">Operator certification</a>).
           </div>
         </div>
       </section>
@@ -583,11 +740,90 @@
         </div>
       </section>
 
-      <!-- ═══ QR Code ═══ -->
-      <section id="qr-print">
+      <!-- ═══ Seal Troubleshooting ═══ -->
+      <section id="seal-troubleshooting">
+        <p class="section-label">Support</p>
+        <h2 class="section-title">Seal troubleshooting</h2>
+        <p class="section-sub">Poor or failed seals are usually caused by temperature, air pressure, film tension, or a dirty sealing bar. Use this guide to isolate and fix seal defects quickly.</p>
+
+        <div class="poly-sub">
+          <h3>Seal defect: root causes &amp; fixes</h3>
+          <table class="poly-tbl">
+            <thead>
+              <tr><th style="width:34%;">Symptom</th><th style="width:20%;">Root cause</th><th>Fix</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Weak seal that peels open easily</td>
+                <td>Seal temperature too low</td>
+                <td>Increase seal temp dial in small increments; run test seals until the film fuses</td>
+              </tr>
+              <tr>
+                <td>Seal melted through / holes in film</td>
+                <td>Seal temperature too high</td>
+                <td>Decrease seal temp dial; check the film roll label for the recommended temperature</td>
+              </tr>
+              <tr>
+                <td>Incomplete seal (partial closure)</td>
+                <td>Low air pressure</td>
+                <td>Verify 80+ PSI on the gauge; drain compressor, check hose and ball valve</td>
+              </tr>
+              <tr>
+                <td>Seal skips or is uneven along the bar</td>
+                <td>Residue or film contamination on sealing bar</td>
+                <td>Stop machine, clean sealing bar with lint-free cloth once cool</td>
+              </tr>
+              <tr>
+                <td>Seal not centered / crooked</td>
+                <td>Film tension uneven</td>
+                <td>Re-thread film per diagram, adjust tension dial 4&ndash;5, keep tension even</td>
+              </tr>
+              <tr>
+                <td>Film sticks to sealing bar</td>
+                <td>Bar too hot or coated with residue</td>
+                <td>Lower temp, clean bar; consider non-stick coating if recurring</td>
+              </tr>
+              <tr>
+                <td>Seal quality varies between bags</td>
+                <td>Compressor cycling / pressure fluctuation</td>
+                <td>Verify regulator holds 80&ndash;90 PSI; check for leaks in hose line</td>
+              </tr>
+              <tr>
+                <td>Bag won't release from bar</td>
+                <td>Overheated or dirty bar</td>
+                <td>Cool down, clean bar, reduce seal temperature</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="margin-top:28px;">Seal quality check</h3>
+          <p class="desc">Before production and after any temperature, pressure, or film change, verify seals with a <strong>tug test</strong>: grip both sides of the sealed edge and pull firmly. The seal must hold with no separation or pinholes.</p>
+
+          <h3 style="margin-top:28px;">Seal temperature reference</h3>
+          <table class="poly-tbl" style="max-width:420px;">
+            <thead><tr><th>Film type</th><th>Typical seal temp</th></tr></thead>
+            <tbody>
+              <tr><td>Standard LDPE poly</td><td>Medium (mid dial range)</td></tr>
+              <tr><td>Thin film / lightweight</td><td>Low&ndash;medium</td></tr>
+              <tr><td>Heavy gauge / thick</td><td>Medium&ndash;high</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout warn">
+            <strong>Always trust the test, not the dial.</strong> Dial positions vary with ambient temperature, film lot, and bar cleanliness. Set the dial near the reference range, then tune with test seals until the tug test passes.
+          </div>
+
+          <div class="callout danger">
+            <strong>Never ship a bag that fails the tug test.</strong> Re-bag the product (see <a href="#rebagging" style="color:var(--steel-blue);text-decoration:underline;">Rebagging procedure</a>) and correct the seal issue before resuming production.
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ QR Codes ═══ -->
+      <section id="qr-codes">
         <p class="section-label">Quick reference</p>
-        <h2 class="section-title">QR code &amp; printable guide</h2>
-        <p class="section-sub">Scan the QR code with your phone to open this guide, or use the print button to post a reference copy at the bagger station.</p>
+        <h2 class="section-title">Section QR codes &mdash; downloadable &amp; printable</h2>
+        <p class="section-sub">Every section has its own QR code so an operator can jump straight to the right part of this guide from their phone. Download each QR as a PNG to post at the machine, or print all of them at once on a single sheet.</p>
 
         <div class="qr-block">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://techmore.github.io/thril/poly-bagger.html"
@@ -595,28 +831,35 @@
                width="180" height="180"
                crossorigin="anonymous">
           <div class="qr-text">
-            <h4>Poly Bagger guide &mdash; on your phone</h4>
-            <p>Scan this QR code to open the full guide on your mobile device. Post this at the bagger station for quick access to setup, rebagging, and troubleshooting steps.</p>
+            <h4>Full guide &mdash; on your phone</h4>
+            <p>Scan this QR code to open the complete guide on your mobile device. Post this at the bagger station.</p>
             <div class="qr-url">https://techmore.github.io/thril/poly-bagger.html</div>
-            <p style="margin-top:8px;font-size:12px;color:#999;">
-              <a href="javascript:window.print()" class="qr-print-link"><i class="ti ti-printer"></i> Print this page</a>
-              &nbsp;&middot;&nbsp;
-              <a href="index.html" class="qr-print-link"><i class="ti ti-home"></i> Back to QMS Wiki</a>
-            </p>
           </div>
+        </div>
+
+        <div class="qr-grid" id="qr-grid"></div>
+
+        <div class="qr-print-all">
+          <button onclick="printAllQr()"><i class="ti ti-printer"></i> Print all QR codes</button>
         </div>
 
         <div class="quick-links">
           <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup</a>
+          <a href="#compressor-setup"><i class="ti ti-wind"></i>Compressor setup</a>
+          <a href="#change-bag"><i class="ti ti-replace"></i>Change bag</a>
+          <a href="#end-of-day"><i class="ti ti-sunset"></i>End of day</a>
           <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
           <a href="#certification"><i class="ti ti-certificate"></i>Certification</a>
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
+          <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting</a>
         </div>
       </section>
 
     </div>
   </div>
+
+  <div class="qr-all-print-sheet" id="qr-print-sheet"></div>
 
   <footer style="background:#001a2b;color:rgba(253,240,213,.55);padding:28px 0;font-size:13px;text-align:center;">
     <div class="container" style="max-width:1120px;margin:0 auto;padding:0 24px;">
@@ -637,6 +880,88 @@
       });
     }, { rootMargin: '-100px 0 -60% 0' });
     document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+
+    // ── Per-section QR codes ─────────────────────────────
+    const qrSections = [
+      { anchor: 'machine-setup', name: 'Machine setup & startup' },
+      { anchor: 'compressor-setup', name: 'Compressor setup' },
+      { anchor: 'change-bag', name: 'Change bag & film roll' },
+      { anchor: 'end-of-day', name: 'End of day shutdown' },
+      { anchor: 'label-printing', name: 'Label printing' },
+      { anchor: 'certification', name: 'Operator certification' },
+      { anchor: 'rebagging', name: 'Rebagging procedure' },
+      { anchor: 'troubleshooting', name: 'Troubleshooting' },
+      { anchor: 'seal-troubleshooting', name: 'Seal troubleshooting' },
+    ];
+
+    function pageUrl(anchor) {
+      return location.origin + location.pathname + (anchor ? '#' + anchor : '');
+    }
+
+    function qrDataUrl(text, size) {
+      const qr = qrcode(0, 'M');
+      qr.addData(text);
+      qr.make();
+      return qr.createDataURL(size || 8, 4);
+    }
+
+    function buildQrCard(section) {
+      const url = pageUrl(section.anchor);
+      const dataUrl = qrDataUrl(url);
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+      card.innerHTML = `
+        <h4>${section.name}</h4>
+        <p>${url}</p>
+        <img src="${dataUrl}" alt="QR code for ${section.name}">
+        <div class="qr-card-actions">
+          <a class="btn-download" onclick="downloadQr('${section.anchor}','${section.name}')"><i class="ti ti-download"></i>PNG</a>
+          <a class="btn-print" onclick="printQr('${section.anchor}','${section.name}')"><i class="ti ti-printer"></i>Print</a>
+        </div>`;
+      return card;
+    }
+
+    function downloadQr(anchor, name) {
+      const url = pageUrl(anchor);
+      const dataUrl = qrDataUrl(url, 12);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'thril-poly-bagger-' + anchor + '-qr.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function printQr(anchor, name) {
+      const url = pageUrl(anchor);
+      const dataUrl = qrDataUrl(url, 16);
+      const win = window.open('', '_blank', 'width=420,height=520');
+      win.document.write(`
+        <html><head><title>${name} QR</title></head>
+        <body style="text-align:center;font-family:Inter,Arial,sans-serif;padding:24px;">
+          <h2 style="font-size:18px;margin-bottom:4px;">${name}</h2>
+          <p style="font-size:12px;color:#555;word-break:break-all;">${url}</p>
+          <img src="${dataUrl}" style="width:300px;height:300px;margin-top:12px;">
+        </body></html>`);
+      win.document.close();
+      win.focus();
+      win.onload = () => { win.print(); };
+      setTimeout(() => win.print(), 300);
+    }
+
+    function printAllQr() {
+      const sheet = document.getElementById('qr-print-sheet');
+      sheet.innerHTML = '';
+      qrSections.forEach(s => sheet.appendChild(buildQrCard(s)));
+      document.body.classList.add('printing-qr');
+      setTimeout(() => {
+        window.print();
+        document.body.classList.remove('printing-qr');
+      }, 100);
+    }
+
+    document.getElementById('qr-grid').innerHTML = '';
+    qrSections.forEach(s => document.getElementById('qr-grid').appendChild(buildQrCard(s)));
   </script>
 </body>
 </html>
