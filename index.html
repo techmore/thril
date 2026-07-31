@@ -35,11 +35,11 @@
     .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
     /* ── Nav ── */
-    nav {
+    body > nav {
       background: var(--deep-space-blue); padding: 12px 0;
       position: sticky; top: 0; z-index: 100; height: 56px;
     }
-    nav .container { display: flex; align-items: center; justify-content: space-between; }
+    body > nav .container { display: flex; align-items: center; justify-content: space-between; }
     .logo { font-size: 22px; font-weight: 800; color: var(--papaya-whip); letter-spacing: -0.5px; }
     .logo span { color: var(--flag-red); }
     .nav-links { display: flex; gap: 24px; list-style: none; }
@@ -1437,7 +1437,7 @@
           tocLinks.forEach(l => { if (l.getAttribute('href') === '#' + id) l.classList.add('active'); });
         }
       });
-    }, { rootMargin: '-100px 0 -60% 0' });
+    }, { rootMargin: '-100px 0px -60% 0px' });
     document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
   </script>
 </body>
