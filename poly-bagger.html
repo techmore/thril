@@ -170,9 +170,13 @@
     .qr-print-all button {
       background: var(--flag-red); color: #fff; border: none; font-size: 13px; font-weight: 600;
       padding: 10px 22px; border-radius: 8px; cursor: pointer; font-family: inherit;
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 6px; margin: 4px;
     }
     .qr-print-all button:hover { background: var(--molten-lava); }
+    .qr-print-all button.btn-download-all {
+      background: var(--deep-space-blue);
+    }
+    .qr-print-all button.btn-download-all:hover { background: #004062; }
 
     .qr-all-print-sheet { display: none; }
 
@@ -840,6 +844,7 @@
         <div class="qr-grid" id="qr-grid"></div>
 
         <div class="qr-print-all">
+          <button class="btn-download-all" onclick="downloadAllQr()"><i class="ti ti-download"></i> Download all QR codes</button>
           <button onclick="printAllQr()"><i class="ti ti-printer"></i> Print all QR codes</button>
         </div>
 
@@ -958,6 +963,54 @@
         window.print();
         document.body.classList.remove('printing-qr');
       }, 100);
+    }
+
+    function downloadAllQr() {
+      const cols = 3;
+      const rows = Math.ceil(qrSections.length / cols);
+      const cellW = 320, cellH = 400;
+      const pad = 16;
+      const canvas = document.createElement('canvas');
+      canvas.width = cols * cellW;
+      canvas.height = rows * cellH;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      qrSections.forEach((s, i) => {
+        const col = i % cols, row = Math.floor(i / cols);
+        const x = col * cellW, y = row * cellH;
+        const url = pageUrl(s.anchor);
+
+        ctx.strokeStyle = '#e5e0d8';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + pad / 2, y + pad / 2, cellW - pad, cellH - pad);
+
+        ctx.fillStyle = '#003049';
+        ctx.font = '700 20px Inter, Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(s.name, x + cellW / 2, y + 40);
+
+        const img = new Image();
+        img.onload = () => {
+          const size = 240;
+          ctx.drawImage(img, x + (cellW - size) / 2, y + 62, size, size);
+          ctx.fillStyle = '#669BBC';
+          ctx.font = '500 11px "SF Mono", Consolas, monospace';
+          const label = url.length > 46 ? url.replace('https://', '').slice(0, 46) + '\u2026' : url.replace('https://', '');
+          ctx.fillText(label, x + cellW / 2, y + cellH - 30);
+        };
+        img.src = qrDataUrl(url, 12);
+      });
+
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = 'thril-poly-bagger-qr-codes.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, 300);
     }
 
     document.getElementById('qr-grid').innerHTML = '';
