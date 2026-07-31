@@ -965,7 +965,16 @@
       }, 100);
     }
 
-    function downloadAllQr() {
+    const qrImageCache = {};
+    function preloadQrImages() {
+      qrSections.forEach(s => {
+        const img = new Image();
+        img.src = qrDataUrl(pageUrl(s.anchor), 12);
+        qrImageCache[s.anchor] = img;
+      });
+    }
+
+    function buildQrSheetCanvas() {
       const cols = 3;
       const rows = Math.ceil(qrSections.length / cols);
       const cellW = 320, cellH = 400;
@@ -991,30 +1000,44 @@
         ctx.textAlign = 'center';
         ctx.fillText(s.name, x + cellW / 2, y + 40);
 
-        const img = new Image();
-        img.onload = () => {
-          const size = 240;
-          ctx.drawImage(img, x + (cellW - size) / 2, y + 62, size, size);
-          ctx.fillStyle = '#669BBC';
-          ctx.font = '500 11px "SF Mono", Consolas, monospace';
-          const label = url.length > 46 ? url.replace('https://', '').slice(0, 46) + '\u2026' : url.replace('https://', '');
-          ctx.fillText(label, x + cellW / 2, y + cellH - 30);
-        };
-        img.src = qrDataUrl(url, 12);
-      });
+        const size = 240;
+        ctx.drawImage(qrImageCache[s.anchor], x + (cellW - size) / 2, y + 62, size, size);
 
-      setTimeout(() => {
+        ctx.fillStyle = '#669BBC';
+        ctx.font = '500 11px "SF Mono", Consolas, monospace';
+        const label = url.length > 46 ? url.replace('https://', '').slice(0, 46) + '\u2026' : url.replace('https://', '');
+        ctx.fillText(label, x + cellW / 2, y + cellH - 30);
+      });
+      return canvas;
+    }
+
+    function downloadAllQr() {
+      const canvas = buildQrSheetCanvas();
+      if (canvas.toBlob) {
+        canvas.toBlob(blob => {
+          if (!blob) return;
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = 'thril-poly-bagger-qr-codes.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
+        }, 'image/png');
+      } else {
         const a = document.createElement('a');
         a.href = canvas.toDataURL('image/png');
         a.download = 'thril-poly-bagger-qr-codes.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      }, 300);
+      }
     }
 
     document.getElementById('qr-grid').innerHTML = '';
     qrSections.forEach(s => document.getElementById('qr-grid').appendChild(buildQrCard(s)));
+    preloadQrImages();
   </script>
 </body>
 </html>
