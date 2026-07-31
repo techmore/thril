@@ -126,6 +126,57 @@
     .poly-steps { font-size: 13px; color: #444; margin: 6px 0 6px 18px; }
     .poly-steps li { margin-bottom: 4px; }
 
+    .checklist {
+      border: 1px solid var(--color-border); border-radius: 12px;
+      background: #fff; padding: 8px 16px; margin: 12px 0 20px;
+    }
+    .checklist-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0 10px; border-bottom: 1px dashed var(--color-border);
+    }
+    .checklist-head strong { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--deep-space-blue); }
+    .checklist-track {
+      flex: 1; height: 8px; background: var(--color-bg-soft);
+      border-radius: 4px; overflow: hidden;
+    }
+    .checklist-fill {
+      display: block; height: 100%; width: 0; border-radius: 4px;
+      background: linear-gradient(90deg, var(--steel-blue), var(--flag-red));
+      transition: width .3s ease;
+    }
+    .checklist-count { font-size: 12px; font-weight: 700; color: var(--steel-blue); min-width: 42px; text-align: right; }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 2px; cursor: pointer;
+      border-bottom: 1px solid var(--color-bg-soft);
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input { display: none; }
+    .check-box {
+      flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px;
+      border: 2px solid var(--steel-blue); border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .check-box i { font-size: 14px; color: #fff; opacity: 0; transform: scale(.5); transition: all .15s; }
+    .check-item input:checked + .check-box { background: var(--steel-blue); border-color: var(--steel-blue); }
+    .check-item input:checked + .check-box i { opacity: 1; transform: scale(1); }
+    .check-item .check-text { font-size: 13px; color: #444; line-height: 1.5; }
+    .check-item input:checked ~ .check-text { text-decoration: line-through; color: #9a9a9a; }
+    .check-item input:checked ~ .check-text strong { color: #7a7a7a; }
+    .checklist-done {
+      display: none; align-items: center; gap: 8px;
+      margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+      background: #e1f5ee; border-left: 4px solid #28a745; color: #1d7a5a; font-size: 13px; font-weight: 500;
+    }
+    .checklist.done .checklist-done { display: flex; }
+    .checklist-reset {
+      margin-top: 10px; background: none; border: 1px solid var(--color-border);
+      color: #888; font-family: inherit; font-size: 12px; font-weight: 500;
+      padding: 5px 12px; border-radius: 6px; cursor: pointer;
+    }
+    .checklist-reset:hover { color: var(--flag-red); border-color: var(--flag-red); }
+
     .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
     .callout.danger { background: #fde8ea; border-left: 4px solid var(--flag-red); color: #721c24; }
     .callout.warn { background: #fff3d6; border-left: 4px solid #ffc107; color: #856404; }
@@ -308,20 +359,27 @@
 
         <div class="poly-sub">
           <h3>Startup sequence</h3>
-          <p class="desc">Follow these steps in order each time the machine is started from cold:</p>
-          <ol class="poly-steps">
-            <li><strong>Compressor check</strong> &mdash; verify compressor tank is drained, ball valve is open, and regulator is set to 80&ndash;90 PSI</li>
-            <li><strong>Connect air</strong> &mdash; attach air hose to the T-1000 quick-disconnect on the rear panel. Listen for the coupling to seat</li>
-            <li><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</li>
-            <li><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads at least 80 PSI</li>
-            <li><strong>Check the disengage lever</strong> &mdash; confirm the lever on the front-left of the machine is in the engaged (closed) position before running. If it is open, the machine shows <strong>Bagger Error</strong> on a red screen (see <a href="#seal-frame-error" style="color:var(--steel-blue);text-decoration:underline;">Seal Frame Open error below</a>)</li>
-            <li><strong>Set film tension</strong> &mdash; adjust film tension dial to 4&ndash;5 for standard poly film</li>
-            <li><strong>Set seal temperature</strong> &mdash; set the seal temp dial to <strong>380 &deg;F</strong> and seal dwell time to <strong>0.3 seconds</strong></li>
-            <li><strong>Set bag length</strong> &mdash; adjust bag length dial to match the product being bagged</li>
-            <li><strong>Load film roll</strong> &mdash; place film roll on unwind spindle, thread through rollers per the diagram inside the film guard. Spare bags and film are stored in the storage area &mdash; grab a fresh roll or pre-made bags from there when needed</li>
-            <li><strong>Cycle mode</strong> &mdash; set cycle mode selector to Manual for setup, or Semi-auto for production</li>
-            <li><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</li>
-          </ol>
+          <p class="desc">Follow these steps in order each time the machine is started from cold. Tap each box as you complete the step:</p>
+          <div class="checklist">
+            <div class="checklist-head">
+              <strong>Startup checklist</strong>
+              <div class="checklist-track"><span class="checklist-fill"></span></div>
+              <span class="checklist-count">0/11</span>
+            </div>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Compressor check</strong> &mdash; verify compressor tank is drained, ball valve is open, and regulator is set to 80&ndash;90 PSI</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Connect air</strong> &mdash; attach air hose to the T-1000 quick-disconnect on the rear panel. Listen for the coupling to seat</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads at least 80 PSI</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check the disengage lever</strong> &mdash; confirm the lever on the front-left of the machine is in the engaged (closed) position before running. If it is open, the machine shows <strong>Bagger Error</strong> on a red screen (see <a href="#seal-frame-error" style="color:var(--steel-blue);text-decoration:underline;">Seal Frame Open error below</a>)</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Set film tension</strong> &mdash; adjust film tension dial to 4&ndash;5 for standard poly film</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Set seal temperature</strong> &mdash; set the seal temp dial to <strong>380 &deg;F</strong> and seal dwell time to <strong>0.3 seconds</strong></span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Set bag length</strong> &mdash; adjust bag length dial to match the product being bagged</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Load film roll</strong> &mdash; place film roll on unwind spindle, thread through rollers per the diagram inside the film guard. Spare bags and film are stored in the storage area &mdash; grab a fresh roll or pre-made bags from there when needed</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Cycle mode</strong> &mdash; set cycle mode selector to Manual for setup, or Semi-auto for production</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span></label>
+            <div class="checklist-done"><i class="ti ti-check"></i> Startup complete &mdash; ready for production.</div>
+            <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
+          </div>
 
           <div class="callout danger">
             <strong>Do not operate without compressed air.</strong> Running the T-1000 below 60 PSI will cause incomplete seals, jammed film, and potential damage to the sealing mechanism. Always verify the pressure gauge before starting production.
@@ -432,15 +490,23 @@
 
         <div class="poly-sub">
           <h3>Shutdown sequence</h3>
-          <ol class="poly-steps">
-            <li><strong>Complete the pending cycle</strong> &mdash; let the machine finish the current bag</li>
-            <li><strong>Press E-stop</strong> &mdash; lock the machine out of cycling</li>
-            <li><strong>Close the compressor ball valve</strong> &mdash; isolates air at the source</li>
-            <li><strong>Power off the T-1000</strong> &mdash; flip the main power switch on the back panel to OFF</li>
-            <li><strong>Drain the compressor tank</strong> &mdash; open the drain valve until water stops flowing; leave it slightly open only if recommended by the compressor manual, otherwise close it</li>
-            <li><strong>Clean the sealer bar</strong> &mdash; once cool, wipe residue off the sealing bar with a lint-free cloth</li>
-            <li><strong>Log the shift</strong> &mdash; record bag count, film roll remaining, and any issues in the production log</li>
-          </ol>
+          <p class="desc">Complete these steps at the end of every shift. Tap each box as you complete the step:</p>
+          <div class="checklist">
+            <div class="checklist-head">
+              <strong>Shutdown checklist</strong>
+              <div class="checklist-track"><span class="checklist-fill"></span></div>
+              <span class="checklist-count">0/7</span>
+            </div>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Complete the pending cycle</strong> &mdash; let the machine finish the current bag</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Press E-stop</strong> &mdash; lock the machine out of cycling</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Close the compressor ball valve</strong> &mdash; isolates air at the source</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power off the T-1000</strong> &mdash; flip the main power switch on the back panel to OFF</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Drain the compressor tank</strong> &mdash; open the drain valve until water stops flowing; leave it slightly open only if recommended by the compressor manual, otherwise close it</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Clean the sealer bar</strong> &mdash; once cool, wipe residue off the sealing bar with a lint-free cloth</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Log the shift</strong> &mdash; record bag count, film roll remaining, and any issues in the production log</span></label>
+            <div class="checklist-done"><i class="ti ti-check"></i> Shutdown complete &mdash; machine is ready for the next startup.</div>
+            <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
+          </div>
 
           <h3 style="margin-top:28px;">Weekly deeper closeout</h3>
           <ul class="poly-steps">
@@ -890,6 +956,27 @@
   </footer>
 
   <script>
+    function resetChecklist(btn) {
+      const list = btn.closest('.checklist');
+      list.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      updateChecklist(list);
+    }
+
+    function updateChecklist(list) {
+      const boxes = list.querySelectorAll('input[type="checkbox"]');
+      const done = list.querySelectorAll('input[type="checkbox"]:checked').length;
+      const fill = list.querySelector('.checklist-fill');
+      const count = list.querySelector('.checklist-count');
+      if (fill) fill.style.width = (done / boxes.length * 100) + '%';
+      if (count) count.textContent = done + '/' + boxes.length;
+      list.classList.toggle('done', done === boxes.length && boxes.length > 0);
+    }
+
+    document.querySelectorAll('.checklist').forEach(list => {
+      list.addEventListener('change', () => updateChecklist(list));
+      updateChecklist(list);
+    });
+
     function toggleToc() {
       const sidebar = document.querySelector('.sidebar');
       const btn = document.querySelector('.toc-toggle');
