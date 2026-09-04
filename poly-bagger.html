@@ -1036,6 +1036,14 @@
             <li><strong>Temperature drifting out of range</strong> (lots of <em>Waiting</em> pauses: thermocouple or heater cartridge on the way out &mdash; raising the setpoint hides it, badly)</li>
           </ul>
 
+          <h3 style="margin-top:28px;">Waiting pauses &amp; measuring real drift</h3>
+          <p class="desc">The manual does not publish the temperature tolerance &mdash; the band is set in the PLC program. What it does say: the machine shows <em>Waiting</em> (flashing) and <strong>pauses operation</strong> whenever the bar is out of range, and in <em>Auto + Start</em> an idle machine will pause and resume all by itself as temp drifts &mdash; every resume is a cycle (nip engagement, audible clunk). So temperature drift and &ldquo;random activations&rdquo; can be the same event.</p>
+          <div class="callout warn">
+            <strong>Setup mode overrides temperature entirely</strong> &mdash; it cycles even when the bar is stone cold. Useful for setup tests, but a machine left in Setup will seal cold and hide a failing heater. Production should never sit in Setup.
+          </div>
+          <p class="desc"><strong>Measure the real offset</strong> (newer manuals, &sect;3.34): Main Menu &rarr; <em>Technical Assistance</em> (default passcode <strong>1001</strong> unless changed) &rarr; <em>Bagger Factory</em> &rarr; <em>Temp Calib</em>. The screen shows the bar's current reading; compare it to a known-good external probe on the bar and enter the variance in the <em>Adjustment</em> field so the Read Out reflects reality. If the machine needs a large correction &mdash; or if <em>Waiting</em> flashes far more than it used to at the same setpoint &mdash; the thermocouple (manual &sect;4.14: replace on &ldquo;excessive fluctuations or incorrect temperature&rdquo;) or heater cartridge (&sect;4.13, normal wear item) is going. Both are in the spare-parts kits. Raising the setpoint to silence Waiting is treating the symptom while the part dies.</p>
+          <p class="desc"><strong>Next time Waiting flashes:</strong> write down the displayed temperature. If it sits 10&ndash;20&deg;F under setpoint for a long stretch, that's an undershooting heater (cartridge aging), not normal regulation.</p>
+
           <div class="callout danger">
             <strong>Never ship a bag that fails the tug test.</strong> Re-bag the product (see <a href="#rebagging" style="color:var(--steel-blue);text-decoration:underline;">Rebagging procedure</a>) and correct the seal issue before resuming production.
           </div>
