@@ -1229,6 +1229,12 @@
                 <td><span style="color:var(--molten-lava);font-weight:600;">(shop rec)</span> Keep a set on shelf for the next roller service</td>
               </tr>
               <tr>
+                <td><strong>PLC backup battery</strong> (3V coin, FP Sigma PLC) &mdash; keeps settings through power-off; a dead one = "settings lost when machine is off"</td>
+                <td><a href="https://ecom.advancedpoly.com/en/product/product-menu-parts-all-parts/battery-3v-coin-for-grey-plc--TP-214111" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">TP-214111 &rarr;</a></td>
+                <td>Settings evaporate when powered off &mdash; swap with machine powered ON so memory holds (generic: Panasonic AFPG804)</td>
+                <td><span style="color:var(--molten-lava);font-weight:600;">(shop rec)</span> ~every 3&ndash;5 years; replace immediately if settings don't survive a power cycle</td>
+              </tr>
+              <tr>
                 <td><strong>Fuse</strong> (12A time-delay 3AG)</td>
                 <td><a href="https://ecom.advancedpoly.com/en/product/product-menu-parts/fuse-12-amp-time-delay-3ag--TP-207344" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">TP-207344 &rarr;</a></td>
                 <td>Blown (main power / screen dead)</td>
@@ -1253,6 +1259,19 @@
             </tbody>
           </table>
           <p class="desc">Compressor consumables (drain valve/petcock) are the compressor maker's parts, not APPI's &mdash; see the <a href="#compressor-setup" style="color:var(--steel-blue);text-decoration:underline;">Compressor setup</a> section.</p>
+
+          <h3 style="margin-top:28px;">Settings lost on power-off &mdash; PLC battery, and why the machine shouldn't run 24/7</h3>
+          <p class="desc">If settings &ldquo;evaporate&rdquo; when the machine is powered off, the PLC's backup battery is dead &mdash; the manual is explicit that changed settings save immediately and <strong>survive power loss</strong> (&sect;3.41). The battery is a 3V lithium coin cell for the Panasonic FP Sigma PLC: APPI part <a href="https://ecom.advancedpoly.com/en/product/product-menu-parts-all-parts/battery-3v-coin-for-grey-plc--TP-214111" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">TP-214111 &rarr;</a> (generic: Panasonic AFPG804; also in the Level&nbsp;2 spare parts kit). It's a ~$10&ndash;30 coin cell with a multi-year design life &mdash; if it's original to the machine, it's overdue.</p>
+          <p class="desc"><strong>Recommended fix order:</strong></p>
+          <ol class="poly-steps">
+            <li><strong>Job Save first</strong> &mdash; before any battery work: Main Menu &rarr; <em>Job Save</em> writes current settings to a saved job slot (manual &sect;3.41), so the recipe can be recalled even if volatile memory clears</li>
+            <li><strong>USB external memory (the built-in solution)</strong> &mdash; the machine natively supports USB recipe storage: unscrew the back cover of the touch-screen housing, insert a USB flash drive into the port on the bottom-left of the screen unit, then Main Menu &rarr; <em>Tech Assist</em> (passcode) &rarr; <em>Bagger Factory</em> &rarr; <em>Perf Registration</em> page &rarr; toggle the <em>PLC / USB</em> button to <strong>USB</strong> (manual &sect;3.42). With USB selected, jobs/recipes and stored data live on the drive &mdash; hundreds of recipes instead of the internal 30. Use a small name-brand drive; a dedicated one that stays with the machine is better than a random thumb drive</li>
+            <li><strong>Replace the PLC battery</strong> &mdash; power the machine ON (not off) while swapping, so the swap happens on live power and memory doesn't clear; then power-cycle once to confirm settings survived</li>
+            <li><strong>Return to normal power-off at end of day</strong> &mdash; with battery + saved jobs (and optionally USB memory), shutdown should no longer lose settings. Running 24/7 was masking a dead battery; it also wastes energy, adds heater-hours, and lets Auto+Start cycle empty bags all night (see the <a href="#bag-tearing" style="color:var(--steel-blue);text-decoration:underline;">phantom activation</a> note)</li>
+          </ol>
+          <div class="callout warn">
+            <strong>If the machine was left ON overnight in Auto + Start</strong>, it self-cycles at its paced rate (see <a href="#bag-tearing" style="color:var(--steel-blue);text-decoration:underline;">Bag breaks &amp; web tension</a>) &mdash; expect unattended empty-bag cycling, extra heater hours, and the temp-drift interactions described in <a href="#seal-troubleshooting" style="color:var(--steel-blue);text-decoration:underline;">Seal troubleshooting</a>.
+          </div>
         </div>
       </section>
 
