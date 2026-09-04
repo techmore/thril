@@ -200,6 +200,11 @@
     .video-embed iframe { border-radius: 8px; max-width: 100%; }
     .video-embed .video-frame { width: 100%; margin-top: 12px; }
     .video-embed .video-frame iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; }
+    .fig-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0 4px; }
+    .manual-fig { background: #fff; border: 1px solid var(--color-border); border-radius: 10px; padding: 12px; text-align: center; }
+    .manual-fig img { width: 100%; height: auto; border-radius: 6px; }
+    .manual-fig figcaption { font-size: 11.5px; color: #666; margin-top: 8px; line-height: 1.45; }
+    @media print { .manual-fig img { max-height: 4in; width: auto; } }
 
     .qr-block {
       background: #fff; border: 2px dashed var(--deep-space-blue); border-radius: 12px;
@@ -1030,6 +1035,45 @@
           <p class="desc">The bag roll itself sits on a shaft wrapped by a brake strap under the dancer bar. That strap is the machine's only tension control. If it grips instead of slipping smoothly, the nip rollers pull against web that can't pay out, and the bag tears. The manual's rule: <strong>if the web of bags breaks prematurely, the tension is too high.</strong></p>
           <p class="desc">The &ldquo;it frees up after sitting&rdquo; behavior is stick-slip: a dirty, glazed, or over-tightened strap grabs with a click when it re-engages, then releases after standing. It's a friction state, not a machine mode &mdash; no setting engages the rollers together.</p>
 
+          <div class="fig-grid">
+            <figure class="manual-fig">
+              <img src="poly-bagger/diagrams/t1k-threading-diagram.png" alt="T-1000 threading diagram, standard vertical, single dancer" loading="lazy">
+              <figcaption><strong>Web path.</strong> Film comes off the roll at the dancer (lower left), then routes up through the nip rollers into the machine. Every tear happens somewhere along this path.</figcaption>
+            </figure>
+            <figure class="manual-fig">
+              <img src="poly-bagger/diagrams/t1k-dancer-assembly.png" alt="T-1000 dancer assembly exploded parts drawing" loading="lazy">
+              <figcaption><strong>Dancer assembly.</strong> Side plates carry the bag roll shaft; the dancer tension bar pivots over it with the brake strap + spring (TP-T1MA00115) wrapping the shaft. Exploded view from the manual.</figcaption>
+            </figure>
+          </div>
+
+          <h3 style="margin-top:28px;">The nip rollers (&ldquo;active/passive&rdquo; pair): cleaning, alignment &amp; compression</h3>
+          <p class="desc">The two rollers past the load table are the <strong>nip rollers</strong> (not related to the air compressor): one rubber-covered grooved roll (the driven, &ldquo;active&rdquo; one) and one grooved steel roll that presses into it. The pressing force is the <strong>compression</strong> &mdash; it's how hard the pair grips the web. The manual's trade-off: <em>too little compression and bags won't tear off after sealing (they slip); too much and you wear the drive roll and motor</em> &mdash; and the grip fights the dancer brake, which is what rips film.</p>
+          <p class="desc"><strong>Cleaning</strong> comes before any of this. Wipe both nip rollers with alcohol on a cotton cloth (power off) &mdash; dirt makes them <em>slip</em> (bags stop tearing off), glaze/residue makes them <em>grab</em> (tearing + that audible clunk). The manual is explicit: <em>always clean rollers before adjusting</em> &mdash; a dirty roller reads as a miscalibrated one.</p>
+          <p class="desc"><strong>Adjustment</strong> is two jobs in one: make the rollers <em>parallel</em>, then set the <em>compression</em>. Both are done from the two side panels:</p>
+          <ol class="poly-steps">
+            <li><strong>Power off, unplug</strong>, remove the left and right side covers</li>
+            <li><strong>Clean both rollers</strong> with alcohol first</li>
+            <li>On each side panel, <strong>loosen the two locking bolts on the upper block</strong> of the compression assembly, then <strong>loosen the nut on the adjustment screw</strong> (see figure below)</li>
+            <li>With the inner frame locked UP, turn the adjustment screws <strong>counterclockwise</strong> to lower the bottom roller until it's <strong>parallel</strong> to the top roller with a <strong>1/16&quot; gap</strong> &mdash; put a lamp behind the rollers so you can see light through the gap and judge parallelism</li>
+            <li>Turn the screws <strong>clockwise, alternating left screw / right screw</strong>, keeping the roller parallel, until the rollers <strong>just touch across the full width</strong></li>
+            <li>Drop the inner frame down and raise it again &mdash; both ends must touch <strong>simultaneously</strong>. If not, redo from the parallel step</li>
+            <li><strong>Snug the upper block bolts</strong> and recheck; don't gorilla-tighten</li>
+          </ol>
+          <div class="callout warn">
+            <strong>When to actually touch this:</strong> only for <em>slipping</em> symptoms (bags not tearing off after the seal, web creeping instead of indexing) or after roller/wear work. If your problem is <em>tearing</em>, do index speed and dancer tension first &mdash; compression is the last lever, and more of it is usually the wrong direction.
+          </div>
+
+          <div class="fig-grid">
+            <figure class="manual-fig">
+              <img src="poly-bagger/diagrams/t1k-nip-left.png" alt="Left side panel compression nip roller adjustment figure 4-1" loading="lazy">
+              <figcaption><strong>Left side panel</strong> (manual Fig. 4-1): loosen bolts on the upper block, then the nut on the adjustment screw below it.</figcaption>
+            </figure>
+            <figure class="manual-fig">
+              <img src="poly-bagger/diagrams/t1k-nip-right.png" alt="Right side panel compression nip roller adjustment figure 4-2" loading="lazy">
+              <figcaption><strong>Right side panel</strong> (manual Fig. 4-2): same assembly mirrored &mdash; adjust both sides equally or the rollers go non-parallel.</figcaption>
+            </figure>
+          </div>
+
           <h3 style="margin-top:28px;">Fix order &mdash; one change at a time</h3>
           <p class="desc">Run a test cycle after each step. If a change makes it worse, put it back (manual's rule) and move to the next step:</p>
           <div class="checklist">
@@ -1071,6 +1115,10 @@
               <tr>
                 <td><a href="https://www.manualslib.com/manual/1401972/Advanced-Poly-Packaging-T-1000.html" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">ManualsLib browsable copy</a></td>
                 <td>Same T-1000-S14 manual in a page-by-page web viewer (no download)</td>
+              </tr>
+              <tr>
+                <td>Diagrams on this page</td>
+                <td>Reproduced from the APPI T-1000-S14 operations manual for internal training: threading diagram (Ch. 2), dancer assembly exploded view (Sec. 5.6), nip roller adjustment Figs. 4-1 / 4-2 (Sec. 4.3, pp. 37&ndash;38)</td>
               </tr>
               <tr>
                 <td><a href="https://www.advancedpoly.com/" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Advanced Poly-Packaging (APPI)</a></td>
