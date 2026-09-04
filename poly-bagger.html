@@ -352,6 +352,7 @@
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
           <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting</a>
+          <a href="#bag-tearing"><i class="ti ti-scissors"></i>Bag breaks &amp; web tension</a>
           <a href="#qr-codes"><i class="ti ti-qrcode"></i>Section QR codes</a>
         </div>
         <div class="toc-group">
@@ -1017,6 +1018,70 @@
         </div>
       </section>
 
+      <!-- ═══ Bag Tearing / Web Tension ═══ -->
+      <section id="bag-tearing">
+        <p class="section-label">Support</p>
+        <h2 class="section-title">Premature bag breaks &amp; web tension</h2>
+        <p class="section-sub">Bags tearing at the perforation or edges during indexing &mdash; often with an audible clunk from the roller area &mdash; is a web tension problem, not a seal setting. Work the checklist in order; change one thing at a time and test after each change.</p>
+
+        <div class="poly-sub">
+          <h3 style="margin-top:0;">What's actually happening</h3>
+          <p class="desc">The two rollers past the load table that press together are the drive (nip) roller pair: one is motor-driven (the &ldquo;active&rdquo; roller timed to the machine), the other is its partner that clamps against it to grip the film. That engagement is normal &mdash; every index pulls the web through them.</p>
+          <p class="desc">The bag roll itself sits on a shaft wrapped by a brake strap under the dancer bar. That strap is the machine's only tension control. If it grips instead of slipping smoothly, the nip rollers pull against web that can't pay out, and the bag tears. The manual's rule: <strong>if the web of bags breaks prematurely, the tension is too high.</strong></p>
+          <p class="desc">The &ldquo;it frees up after sitting&rdquo; behavior is stick-slip: a dirty, glazed, or over-tightened strap grabs with a click when it re-engages, then releases after standing. It's a friction state, not a machine mode &mdash; no setting engages the rollers together.</p>
+
+          <h3 style="margin-top:28px;">Fix order &mdash; one change at a time</h3>
+          <p class="desc">Run a test cycle after each step. If a change makes it worse, put it back (manual's rule) and move to the next step:</p>
+          <div class="checklist">
+            <div class="checklist-head">
+              <strong>Web tension checklist</strong>
+              <div class="checklist-track"><span class="checklist-fill"></span></div>
+              <span class="checklist-count">0/6</span>
+            </div>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Reduce index speed</strong> &mdash; Settings screen: typical is 15&ndash;25 in/sec. If bags break at the perforation, drop to 10&ndash;15 and test (manual: premature breaks &rarr; reduce index speed)</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Loosen the brake strap</strong> &mdash; on the dancer bar, slide the spring block <strong>away</strong> from the dancer roller, then test (decreases strap tension)</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Reduce pivot force</strong> &mdash; if it still tears, move the dancer bar pivot point closer to the dancer roller (less downward force)</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Clean the film path</strong> &mdash; power off; alcohol-wipe the blue rubber roller, idler rollers, perforation sensor, roll shaft, and brake strap (glaze/residue makes the strap grab instead of slip)</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check alignment</strong> &mdash; the roll shaft should sit parallel on the dancer side plates and the strap should wrap the shaft; reseat the roll centered on the shaft</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Replace the strap</strong> &mdash; if the audible grab returns after cleaning, the strap is glazed/worn: swap in a new brake tension strap, PN <strong>TP-T1MA00115</strong> (in the Level One spare parts kit)</span></label>
+            <div class="checklist-done"><i class="ti ti-check"></i> Tension set &mdash; run 10+ bags and confirm no tears before resuming production.</div>
+            <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
+          </div>
+
+          <div class="callout warn">
+            <strong>Thinner film needs less tension.</strong> Our retail poly is thin &mdash; err toward loose. Too little tension shows up as left/right tracking wander (fixable with the plastic web guides), but too much tension rips bags. Track first, tension last.
+          </div>
+
+          <div class="callout info">
+            <strong>Parts to keep on the shelf:</strong> Brake tension strap PN TP-T1MA00115 (Level One kit item #3) and the Teflon/PTFE sheet PN TP-300500. Both are documented wear items in the manual's spare parts list.
+          </div>
+
+          <h3 style="margin-top:28px;">References &amp; manual links</h3>
+          <table class="poly-tbl" style="max-width:720px;">
+            <thead><tr><th>Source</th><th>What it covers</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><a href="https://ecom.advancedpoly.com/Image/GetDocument/en/194/t-1000%20operations%20manual%20version%208a%20for%20serial%20numbers%20213101186-214101246.pdf" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">T-1000-S14 Operations Manual v8a (official PDF)</a></td>
+                <td>Sections 4.4&ndash;4.6 (dancer, brake strap, web guides), 4.19 (spare parts kits), 4.20&ndash;4.21 (troubleshooting guide &amp; checklist)</td>
+              </tr>
+              <tr>
+                <td><a href="https://ecom.advancedpoly.com/Image/GetDocument/en/193/t-1000%20operations%20manual%20version%209%20for%20serial%20numbers%20214101247-215051291.pdf" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">T-1000-S14 Operations Manual v9 (official PDF)</a></td>
+                <td>Same content, newer serial range (214101247 and up) &mdash; use whichever matches your machine's serial</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.manualslib.com/manual/1401972/Advanced-Poly-Packaging-T-1000.html" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">ManualsLib browsable copy</a></td>
+                <td>Same T-1000-S14 manual in a page-by-page web viewer (no download)</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.advancedpoly.com/" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Advanced Poly-Packaging (APPI)</a></td>
+                <td>Manufacturer &mdash; (330) 785-4000 / (800) 754-4403 for the pass-coded options and factory support</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="desc">No public video exists for the dancer/brake adjustment &mdash; the vendor's only operator video (threading, on Vimeo) is domain-locked to advancedpoly.com. Our own threading video is in the <a href="#rebagging" style="color:var(--steel-blue);text-decoration:underline;">Rebagging section</a>; a short clip of the strap adjustment belongs here when we film it.</p>
+        </div>
+      </section>
+
       <!-- ═══ QR Codes ═══ -->
       <section id="qr-codes">
         <p class="section-label">Quick reference</p>
@@ -1052,6 +1117,7 @@
           <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging</a>
           <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
           <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting</a>
+          <a href="#bag-tearing"><i class="ti ti-scissors"></i>Bag breaks &amp; tension</a>
         </div>
       </section>
 
@@ -1119,6 +1185,7 @@
       { anchor: 'rebagging', name: 'Rebagging procedure' },
       { anchor: 'troubleshooting', name: 'Troubleshooting' },
       { anchor: 'seal-troubleshooting', name: 'Seal troubleshooting' },
+      { anchor: 'bag-tearing', name: 'Bag breaks & web tension' },
     ];
 
     function pageUrl(anchor) {
