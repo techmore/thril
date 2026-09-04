@@ -1017,6 +1017,25 @@
             <strong>Stop and escalate</strong> if pressure will not hold at 60 PSI after draining and re-checking, the drain valve stays clogged after the blowout recovery, or you hear continuous hissing with the machine idle. Tag the machine out and call the bagging area lead.
           </div>
 
+          <h3 style="margin-top:28px;">Is the temperature right &mdash; or masking something else?</h3>
+          <p class="desc">Our baseline is <strong>380&nbsp;&deg;F / 0.3&nbsp;sec</strong>, which sits in the manual's normal 360&ndash;440&nbsp;&deg;F band. But temperature is the dial everyone reaches for last-resort &mdash; and the manual's own troubleshooting table lists &ldquo;seal temperature too high&rdquo; as the <em>cause</em> of sticking bags, melt-through, and film damage. If bags tear at or next to the seal, or stick to the bar and get yanked, suspect the temp is high.</p>
+          <p class="desc"><strong>Find your real number with a ladder test</strong> (one variable, small steps):</p>
+          <ol class="poly-steps">
+            <li>Start at the current setting and run 3 test bags; do the <strong>tug test</strong> on each seal</li>
+            <li>Drop temp by <strong>10&ndash;15&nbsp;&deg;F</strong>, wait for the heater to settle, run 3 more, tug test again</li>
+            <li>Keep stepping down until seals <strong>start failing</strong> the tug test (peels open, gaps, pinholes)</li>
+            <li>Set the machine <strong>10&ndash;20&nbsp;&deg;F above that failure point</strong>. That's your film's real number &mdash; not 380 out of habit</li>
+            <li>If seals go weak <em>well above</em> where they used to pass, the problem isn't temp &mdash; it's pressure, bar cleanliness, or the rubber strip (below)</li>
+          </ol>
+          <p class="desc"><strong>If temp seems to need to be high, check what it's compensating for</strong> &mdash; in order:</p>
+          <ul class="poly-steps">
+            <li><strong>Air pressure below 60 PSI</strong> at the machine (weak, partial seals; our compressor water/drain issues live <a href="#compressor-setup" style="color:var(--steel-blue);text-decoration:underline;">here</a>)</li>
+            <li><strong>Seal time too short</strong> for the film thickness (manual @400&nbsp;&deg;F: 0.3&nbsp;s for 1.5&nbsp;mil, 0.4&nbsp;s for 2&ndash;3&nbsp;mil, 0.7&nbsp;s for 4&nbsp;mil &mdash; time and temp trade against each other)</li>
+            <li><strong>Dirty sealing bar / contaminated rubber strip</strong> on the pressure bar (clean with alcohol once cool)</li>
+            <li><strong>Worn PTFE sheet</strong> (folded over, scored, at end of roll &mdash; bag sticks, seals go inconsistent)</li>
+            <li><strong>Temperature drifting out of range</strong> (lots of <em>Waiting</em> pauses: thermocouple or heater cartridge on the way out &mdash; raising the setpoint hides it, badly)</li>
+          </ul>
+
           <div class="callout danger">
             <strong>Never ship a bag that fails the tug test.</strong> Re-bag the product (see <a href="#rebagging" style="color:var(--steel-blue);text-decoration:underline;">Rebagging procedure</a>) and correct the seal issue before resuming production.
           </div>
