@@ -1,0 +1,4 @@
+^XA
+^XFE:CCSBLACK.ZPL^FS
+^PQ1
+^XZ

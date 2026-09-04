@@ -671,6 +671,37 @@
             <strong>Never</strong> use <code>^PON</code> or <code>^FWN</code> in ZPL &mdash; these commands cause the printer to reject the job with a "not ready" error. Always rotate the image in Python instead.
           </div>
         </div>
+
+        <div class="poly-sub" id="label-save-restore">
+          <h3 style="margin-top:0;">Save &amp; restore the label on the printer (survives power-off)</h3>
+          <p class="desc">The label lives in the Zebra printer's <strong>flash memory</strong>, not the bagger. Save it once. After any power outage or printer reboot, recall it with one command &mdash; verified working after a full Zebra power cut (Sept 2026).</p>
+
+          <div class="video-embed">
+            <i class="ti ti-player-play"></i>
+            <div class="video-text">
+              <h4>Watch: stored-format printing on a Zebra</h4>
+              <p>The exact technique this page uses &mdash; a label template stored in the printer, recalled with fresh data (4&nbsp;min). Generic Zebra demo, not our machine, but it shows the store &amp; recall flow end to end.</p>
+            </div>
+            <span class="video-pill">4:11</span>
+            <div class="video-frame" style="width:100%;">
+              <iframe src="https://www.youtube-nocookie.com/embed/Ad349IkyGew" title="ZPL stored format recall example" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Save the label to flash (one time)</h3>
+          <div class="cmd">lp -d Zebra -o raw "poly-bagger/UPC Labels/CCSBLACK_store_flash.zpl"</div>
+          <p class="desc">That file starts with <code>^DFE:CCSBLACK.ZPL</code>. <code>E:</code> = flash memory, survives power-off. <code>R:</code> = RAM, wiped on reboot &mdash; never store to R.</p>
+
+          <h3 style="margin-top:28px;">Restore / recall (after any power cycle, or anytime)</h3>
+          <div class="cmd">lp -d Zebra -o raw "poly-bagger/UPC Labels/CCSBLACK_recall_flash.zpl"</div>
+          <p class="desc">Starts with <code>^XFE:CCSBLACK.ZPL</code> &mdash; recalls the stored label and prints it. If the printer has been fully powered off, just run this again and confirm a clean label prints.</p>
+
+          <div class="callout warn">
+            <strong>Rules that bit us (don't repeat them):</strong> colon not comma (<code>^XFE:NAME.ZPL</code>, not <code>^XFE,NAME</code>) &middot; E: flash survives reboot, R: RAM does not &middot; filenames max 8 characters &middot; the bagger screen's own "store to label 999" writes <em>volatile</em> memory and will be gone after a reboot &mdash; ignore it.
+          </div>
+
+          <p class="desc">Reference: <a href="https://support.zebra.com/article/Using-ZPL-Stored-Formats" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Zebra &mdash; Using ZPL Stored Formats</a> &middot; <a href="https://support.zebra.com/article/Store-label-format-and-recall-for-printing-using-ZebraDesigner-3" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Store &amp; recall via ZebraDesigner 3</a>. Longer video walkthroughs: <a href="https://www.youtube.com/watch?v=WU3aGnvXnH4" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">full store-to-flash with PLC trigger (41 min)</a> &middot; <a href="https://www.youtube.com/watch?v=zGQrt3f3Jgg" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Zebra official: design a template, invoke it (29 min)</a>.</p>
+        </div>
       </section>
 
       <!-- ═══ Certification ═══ -->
