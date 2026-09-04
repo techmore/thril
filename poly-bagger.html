@@ -1276,6 +1276,10 @@
           <div class="callout warn">
             <strong>If the machine was left ON overnight in Auto + Start</strong>, it self-cycles at its paced rate (see <a href="#bag-tearing" style="color:var(--steel-blue);text-decoration:underline;">Bag breaks &amp; web tension</a>) &mdash; expect unattended empty-bag cycling, extra heater hours, and the temp-drift interactions described in <a href="#seal-troubleshooting" style="color:var(--steel-blue);text-decoration:underline;">Seal troubleshooting</a>.
           </div>
+
+          <div class="callout info">
+            <strong>Where everything lives (labels are NOT on this stick):</strong> the USB stick stores <em>bagger recipes</em> only (seal temp, speed, feed distance &mdash; the <code>REC0000.CSV</code> row). The <strong>label formats live in the printer's own memory</strong> (Ti-1000Z hang-behind printer, slots <em>Label # 001&ndash;999</em>, recalled by number from the printer Setup/Stored Labels screen &mdash; note which number each SKU uses and write it here: ____________). Printer memory survives power-off; the printer even has its own rear power switch so it can be reset without touching the PLC. The <strong>label source files (.docx / .zpl) live on the Mac</strong> in <code>poly-bagger/UPC Labels/</code> and are committed to this repo &mdash; any stored label can be regenerated from them if ever needed. The boot-time &ldquo;load a label&rdquo; prompt is a <em>selection</em> (which stored label number to use), not a loss. Known quirk: label <em>lengths</em> aren't saved with stored formats &mdash; keep a small chart of label length per Label # (manual recommends stored labels share one length, or set Length manually on recall).
+          </div>
         </div>
       </section>
 
