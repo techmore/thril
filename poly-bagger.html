@@ -198,6 +198,8 @@
       font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap;
     }
     .video-embed iframe { border-radius: 8px; max-width: 100%; }
+    .video-embed .video-frame { width: 100%; margin-top: 12px; }
+    .video-embed .video-frame iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; }
 
     .qr-block {
       background: #fff; border: 2px dashed var(--deep-space-blue); border-radius: 12px;
@@ -265,6 +267,7 @@
 
     @media print {
       nav, .sidebar, .hero, .quick-links, .back-link, .toc-toggle { display: none !important; }
+      .video-embed { display: none !important; }
       .page-wrap { display: block; max-width: 100%; padding: 0; }
       .main-content { max-width: 100%; }
       section { break-inside: auto; padding: 16px 0; border: none; }
@@ -498,6 +501,18 @@
         <p class="section-label">Production</p>
         <h2 class="section-title">Change bag &amp; film roll</h2>
         <p class="section-sub">Change the film roll when the core becomes visible or when switching to a different film gauge. A clean changeover prevents misaligned labels and weak seals.</p>
+
+        <div class="video-embed">
+          <i class="ti ti-player-play"></i>
+          <div class="video-text">
+            <h4>Watch: threading a fresh roll of bags onto the T-1000</h4>
+            <p>The same steps as the changeover list below, on the machine: load the roll, route the web, index, and test.</p>
+          </div>
+          <span class="video-pill">1:47</span>
+          <div class="video-frame" style="width:100%;">
+            <iframe src="https://www.youtube-nocookie.com/embed/Qx7kasSY9PM" title="T-1000 film roll threading" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
 
         <div class="poly-sub">
           <h3>When to change the film roll</h3>
@@ -753,7 +768,7 @@
           <h3 style="margin-top:0;">Film roll loading reference</h3>
           <p class="desc">The manufacturer's own tutorial for loading and threading a roll of bags onto a T-1000 lives on Vimeo (Advanced Poly-Packaging's channel), but it is set to play only on advancedpoly.com &mdash; the embed shows &ldquo;Sorry&rdquo; everywhere else, so it can't be placed on this page.</p>
           <p class="desc"><a href="https://vimeo.com/1204232627" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">How to thread a roll of bags onto a T-1000 with ZT printer &rarr;</a> <span style="color:#888;">(opens on Vimeo; may show a domain restriction message there too)</span></p>
-          <p class="desc">Our own film-roll changeover steps are in <a href="#change-bag" style="color:var(--steel-blue);text-decoration:underline;">Change bag &amp; film roll</a>; our film-roll loading video is still on the shot list.</p>
+          <p class="desc">Our own film-roll threading video is now embedded in the <a href="#change-bag" style="color:var(--steel-blue);text-decoration:underline;">Change bag &amp; film roll</a> section above &mdash; use it for roll changes and reloads.</p>
         </div>
 
         <div class="poly-sub">
