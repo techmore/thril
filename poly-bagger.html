@@ -183,6 +183,22 @@
     .callout.tip { background: #e1f5ee; border-left: 4px solid #28a745; color: #1d7a5a; }
     .callout.info { background: #e8edf0; border-left: 4px solid var(--steel-blue); color: #003049; }
 
+    .video-embed {
+      border: 1px solid var(--color-border); border-radius: 12px;
+      background: var(--color-bg-soft); padding: 16px 18px; margin: 0 0 18px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .video-embed > i { font-size: 28px; color: var(--flag-red); }
+    .video-embed .video-text { flex: 1; min-width: 220px; }
+    .video-embed h4 { font-size: 14px; font-weight: 700; color: var(--deep-space-blue); margin-bottom: 2px; }
+    .video-embed p { font-size: 12.5px; color: #555; margin: 0; }
+    .video-embed a.video-link { color: var(--flag-red); font-weight: 600; font-size: 13px; }
+    .video-embed .video-pill {
+      background: var(--papaya-whip); color: var(--deep-space-blue);
+      font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+    }
+    .video-embed iframe { border-radius: 8px; max-width: 100%; }
+
     .qr-block {
       background: #fff; border: 2px dashed var(--deep-space-blue); border-radius: 12px;
       padding: 20px 24px; margin: 24px 0; text-align: center;
@@ -357,6 +373,15 @@
         <h2 class="section-title">Machine setup &amp; startup</h2>
         <p class="section-sub">Step-by-step startup procedure for the Advanced Poly T-1000 bagger. Perform these steps every time the machine is started.</p>
 
+        <div class="video-embed">
+          <i class="ti ti-player-play"></i>
+          <div class="video-text">
+            <h4>Watch: T-1000 startup walkthrough</h4>
+            <p>Every checklist step below appears in the video in the same order. Follow along or use the checklist on its own.</p>
+          </div>
+          <span class="video-pill">Video coming soon</span>
+        </div>
+
         <div class="poly-sub">
           <h3>Startup sequence</h3>
           <p class="desc">Follow these steps in order each time the machine is started from cold. Tap each box as you complete the step:</p>
@@ -364,7 +389,7 @@
             <div class="checklist-head">
               <strong>Startup checklist</strong>
               <div class="checklist-track"><span class="checklist-fill"></span></div>
-              <span class="checklist-count">0/13</span>
+              <span class="checklist-count">0/12</span>
             </div>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Inspect the machine</strong> &mdash; walk around the bagger: film guard closed, sealer bar clean, no debris, film, or loose parts in the feed path</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</span></label>
@@ -377,7 +402,6 @@
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Start the compressor</strong> &mdash; with the ball valve still closed, start the compressor and let it build pressure</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Open ball valve &amp; set pressure</strong> &mdash; once the compressor is running, open the ball valve and set the regulator to <strong>60 PSI</strong></span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads <strong>60 PSI</strong></span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><del style="color:#9a9a9a;"><strong>Cycle mode</strong> &mdash; set cycle mode selector to Manual for setup, or Semi-auto for production</del></span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span></label>
             <div class="checklist-done"><i class="ti ti-check"></i> Startup complete &mdash; ready for production.</div>
             <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
@@ -402,6 +426,15 @@
         <p class="section-label">Air supply</p>
         <h2 class="section-title">Compressor setup</h2>
         <p class="section-sub">The T-1000 runs on compressed air. Correct compressor configuration protects the sealer and keeps seal quality consistent. Set up the air supply before every startup.</p>
+
+        <div class="video-embed">
+          <i class="ti ti-player-play"></i>
+          <div class="video-text">
+            <h4>Watch: compressor setup &amp; drain recovery</h4>
+            <p>Covers tank draining, the 60 PSI setup, and the pressure-blowout recovery for a clogged drain valve.</p>
+          </div>
+          <span class="video-pill">Video coming soon</span>
+        </div>
 
         <div class="poly-sub">
           <h3>Required air supply</h3>
@@ -443,6 +476,20 @@
           <div class="callout tip">
             <strong>Cold startup:</strong> Compressors build more water in cold weather. If the machine has been idle overnight, always drain the tank first &mdash; moisture in the line drops effective pressure and weakens seals.
           </div>
+
+          <h3 style="margin-top:28px;">Summer water buildup &amp; clogged drain</h3>
+          <p class="desc">In warm, humid weather (worst in summer) the tank collects water fast, and debris + sludge can clog the drain valve so it stops draining even with water still inside. This is a known issue on this compressor &mdash; here is the recovery that works:</p>
+          <div class="callout warn">
+            <strong>Drain valve jammed / won't drain:</strong>
+            <ol class="poly-steps" style="margin-top:6px;">
+              <li><strong>Close the drain valve</strong> so the tank can re-pressurize</li>
+              <li><strong>Close the ball valve</strong> to the machine (keep the air out of the line while you work on the drain)</li>
+              <li><strong>Turn the compressor ON</strong> and let it build up pressure with the vent/drain still closed</li>
+              <li><strong>Open the drain valve</strong> once pressure is up &mdash; the stored pressure blows the water and debris out in a rush and clears the clog</li>
+              <li>Repeat if the first blast doesn't fully clear it; then close the drain valve and return to the normal startup sequence</li>
+            </ol>
+          </div>
+          <p class="desc">If pressure-blowout stops working (the clog returns sooner each time), the tank sludge has built up past what flushing clears &mdash; the drain valve or petcock needs to be removed and cleaned, or the tank professionally flushed.</p>
         </div>
       </section>
 
@@ -491,6 +538,15 @@
         <h2 class="section-title">End of day shutdown</h2>
         <p class="section-sub">Complete shutdown keeps the sealer bar, film path, and compressor ready for the next startup. Perform these steps at the end of every shift.</p>
 
+        <div class="video-embed">
+          <i class="ti ti-player-play"></i>
+          <div class="video-text">
+            <h4>Watch: end-of-day shutdown</h4>
+            <p>Shutdown order, tank drain, and what to do when the drain valve is clogged with water and debris.</p>
+          </div>
+          <span class="video-pill">Video coming soon</span>
+        </div>
+
         <div class="poly-sub">
           <h3>Shutdown sequence</h3>
           <p class="desc">Complete these steps at the end of every shift. Tap each box as you complete the step:</p>
@@ -498,15 +554,13 @@
             <div class="checklist-head">
               <strong>Shutdown checklist</strong>
               <div class="checklist-track"><span class="checklist-fill"></span></div>
-              <span class="checklist-count">0/7</span>
+              <span class="checklist-count">0/5</span>
             </div>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Complete the pending cycle</strong> &mdash; let the machine finish the current bag</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><del style="color:#9a9a9a;"><strong>Press E-stop</strong> &mdash; lock the machine out of cycling</del></span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Shut off the compressor &amp; empty the valve</strong> &mdash; shut off the compressor, then open the valve to empty all air and/or water from the line and tank</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power off the T-1000</strong> &mdash; flip the main power switch on the back panel to OFF</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Drain the compressor tank</strong> &mdash; open the drain valve until water stops flowing; leave it slightly open only if recommended by the compressor manual, otherwise close it</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Drain the compressor tank</strong> &mdash; open the drain valve until water stops flowing, then close it. If it clogs (water stops, but tank still sounds full or spits debris), use the pressure-blowout recovery below instead of forcing it</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Clean the sealer bar</strong> &mdash; once cool, wipe residue off the sealing bar with a lint-free cloth</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><del style="color:#9a9a9a;"><strong>Log the shift</strong> &mdash; record bag count, film roll remaining, and any issues in the production log</del></span></label>
             <div class="checklist-done"><i class="ti ti-check"></i> Shutdown complete &mdash; machine is ready for the next startup.</div>
             <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
           </div>
@@ -835,6 +889,15 @@
         <h2 class="section-title">Seal troubleshooting</h2>
         <p class="section-sub">Poor or failed seals are usually caused by temperature, air pressure, film tension, or a dirty sealing bar. Use this guide to isolate and fix seal defects quickly.</p>
 
+        <div class="video-embed">
+          <i class="ti ti-player-play"></i>
+          <div class="video-text">
+            <h4>Watch: seal troubleshooting in action</h4>
+            <p>What weak, partial, and skipped seals look like, plus the tug test and the air-before-heat check.</p>
+          </div>
+          <span class="video-pill">Video coming soon</span>
+        </div>
+
         <div class="poly-sub">
           <h3>Seal defect: root causes &amp; fixes</h3>
           <table class="poly-tbl">
@@ -842,6 +905,21 @@
               <tr><th style="width:34%;">Symptom</th><th style="width:20%;">Root cause</th><th>Fix</th></tr>
             </thead>
             <tbody>
+              <tr>
+                <td>Machine stalls mid-cycle / jaw motion is weak or slow</td>
+                <td>Air supply starved (compressor behind or drain clogged)</td>
+                <td>Check the T-1000 gauge first: below 60 PSI, drain the compressor tank (see <a href="#compressor-setup" style="color:var(--steel-blue);text-decoration:underline;">Compressor setup</a> for the clogged-drain blowout recovery), reopen the ball valve, re-verify 60 PSI</td>
+              </tr>
+              <tr>
+                <td>Pressure dropped slowly during the run</td>
+                <td>Leaking hose or quick-disconnect, or compressor tripped/off</td>
+                <td>Listen for hiss along the hose and fittings; re-seat the quick-disconnect; confirm the compressor is running and the ball valve is fully open</td>
+              </tr>
+              <tr>
+                <td>Seals got weak and machine sounds "wet"</td>
+                <td>Water in the air line (full air catch / separator)</td>
+                <td>Drain the air catch / water separator bowl, then the compressor tank; run 2&ndash;3 test bags to purge wet air before resuming production</td>
+              </tr>
               <tr>
                 <td>Weak seal that peels open easily</td>
                 <td>Seal temperature too low</td>
@@ -901,6 +979,14 @@
 
           <div class="callout warn">
             <strong>Always trust the test, not the dial.</strong> Dial positions vary with ambient temperature, film lot, and bar cleanliness. Set the dial near the reference range, then tune with test seals until the tug test passes.
+          </div>
+
+          <div class="callout warn">
+            <strong>Check air before blaming heat.</strong> Low pressure mimics a bad temperature setting (weak, partial seals). Always confirm the T-1000 gauge reads 60 PSI before turning the temp dial &mdash; otherwise you chase the wrong cause and risk overheating good film.
+          </div>
+
+          <div class="callout danger">
+            <strong>Stop and escalate</strong> if pressure will not hold at 60 PSI after draining and re-checking, the drain valve stays clogged after the blowout recovery, or you hear continuous hissing with the machine idle. Tag the machine out and call the bagging area lead.
           </div>
 
           <div class="callout danger">
