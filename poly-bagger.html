@@ -676,18 +676,6 @@
           <h3 style="margin-top:0;">Save &amp; restore the label on the printer (survives power-off)</h3>
           <p class="desc">The label lives in the Zebra printer's <strong>flash memory</strong>, not the bagger. Save it once. After any power outage or printer reboot, recall it with one command &mdash; verified working after a full Zebra power cut (Sept 2026).</p>
 
-          <div class="video-embed">
-            <i class="ti ti-player-play"></i>
-            <div class="video-text">
-              <h4>Watch: stored-format printing on a Zebra</h4>
-              <p>The exact technique this page uses &mdash; a label template stored in the printer, recalled with fresh data (4&nbsp;min). Generic Zebra demo, not our machine, but it shows the store &amp; recall flow end to end.</p>
-            </div>
-            <span class="video-pill">4:11</span>
-            <div class="video-frame" style="width:100%;">
-              <iframe src="https://www.youtube-nocookie.com/embed/Ad349IkyGew" title="ZPL stored format recall example" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-          </div>
-
           <h3 style="margin-top:28px;">Save the label to flash (one time)</h3>
           <div class="cmd">lp -d Zebra -o raw "poly-bagger/UPC Labels/CCSBLACK_store_flash.zpl"</div>
           <p class="desc">That file starts with <code>^DFE:CCSBLACK.ZPL</code>. <code>E:</code> = flash memory, survives power-off. <code>R:</code> = RAM, wiped on reboot &mdash; never store to R.</p>
