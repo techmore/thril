@@ -176,6 +176,12 @@
       padding: 5px 12px; border-radius: 6px; cursor: pointer;
     }
     .checklist-reset:hover { color: var(--flag-red); border-color: var(--flag-red); }
+    .checklist-print {
+      margin-left: 8px; padding: 6px 12px; border: 1px solid var(--color-border);
+      border-radius: 6px; background: #fff; color: var(--deep-space-blue);
+      font: inherit; font-size: 12px; cursor: pointer;
+    }
+    .checklist-print:hover { color: var(--flag-red); border-color: var(--flag-red); }
 
     .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
     .callout.danger { background: #fde8ea; border-left: 4px solid var(--flag-red); color: #721c24; }
@@ -271,8 +277,10 @@
     .back-link:hover { color: var(--deep-space-blue); }
 
     @media print {
+      @page { size: 4in 6in; margin: 0.2in; }
       nav, .sidebar, .hero, .quick-links, .back-link, .toc-toggle { display: none !important; }
       .video-embed { display: none !important; }
+      .checklist-print, .checklist-reset { display: none !important; }
       .page-wrap { display: block; max-width: 100%; padding: 0; }
       .main-content { max-width: 100%; }
       section { break-inside: auto; padding: 16px 0; border: none; }
@@ -285,6 +293,19 @@
       body.printing-qr nav, body.printing-qr .sidebar, body.printing-qr .hero,
       body.printing-qr .main-content, body.printing-qr footer { display: none !important; }
       .qr-all-print-sheet .qr-card { border: 1px solid #000; }
+      body.printing-startup-checklist .page-wrap,
+      body.printing-startup-checklist .main-content,
+      body.printing-startup-checklist #machine-setup,
+      body.printing-startup-checklist #startup-checklist-print { display: block !important; }
+      body.printing-startup-checklist .main-content > *:not(#machine-setup),
+      body.printing-startup-checklist #machine-setup > *:not(#startup-checklist-print) { display: none !important; }
+      body.printing-startup-checklist #startup-checklist-print .checklist { display: block !important; }
+      body.printing-startup-checklist #startup-checklist-print .checklist-head { margin-bottom: 8px; }
+      body.printing-startup-checklist #startup-checklist-print .checklist-track { display: none; }
+      body.printing-startup-checklist #startup-checklist-print .check-item { padding: 4px 0; font-size: 9px; line-height: 1.25; }
+      body.printing-startup-checklist #startup-checklist-print .check-box { width: 11px; height: 11px; min-width: 11px; }
+      body.printing-startup-checklist #startup-checklist-print .check-text { color: #000; }
+      body.printing-startup-checklist #startup-checklist-print .checklist-done { margin-top: 8px; font-size: 9px; }
     }
 
     @media (min-width: 1024px) { .sidebar.visible { display: block; } }
@@ -400,7 +421,7 @@
         <div class="poly-sub">
           <h3>Startup sequence</h3>
           <p class="desc">Follow these steps in order each time the machine is started from cold. Tap each box as you complete the step:</p>
-          <div class="checklist">
+          <div class="checklist" id="startup-checklist-print">
             <div class="checklist-head">
               <strong>Startup checklist</strong>
               <div class="checklist-track"><span class="checklist-fill"></span></div>
@@ -420,6 +441,7 @@
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span></label>
             <div class="checklist-done"><i class="ti ti-check"></i> Startup complete &mdash; ready for production.</div>
             <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
+            <button class="checklist-print" onclick="printStartupChecklist(this)"><i class="ti ti-printer"></i> Print checklist</button>
           </div>
 
           <div class="callout danger">
@@ -1363,6 +1385,15 @@
       const list = btn.closest('.checklist');
       list.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
       updateChecklist(list);
+    }
+
+    function printStartupChecklist(btn) {
+      document.body.classList.add('printing-startup-checklist');
+      window.addEventListener('afterprint', function cleanup() {
+        document.body.classList.remove('printing-startup-checklist');
+        window.removeEventListener('afterprint', cleanup);
+      });
+      window.print();
     }
 
     function updateChecklist(list) {
