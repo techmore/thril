@@ -64,6 +64,7 @@
       background: var(--papaya-whip); color: var(--deep-space-blue);
     }
     .sidebar nav a i { font-size: 16px; width: 20px; color: var(--steel-blue); }
+    .sidebar nav a .nav-time { margin-left: auto; color: var(--steel-blue); font-size: 10px; font-weight: 700; white-space: nowrap; }
     .sidebar .toc-group { margin-bottom: 16px; }
     .sidebar .toc-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
@@ -162,6 +163,7 @@
     .check-item input:checked + .check-box { background: var(--steel-blue); border-color: var(--steel-blue); }
     .check-item input:checked + .check-box i { opacity: 1; transform: scale(1); }
     .check-item .check-text { font-size: 13px; color: #444; line-height: 1.5; }
+    .check-time { margin-left: auto; flex-shrink: 0; color: var(--steel-blue); font-size: 11px; font-weight: 700; white-space: nowrap; }
     .check-item input:checked ~ .check-text { text-decoration: line-through; color: #9a9a9a; }
     .check-item input:checked ~ .check-text strong { color: #7a7a7a; }
     .checklist-done {
@@ -323,6 +325,7 @@
       #machine-setup .checklist-count { font-size: 10px; }
       #machine-setup .checklist-track { display: none; }
       #machine-setup .check-item { gap: 6px; padding: 3px 0; font-size: 10px; line-height: 1.18; }
+      #machine-setup .check-time { font-size: 9px; }
       #machine-setup .check-box { width: 13px; height: 13px; min-width: 13px; }
       #machine-setup .checklist-done { margin-top: 5px; padding: 5px 7px; font-size: 10px; }
       #machine-setup .checklist-reset,
@@ -389,18 +392,18 @@
       <nav>
         <div class="toc-group">
           <div class="toc-label">Guide</div>
-          <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup &amp; startup</a>
-          <a href="#compressor-setup"><i class="ti ti-wind"></i>Compressor setup</a>
-          <a href="#change-bag"><i class="ti ti-replace"></i>Change bag &amp; film roll</a>
-          <a href="#end-of-day"><i class="ti ti-sunset"></i>End of day shutdown</a>
-          <a href="#label-printing"><i class="ti ti-printer"></i>Label printing</a>
-          <a href="#certification"><i class="ti ti-certificate"></i>Operator certification</a>
-          <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure</a>
-          <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting</a>
-          <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting</a>
-          <a href="#bag-tearing"><i class="ti ti-scissors"></i>Bag breaks &amp; web tension</a>
-          <a href="#parts"><i class="ti ti-tool"></i>Replacement parts &amp; intervals</a>
-          <a href="#qr-codes"><i class="ti ti-qrcode"></i>Section QR codes</a>
+          <a href="#machine-setup"><i class="ti ti-settings"></i>Machine setup &amp; startup<span class="nav-time">15 min</span></a>
+          <a href="#compressor-setup"><i class="ti ti-wind"></i>Compressor checklist &amp; startup<span class="nav-time">10 min</span></a>
+          <a href="#change-bag"><i class="ti ti-replace"></i>Change bag &amp; film roll<span class="nav-time">15 min</span></a>
+          <a href="#end-of-day"><i class="ti ti-sunset"></i>End of day shutdown<span class="nav-time">5 min</span></a>
+          <a href="#label-printing"><i class="ti ti-printer"></i>Label printing<span class="nav-time">10 min</span></a>
+          <a href="#certification"><i class="ti ti-certificate"></i>Operator certification<span class="nav-time">30 min</span></a>
+          <a href="#rebagging"><i class="ti ti-refresh"></i>Rebagging procedure<span class="nav-time">10 min</span></a>
+          <a href="#troubleshooting"><i class="ti ti-alert-triangle"></i>Troubleshooting<span class="nav-time">5 min</span></a>
+          <a href="#seal-troubleshooting"><i class="ti ti-heat"></i>Seal troubleshooting<span class="nav-time">10 min</span></a>
+          <a href="#bag-tearing"><i class="ti ti-scissors"></i>Bag breaks &amp; web tension<span class="nav-time">15 min</span></a>
+          <a href="#parts"><i class="ti ti-tool"></i>Replacement parts &amp; intervals<span class="nav-time">5 min</span></a>
+          <a href="#qr-codes"><i class="ti ti-qrcode"></i>Section QR codes<span class="nav-time">1 min</span></a>
         </div>
         <div class="toc-group">
           <div class="toc-label">Resources</div>
@@ -447,18 +450,18 @@
               <div class="checklist-track"><span class="checklist-fill"></span></div>
               <span class="checklist-count">0/12</span>
             </div>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Inspect the machine</strong> &mdash; walk around the bagger: film guard closed, sealer bar clean, no debris, film, or loose parts in the feed path</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check the disengage lever</strong> &mdash; confirm the lever on the front-left of the machine is in the engaged (closed) position before running. If it is open, the machine shows <strong>Bagger Error</strong> on a red screen (see <a href="#seal-frame-error" style="color:var(--steel-blue);text-decoration:underline;">Seal Frame Open error below</a>)</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Set seal temperature</strong> &mdash; set the seal temp dial to <strong>380 &deg;F</strong> and seal dwell time to <strong>0.3 seconds</strong></span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Inspect film roll</strong> &mdash; the bagger should already have a film roll loaded. Inspect it and replace only if needed, using the correct bag for the order. Spare bags and film are stored in the storage area</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check the air catch for water</strong> &mdash; drain any water from the air catch / water separator on the air line so dry air reaches the machine</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Compressor check</strong> &mdash; verify the tank is drained and the ball valve is <strong>closed</strong></span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Connect air</strong> &mdash; attach the air hose to the T-1000 quick-disconnect on the rear panel. Listen for the coupling to seat &mdash; do this before starting the compressor</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Start the compressor</strong> &mdash; with the ball valve still closed, start the compressor and let it build pressure</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Open ball valve &amp; set pressure</strong> &mdash; once the compressor is running, open the ball valve and set the regulator to <strong>60 PSI</strong></span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads <strong>60 PSI</strong></span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Inspect the machine</strong> &mdash; walk around the bagger: film guard closed, sealer bar clean, no debris, film, or loose parts in the feed path</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Power on</strong> &mdash; flip the main power switch on the back panel to the ON position</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check the disengage lever</strong> &mdash; confirm the lever on the front-left of the machine is in the engaged (closed) position before running. If it is open, the machine shows <strong>Bagger Error</strong> on a red screen (see <a href="#seal-frame-error" style="color:var(--steel-blue);text-decoration:underline;">Seal Frame Open error below</a>)</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Set seal temperature</strong> &mdash; set the seal temp dial to <strong>380 &deg;F</strong> and seal dwell time to <strong>0.3 seconds</strong></span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Inspect film roll</strong> &mdash; the bagger should already have a film roll loaded. Inspect it and replace only if needed, using the correct bag for the order. Spare bags and film are stored in the storage area</span><span class="check-time">2 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Check the air catch for water</strong> &mdash; drain any water from the air catch / water separator on the air line so dry air reaches the machine</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Compressor check</strong> &mdash; verify the tank is drained and the ball valve is <strong>closed</strong></span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Connect air</strong> &mdash; attach the air hose to the T-1000 quick-disconnect on the rear panel. Listen for the coupling to seat &mdash; do this before starting the compressor</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Start the compressor</strong> &mdash; with the ball valve still closed, start the compressor and let it build pressure</span><span class="check-time">2&ndash;5 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Open ball valve &amp; set pressure</strong> &mdash; once the compressor is running, open the ball valve and set the regulator to <strong>60 PSI</strong></span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads <strong>60 PSI</strong></span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span><span class="check-time">1 min</span></label>
             <div class="checklist-done"><i class="ti ti-check"></i> Startup complete &mdash; ready for production.</div>
             <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
             <button class="checklist-print" onclick="printStartupChecklist(this)"><i class="ti ti-printer"></i> Print checklist</button>
@@ -481,7 +484,7 @@
       <!-- ═══ Compressor Setup ═══ -->
       <section id="compressor-setup">
         <p class="section-label">Air supply</p>
-        <h2 class="section-title">Compressor setup</h2>
+        <h2 class="section-title">Compressor checklist &amp; startup</h2>
         <p class="section-sub">The T-1000 runs on compressed air. Correct compressor configuration protects the sealer and keeps seal quality consistent. Set up the air supply before every startup.</p>
 
         <div class="video-embed">
