@@ -31,9 +31,7 @@
       main > *:not(.print-card) { display:none; }
       .print-card { display:block; text-align:center; color:var(--blue); padding-top:.2in; }
       .print-card h1 { font-size:22px; margin:0 0 6px; }
-      .print-card p { font-size:12px; margin:0 0 14px; color:var(--muted); }
       .print-card img { width:2.6in; height:2.6in; }
-      .print-card .url { margin-top:14px; font-size:10px; word-break:break-all; }
     }
   </style>
 </head>
@@ -56,17 +54,11 @@
     <p class="footer"><a href="poly-bagger.html">Open the full guide</a></p>
     <section class="print-card" aria-hidden="true">
       <h1>Poly Bagger Operator Menu</h1>
-      <p>Scan to open the mobile operator workflow.</p>
-      <img id="menu-qr" alt="QR code for the Poly Bagger Operator Menu">
-      <div class="url">https://techmore.github.io/thril/operator-menu.html</div>
+      <img id="menu-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&amp;data=https://techmore.github.io/thril/operator-menu.html" alt="QR code for the Poly Bagger Operator Menu">
     </section>
   </main>
   <script>
     function printMenuQr() {
-      const qr = qrcode(0, 'M');
-      qr.addData('https://techmore.github.io/thril/operator-menu.html');
-      qr.make();
-      document.getElementById('menu-qr').src = qr.createDataURL(10, 4);
       window.print();
     }
   </script>
