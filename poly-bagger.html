@@ -214,6 +214,17 @@
     .screen-reference-grid figure { margin: 0; padding: 6px; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; }
     .screen-reference-grid img { display: block; width: 100%; height: 130px; object-fit: contain; border-radius: 5px; }
     .screen-reference-grid figcaption { margin-top: 5px; color: var(--deep-space-blue); font-size: 11px; font-weight: 700; text-align: center; }
+    .touchscreen-steps { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 16px; }
+    .touchscreen-step { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 20px; align-items: center; padding: 20px; border: 1px solid var(--color-border); border-radius: 12px; background: #fff; }
+    .touchscreen-step h4 { font-size: 17px; color: var(--deep-space-blue); margin: 0 0 10px; }
+    .touchscreen-step p { font-size: 14px; line-height: 1.65; color: #444; margin: 0; }
+    .touchscreen-step figure { margin: 0; }
+    .touchscreen-step img { display: block; width: 100%; height: auto; border-radius: 8px; }
+    .touchscreen-step figcaption { margin-top: 7px; font-size: 12px; color: #666; text-align: center; }
+    .touchscreen-step.text-only { grid-template-columns: 1fr; }
+    .touchscreen-step.wait-step { border-left: 4px solid #ffc107; }
+    @media (max-width: 760px) { .touchscreen-step { grid-template-columns: 1fr; padding: 16px; gap: 14px; } }
+    @media print { .touchscreen-step { break-inside: avoid; } .touchscreen-step img { max-height: 3in; object-fit: contain; } }
     .manual-fig { background: #fff; border: 1px solid var(--color-border); border-radius: 10px; padding: 12px; text-align: center; }
     .manual-fig img { width: 100%; height: auto; border-radius: 6px; }
     .manual-fig figcaption { font-size: 11.5px; color: #666; margin-top: 8px; line-height: 1.45; }
@@ -467,7 +478,7 @@
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Start the compressor</strong> &mdash; with the ball valve still closed, start the compressor and let it build pressure</span><span class="check-time">2&ndash;5 min</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Open ball valve &amp; set pressure</strong> &mdash; once the compressor is running, open the ball valve and set the regulator to <strong>60 PSI</strong></span><span class="check-time">1 min</span></label>
             <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Verify pressure</strong> &mdash; check the air pressure gauge on the control panel reads <strong>60 PSI</strong></span><span class="check-time">1 min</span></label>
-            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; press the green Start button to run one test bag. Verify seal quality and bag length before production</span><span class="check-time">1 min</span></label>
+            <label class="check-item"><input type="checkbox"><span class="check-box"><i class="ti ti-check"></i></span><span class="check-text"><strong>Test cycle</strong> &mdash; follow the <a href="#production-training" style="color:var(--steel-blue);text-decoration:underline;">touchscreen steps below</a>: wait for Ready, select Stop to enable the machine, then press Manual Cycle. Verify seal quality and bag length before production</span><span class="check-time">1 min</span></label>
             <div class="checklist-done"><i class="ti ti-check"></i> Startup complete &mdash; ready for production.</div>
             <button class="checklist-reset" onclick="resetChecklist(this)"><i class="ti ti-refresh"></i> Reset</button>
             <button class="checklist-print" onclick="printStartupChecklist(this)"><i class="ti ti-printer"></i> Print checklist</button>
@@ -490,17 +501,6 @@
       <!-- ═══ Compressor Setup ═══ -->
       <section id="compressor-setup">
         <div class="poly-sub">
-          <h3>Fortress pancake compressor: daily routine</h3>
-          <p class="desc">Use this routine for the Fortress pancake compressor that supplies the bagger.</p>
-          <ol class="poly-steps">
-            <li><strong>End of day:</strong> switch the compressor off, drain the tank until water stops flowing, then close the drain valve.</li>
-            <li><strong>Pull the power:</strong> unplug the compressor after draining it.</li>
-            <li><strong>Morning check:</strong> confirm the tank is drained, the hose and fittings look secure, and the drain valve is closed.</li>
-            <li><strong>Power on:</strong> plug in the compressor and switch it on. Let it build pressure.</li>
-            <li><strong>Verify PSI:</strong> confirm the regulator/gauge is at the required operating pressure before running the bagger.</li>
-          </ol>
-          <div class="callout warn"><strong>Do not run the bagger without confirmed air pressure.</strong> Stop and get assistance if the compressor will not build pressure, the gauge is not reading correctly, or a hose/fitting leaks.</div>
-
           <h3>Required air supply</h3>
           <table class="poly-tbl" style="max-width:520px;">
             <thead><tr><th>Parameter</th><th>Setting</th></tr></thead>
@@ -557,6 +557,22 @@
         </div>
       </section>
 
+      <!-- ═══ Fortress Compressor ═══ -->
+      <section id="fortress-compressor">
+        <div class="poly-sub">
+          <h2 class="section-title">Fortress pancake compressor</h2>
+          <p class="section-sub">This is separate equipment from the T-1000 bagger. Follow this daily routine for the Fortress compressor.</p>
+          <ol class="poly-steps">
+            <li><strong>End of day:</strong> switch the compressor off, drain the tank until water stops flowing, then close the drain valve.</li>
+            <li><strong>Pull the power:</strong> unplug the compressor after draining it.</li>
+            <li><strong>Morning check:</strong> confirm the tank is drained, the hose and fittings look secure, and the drain valve is closed.</li>
+            <li><strong>Power on:</strong> plug in the compressor and switch it on. Let it build pressure.</li>
+            <li><strong>Verify PSI:</strong> confirm the regulator/gauge is at the required operating pressure before running the equipment it supplies.</li>
+          </ol>
+          <div class="callout warn"><strong>Do not operate connected equipment without confirmed air pressure.</strong> Stop and get assistance if the compressor will not build pressure, the gauge is not reading correctly, or a hose/fitting leaks.</div>
+        </div>
+      </section>
+
       <!-- ═══ Change Bag / Film Roll ═══ -->
       <section id="change-bag">
         <p class="section-label">Production</p>
@@ -564,36 +580,34 @@
         <p class="section-sub">Run the bagger safely and consistently: verify settings, check the first bag, monitor quality, and complete a clean film changeover when needed.</p>
 
         <div class="poly-sub">
-          <h3>Production screens</h3>
-          <p class="desc">Keep the machine on the normal <strong>Operation</strong> screen while running. Use the touchscreen to confirm the mode, temperature/pressure status, bag count, and any warning message.</p>
-          <ol class="poly-steps">
-            <li><strong>Operation screen:</strong> normal production view. Start or stop the machine here and watch for <em>Ready</em>, <em>Waiting</em>, or an alarm message.</li>
-            <li><strong>Settings screen:</strong> review or adjust the approved recipe settings, including seal temperature, seal time, fill time, air pulse, and index speed.</li>
-            <li><strong>Main Menu:</strong> use this when you need job save/recall, options, counters, or technical information. Do not change service settings unless authorized.</li>
-            <li><strong>If you get lost:</strong> stop the machine, return to <em>Main Menu</em>, select the normal <em>Operation</em> screen, confirm the correct job/settings, and run one test bag before resuming production.</li>
+          <h3 id="production-training">From startup to your first cycle</h3>
+          <p class="desc">Follow these screens on our bagger. Complete the <a href="#machine-setup" style="color:var(--steel-blue);text-decoration:underline;">machine startup checklist</a>, including the air-pressure and guard checks, before enabling a cycle. Use the approved job settings; the values pictured are examples. Select any image to enlarge it.</p>
+          <ol class="touchscreen-steps" aria-label="Touchscreen startup sequence">
+            <li class="touchscreen-step">
+              <div><h4>1. Startup &rarr; Operation</h4><p>After the machine powers on, the <strong>Startup</strong> screen appears. Select <strong>Operation</strong> to open the local operation screen shown in the next step.</p></div>
+              <figure><a href="poly-bagger/images/Startup-screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Startup-screen.png" alt="Startup screen with the yellow Operation button on the right" loading="lazy"></a><figcaption>Startup screen &mdash; select Operation.</figcaption></figure>
+            </li>
+            <li class="touchscreen-step">
+              <div><h4>2. Operation &rarr; Main Menu</h4><p>On the <strong>local Operation</strong> screen, select <strong>Main Menu</strong> in the <strong>bottom-right corner</strong>.</p></div>
+              <figure><a href="poly-bagger/images/local-operation.jpeg" target="_blank" rel="noreferrer"><img src="poly-bagger/images/local-operation.jpeg" alt="Our local Operation screen with Main Menu in the bottom-right corner" loading="lazy"></a><figcaption>Local Operation &mdash; Main Menu is at the bottom right.</figcaption></figure>
+            </li>
+            <li class="touchscreen-step">
+              <div><h4>3. Main Menu &rarr; Bagger Settings</h4><p>On the <strong>local Main Menu</strong>, select <strong>Bagger Settings</strong>, the <strong>middle button in the top row</strong> of yellow menu buttons.</p></div>
+              <figure><a href="poly-bagger/images/local-mainmenu.jpeg" target="_blank" rel="noreferrer"><img src="poly-bagger/images/local-mainmenu.jpeg" alt="Our local Main Menu with Bagger Settings in the middle of the top menu row" loading="lazy"></a><figcaption>Local Main Menu &mdash; select Bagger Settings.</figcaption></figure>
+            </li>
+            <li class="touchscreen-step wait-step">
+              <div><h4>4. Bagger Settings &mdash; wait for Ready</h4><p>The <strong>local Bagger Settings</strong> screen opens. Confirm the approved settings, then <strong>halt here until Wait changes to Ready</strong>. The bagger indicator is at the <strong>upper left</strong>, beside Stop. Do not confuse it with the printer&rsquo;s separate Ready indicator on the Operation screen.</p></div>
+              <figure><a href="poly-bagger/images/local-baggersettings.jpeg" target="_blank" rel="noreferrer"><img src="poly-bagger/images/local-baggersettings.jpeg" alt="Our local Bagger Settings screen showing Wait at the upper left, Stop immediately to its right, and Manual Cycle at the upper right" loading="lazy"></a><figcaption>Local Bagger Settings &mdash; this photo still shows Wait.</figcaption></figure>
+            </li>
+            <li class="touchscreen-step text-only">
+              <div><h4>5. Select Stop to enable the machine</h4><p>Once the bagger shows <strong>Ready</strong>, select the red <strong>Stop</strong> button immediately to the <strong>right of the Ready/Wait indicator</strong>. This toggles the machine from <strong>Stop</strong> to <strong>Start</strong>, enabling it to cycle.</p></div>
+            </li>
+            <li class="touchscreen-step text-only">
+              <div><h4>6. Press Manual Cycle to engage</h4><p>With the operating area clear, press the green <strong>Manual Cycle</strong> button at the <strong>upper right</strong> to engage one cycle. Check the first bag&rsquo;s seal and length before continuing production.</p></div>
+            </li>
           </ol>
-          <div class="callout info"><strong>Important:</strong> If the screen shows <em>Waiting</em>, <em>Bagger Error</em>, an open-guard message, or an unexpected mode, do not keep cycling. Correct the condition or get assistance before restarting.</div>
-
-          <h3 id="production-training">Production training: touchscreen basics</h3>
-          <p class="desc">The screen names can vary slightly with installed options, but the workflow is the same. The manufacturer’s manual shows the standard Operation, Main Menu, and Settings screens.</p>
-          <div class="screen-reference-grid" aria-label="Bagger touchscreen reference images">
-            <figure><a href="poly-bagger/images/Startup-screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Startup-screen.png" alt="Bagger Startup screen"></a><figcaption>Startup screen</figcaption></figure>
-            <figure><a href="poly-bagger/images/Operation%20Screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Operation%20Screen.png" alt="Bagger Operation Screen"></a><figcaption>Operation screen</figcaption></figure>
-            <figure><a href="poly-bagger/images/Main%20Menu.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Main%20Menu.png" alt="Bagger Main Menu screen"></a><figcaption>Main Menu</figcaption></figure>
-            <figure><a href="poly-bagger/images/Settings%20Screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Settings%20Screen.png" alt="Bagger Settings Screen"></a><figcaption>Settings screen</figcaption></figure>
-          </div>
-          <ul class="poly-steps">
-            <li><strong>Startup screen:</strong> select <em>Operation</em> to enter the normal production screen.</li>
-            <li><strong>Operation screen:</strong> the normal production screen. Stay here while running and watch the Ready/Waiting indicator, mode, bag count, and messages.</li>
-            <li><strong>Start / Stop:</strong> enables or halts bagger operation. Use <em>Stop</em> whenever production is not actively running.</li>
-            <li><strong>Manual / Auto:</strong> selects operator-initiated cycling or automatic paced cycling. Confirm the intended mode before starting.</li>
-            <li><strong>Run / Setup:</strong> Run is for production; Setup is for adjustment or testing. Setup may allow operation before temperature is ready and can affect counters or auxiliary signals.</li>
-            <li><strong>Ready / Waiting:</strong> Ready means the heater is within its accepted temperature range. Waiting means the machine is not ready and may pause cycling.</li>
-            <li><strong>Main Menu:</strong> the navigation hub for Settings, job/recipe recall, counters, options, and technical information.</li>
-            <li><strong>Settings:</strong> review or change approved bag settings such as seal temperature, seal time, fill time, air pulse, and index speed. Make one change at a time and test a bag.</li>
-          </ul>
-          <div class="callout warn"><strong>If you get lost:</strong> stop the machine, return to <em>Main Menu</em>, open the normal <em>Operation</em> screen, confirm the correct mode and job, then run one test bag before resuming.</div>
-          <p class="desc"><a href="poly-bagger/media/t1000-operation-manual-v9h.pdf" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Manufacturer screen reference (local copy)</a> &mdash; see the Touch Screen Operation chapter for the sample Operation, Main Menu, and Settings screens. Your machine may differ because of options or software version.</p>
+          <div class="callout info"><strong>If the bagger is not ready:</strong> remain stopped while Wait is displayed. Resolve any <strong>Bagger Error</strong> or open-guard message before cycling.</div>
+          <p class="desc"><a href="poly-bagger/media/t1000-operation-manual-v9h.pdf#page=29" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Manufacturer control reference</a> &mdash; Operation, Main Menu, Start/Stop, Ready/Waiting, and Bagger Settings (printed page 28).</p>
 
           <h3>Change bag &amp; film roll</h3>
           <h3 style="margin-top:18px;">When to change the film roll</h3>
