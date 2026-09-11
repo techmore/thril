@@ -278,6 +278,11 @@
       font-size: 13px; color: var(--steel-blue); font-weight: 500; margin-bottom: 16px;
     }
     .back-link:hover { color: var(--deep-space-blue); }
+    .hero-menu-link {
+      display: inline-flex; margin-top: 14px; color: var(--papaya-whip);
+      font-size: 13px; font-weight: 700; text-decoration: underline;
+    }
+    .hero-menu-link:hover { color: #fff; }
 
     @media print {
       @page { size: 4in 6in; margin: 0.2in; }
@@ -381,11 +386,12 @@
     <div class="container">
       <h1>Poly Bagger &mdash; machine setup &amp; label printing<span>.</span></h1>
       <p>Complete guide for the Advanced Poly T-1000 bagger: physical controls and startup, compressor setup, film change, end-of-day shutdown, operator certification checklist, label printing workflow, rebagging procedure, and dedicated troubleshooting for seals and label placement.</p>
+      <a class="hero-menu-link" href="#mobile-menu">Open section menu &darr;</a>
     </div>
   </header>
 
   <div class="page-wrap">
-    <button class="toc-toggle" onclick="toggleToc()" aria-expanded="false">
+    <button class="toc-toggle" id="mobile-menu" onclick="toggleToc()" aria-expanded="false">
       <i class="ti ti-list"></i> Table of contents
       <i class="ti ti-chevron-down"></i>
     </button>
