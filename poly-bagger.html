@@ -210,7 +210,7 @@
     .video-embed .video-frame { width: 100%; margin-top: 12px; }
     .video-embed .video-frame iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; }
     .fig-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0 4px; }
-    .screen-reference-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 16px; }
+    .screen-reference-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0 16px; }
     .screen-reference-grid figure { margin: 0; padding: 6px; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; }
     .screen-reference-grid img { display: block; width: 100%; height: 130px; object-fit: contain; border-radius: 5px; }
     .screen-reference-grid figcaption { margin-top: 5px; color: var(--deep-space-blue); font-size: 11px; font-weight: 700; text-align: center; }
@@ -341,6 +341,7 @@
       #machine-setup .checklist-reset,
       #machine-setup .checklist-print { padding: 4px 8px; font-size: 10px; }
       #machine-setup .callout { display: none; }
+      .screen-reference-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     .toc-toggle {
@@ -576,11 +577,13 @@
           <h3 id="production-training">Production training: touchscreen basics</h3>
           <p class="desc">The screen names can vary slightly with installed options, but the workflow is the same. The manufacturer’s manual shows the standard Operation, Main Menu, and Settings screens.</p>
           <div class="screen-reference-grid" aria-label="Bagger touchscreen reference images">
+            <figure><a href="poly-bagger/images/Startup-screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Startup-screen.png" alt="Bagger Startup screen"></a><figcaption>Startup screen</figcaption></figure>
             <figure><a href="poly-bagger/images/Operation%20Screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Operation%20Screen.png" alt="Bagger Operation Screen"></a><figcaption>Operation screen</figcaption></figure>
             <figure><a href="poly-bagger/images/Main%20Menu.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Main%20Menu.png" alt="Bagger Main Menu screen"></a><figcaption>Main Menu</figcaption></figure>
             <figure><a href="poly-bagger/images/Settings%20Screen.png" target="_blank" rel="noreferrer"><img src="poly-bagger/images/Settings%20Screen.png" alt="Bagger Settings Screen"></a><figcaption>Settings screen</figcaption></figure>
           </div>
           <ul class="poly-steps">
+            <li><strong>Startup screen:</strong> select <em>Operation</em> to enter the normal production screen.</li>
             <li><strong>Operation screen:</strong> the normal production screen. Stay here while running and watch the Ready/Waiting indicator, mode, bag count, and messages.</li>
             <li><strong>Start / Stop:</strong> enables or halts bagger operation. Use <em>Stop</em> whenever production is not actively running.</li>
             <li><strong>Manual / Auto:</strong> selects operator-initiated cycling or automatic paced cycling. Confirm the intended mode before starting.</li>
