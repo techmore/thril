@@ -18,9 +18,11 @@
     ol { margin:10px 0 0 22px; padding:0; }
     li { margin:0 0 12px; line-height:1.45; }
     .warning { margin-top:18px; padding:12px; border-left:4px solid var(--red); background:#fde8ea; line-height:1.4; }
-    .print-button { position:absolute; top:12px; right:12px; border:0; border-radius:7px; padding:8px 10px; background:#ffffff22; color:var(--cream); cursor:pointer; font-size:18px; line-height:1; }
+    .print-button { position:absolute; top:12px; border:0; border-radius:7px; padding:8px 10px; background:#ffffff22; color:var(--cream); cursor:pointer; font-size:18px; line-height:1; }
+    .print-button.qr { right:12px; }
+    .print-button.list { right:52px; }
     .print-button:hover { background:#ffffff40; }
-    .print-card { display:none; }
+    .print-card, .print-list-card { display:none; }
     a { color:var(--blue); }
     .back { display:inline-block; margin-top:18px; }
     @media print {
@@ -30,6 +32,13 @@
       .print-card { display:block; width:4in; height:6in; text-align:center; color:var(--blue); padding-top:.35in; }
       .print-card h1 { font-size:22px; margin:0 0 6px; }
       .print-card img { width:3.4in; height:3.4in; }
+      body.printing-list main > *:not(.print-list-card) { display:none; }
+      body.printing-list .print-list-card { display:block; width:4in; height:6in; color:#000; padding-top:.05in; }
+      body.printing-list .print-list-card h1 { font-size:17px; margin:0 0 8px; }
+      body.printing-list .print-list-card h2 { color:#000; font-size:12px; margin:8px 0 3px; }
+      body.printing-list .print-list-card ol { margin:0 0 0 16px; padding:0; }
+      body.printing-list .print-list-card li { margin:0 0 4px; font-size:9px; line-height:1.2; }
+      body.printing-list .print-list-card strong { font-weight:700; }
     }
   </style>
 </head>
@@ -38,7 +47,8 @@
     <header>
       <h1>Fortress pancake compressor</h1>
       <p>Separate equipment from the T-1000 poly bagger. Follow this routine for the Fortress compressor only.</p>
-      <button class="print-button" type="button" onclick="printFortressQr()" aria-label="Print QR code for Fortress compressor instructions" title="Print QR code"><i class="ti ti-printer"></i></button>
+      <button class="print-button list" type="button" onclick="printFortressList()" aria-label="Print Fortress compressor checklist" title="Print checklist"><i class="ti ti-list-check"></i></button>
+      <button class="print-button qr" type="button" onclick="printFortressQr()" aria-label="Print QR code for Fortress compressor instructions" title="Print QR code"><i class="ti ti-qrcode"></i></button>
     </header>
     <section class="card">
       <h2>Start-of-day safety check</h2>
@@ -61,9 +71,34 @@
       <h1>Fortress pancake compressor</h1>
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&amp;data=https://techmore.github.io/thril/fortress-compressor.html" alt="QR code for Fortress compressor instructions">
     </section>
+    <section class="print-list-card" aria-hidden="true">
+      <h1>Fortress Pancake Compressor</h1>
+      <h2>Start-of-day safety check</h2>
+      <ol>
+        <li><strong>Inspect:</strong> confirm the tank is drained, the hose and fittings look secure, and the drain valve is closed.</li>
+        <li><strong>Connect power:</strong> plug in the compressor and switch it on.</li>
+        <li><strong>Build pressure:</strong> let the compressor run until it reaches operating pressure.</li>
+        <li><strong>Check PSI:</strong> confirm the regulator/gauge is at the required pressure before running connected equipment.</li>
+      </ol>
+      <h2>End-of-day safety check</h2>
+      <ol>
+        <li><strong>Switch off:</strong> turn the compressor off.</li>
+        <li><strong>Drain the tank:</strong> open the drain valve until water stops flowing, then close the valve.</li>
+        <li><strong>Pull the power:</strong> unplug the compressor after draining it.</li>
+      </ol>
+    </section>
   </main>
   <script>
     function printFortressQr() {
+      window.print();
+    }
+
+    function printFortressList() {
+      document.body.classList.add('printing-list');
+      window.addEventListener('afterprint', function cleanup() {
+        document.body.classList.remove('printing-list');
+        window.removeEventListener('afterprint', cleanup);
+      });
       window.print();
     }
   </script>
