@@ -10,7 +10,7 @@
     * { box-sizing:border-box; }
     body { margin:0; background:#f8f6f2; color:var(--text); font-family:Arial,sans-serif; }
     main { max-width:680px; margin:auto; padding:28px 18px 40px; }
-    header { background:linear-gradient(135deg,var(--blue),#4a1a1a); color:var(--cream); border-radius:16px; padding:24px 20px; margin-bottom:18px; }
+    header { position:relative; background:linear-gradient(135deg,var(--blue),#4a1a1a); color:var(--cream); border-radius:16px; padding:24px 58px 24px 20px; margin-bottom:18px; }
     h1 { margin:0 0 7px; font-size:28px; line-height:1.1; }
     header p { margin:0; color:#fff; font-size:14px; line-height:1.45; }
     .card { background:#fff; border:1px solid #e5e0d8; border-radius:12px; padding:18px; box-shadow:0 2px 6px #00304910; }
@@ -18,8 +18,19 @@
     ol { margin:10px 0 0 22px; padding:0; }
     li { margin:0 0 12px; line-height:1.45; }
     .warning { margin-top:18px; padding:12px; border-left:4px solid var(--red); background:#fde8ea; line-height:1.4; }
+    .print-button { position:absolute; top:12px; right:12px; border:0; border-radius:7px; padding:8px 10px; background:#ffffff22; color:var(--cream); cursor:pointer; font-size:18px; line-height:1; }
+    .print-button:hover { background:#ffffff40; }
+    .print-card { display:none; }
     a { color:var(--blue); }
     .back { display:inline-block; margin-top:18px; }
+    @media print {
+      @page { size:4in 6in; margin:.25in; }
+      body { background:#fff; }
+      main > *:not(.print-card) { display:none; }
+      .print-card { display:block; width:4in; height:6in; text-align:center; color:var(--blue); padding-top:.35in; }
+      .print-card h1 { font-size:22px; margin:0 0 6px; }
+      .print-card img { width:3.4in; height:3.4in; }
+    }
   </style>
 </head>
 <body>
@@ -27,6 +38,7 @@
     <header>
       <h1>Fortress pancake compressor</h1>
       <p>Separate equipment from the T-1000 poly bagger. Follow this routine for the Fortress compressor only.</p>
+      <button class="print-button" type="button" onclick="printFortressQr()" aria-label="Print QR code for Fortress compressor instructions" title="Print QR code"><i class="ti ti-printer"></i></button>
     </header>
     <section class="card">
       <h2>Start-of-day safety check</h2>
@@ -45,6 +57,15 @@
       <div class="warning"><strong>Stop and get assistance</strong> if the compressor will not build pressure, the gauge is not reading correctly, or a hose/fitting leaks.</div>
     </section>
     <a class="back" href="operator-menu.html">&larr; Back to mobile operator menu</a>
+    <section class="print-card" aria-hidden="true">
+      <h1>Fortress pancake compressor</h1>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&amp;data=https://techmore.github.io/thril/fortress-compressor.html" alt="QR code for Fortress compressor instructions">
+    </section>
   </main>
+  <script>
+    function printFortressQr() {
+      window.print();
+    }
+  </script>
 </body>
 </html>
