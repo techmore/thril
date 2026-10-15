@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manufacturing Resources | Thril</title>
+  <meta name="description" content="Industrial SLS equipment pricing, official Formlabs and Tesla videos, and a quote comparison worksheet for recurring production and injection molding.">
+  <style>
+    :root { --blue:#003049; --red:#c1121f; --cream:#fdf0d5; --steel:#669bbc; --ink:#1a1a1a; --muted:#5a5a5a; --line:#e5e0d8; --soft:#f8f6f2; }
+    * { box-sizing:border-box; }
+    html { scroll-padding-top:80px; }
+    body { margin:0; color:var(--ink); background:white; font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.65; }
+    a { color:var(--blue); text-underline-offset:3px; }
+    a:hover { color:var(--red); }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline:3px solid var(--steel); outline-offset:4px; }
+    body > header { background:var(--blue); color:var(--cream); }
+    .topbar { max-width:1120px; margin:auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { font-size:22px; font-weight:800; color:var(--cream); text-decoration:none; }
+    .brand span { color:#ef6c72; }
+    .topbar nav { display:flex; flex-wrap:wrap; gap:18px; font-size:13px; }
+    .topbar nav a { color:var(--cream); }
+    main { max-width:1056px; margin:auto; padding:36px 24px 64px; }
+    .breadcrumb, .meta, .source { color:var(--muted); font-size:13px; }
+    .eyebrow { color:var(--red); text-transform:uppercase; letter-spacing:1.5px; font-size:12px; font-weight:700; margin:24px 0 8px; }
+    h1,h2,h3 { color:var(--blue); line-height:1.2; }
+    h1 { font-size:clamp(30px,5vw,44px); margin:0 0 14px; }
+    h2 { font-size:26px; margin:0 0 14px; }
+    h3 { font-size:18px; margin:0 0 12px; }
+    p { margin:0 0 16px; }
+    .intro { max-width:760px; font-size:17px; }
+    .jump-links { display:flex; flex-wrap:wrap; gap:10px; margin:24px 0; }
+    .jump-links a { padding:7px 14px; background:var(--soft); border:1px solid var(--line); border-radius:20px; font-size:13px; text-decoration:none; }
+    section { border-top:1px solid var(--line); padding:32px 0; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .card { border:1px solid var(--line); border-radius:12px; padding:22px; background:var(--soft); }
+    .tag { display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px; }
+    .button { display:inline-block; padding:10px 16px; background:var(--red); border:1px solid var(--red); color:white; border-radius:7px; font-size:14px; font-weight:600; text-decoration:none; cursor:pointer; }
+    .button:hover { background:#940b16; color:white; }
+    button.secondary { background:white; color:var(--blue); border:1px solid var(--line); }
+    .notice { border-left:4px solid var(--steel); background:#e8edf0; padding:16px 20px; border-radius:6px; margin:20px 0; font-size:14px; }
+    .table-wrap { overflow-x:auto; }
+    table { border-collapse:collapse; width:100%; font-size:14px; }
+    caption { text-align:left; font-size:13px; color:var(--muted); margin-bottom:10px; }
+    th,td { padding:12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    thead th { background:var(--blue); color:var(--cream); font-weight:600; }
+    tbody th { color:var(--blue); min-width:125px; }
+    .price { white-space:nowrap; font-weight:700; font-size:19px; color:var(--blue); }
+    .quote-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    label { display:block; font-size:13px; font-weight:600; color:var(--blue); }
+    input { width:100%; border:1px solid #aaa; border-radius:6px; padding:11px; font:inherit; background:white; margin-top:6px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin:20px 0; }
+    #comparison-results { background:#e8edf0; padding:20px; border-radius:10px; }
+    #comparison-results p:last-child { margin-bottom:0; }
+    #cost-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-bottom:16px; }
+    .cost { font-size:24px; display:block; color:var(--blue); font-weight:700; }
+    .cost-label { font-size:13px; }
+    ul,ol { padding-left:22px; }
+    li { margin-bottom:9px; }
+    .source { margin:14px 0 0; }
+    .source a { font-weight:500; }
+    footer { background:var(--soft); border-top:1px solid var(--line); padding:24px; font-size:13px; text-align:center; }
+    [hidden] { display:none !important; }
+    @media(max-width:700px) { main { padding:24px 18px 40px; } .grid,.quote-grid { grid-template-columns:1fr; } .topbar { padding:12px 18px; align-items:flex-start; } .topbar nav { gap:10px; } .card { padding:18px; } }
+    @media print { body > header,.jump-links,.actions,footer { display:none; } main { max-width:none; padding:0; } section { padding:20px 0; } .card { break-inside:avoid; } input { border:none; padding:0; } a { color:black; } }
+  </style>
+</head>
+<body>
+  <header><div class="topbar"><a class="brand" href="index.html">THRIL<span>.</span></a><nav aria-label="Site navigation"><a href="index.html">QMS Wiki</a><a href="ccs-stocks.html">CCS Stocks</a><a href="poly-bagger.html">Bagger</a></nav></div></header>
+  <main>
+    <p class="breadcrumb"><a href="index.html">Thril</a> / Planning &amp; reference</p>
+    <p class="eyebrow">Manufacturing resources</p>
+    <h1>Production methods, equipment &amp; cost</h1>
+    <p class="intro">A practical reference for comparing industrial 3D printing, outsourced production, and injection molding for recurring orders. Start with the part requirements, then compare complete quotes over the expected production run.</p>
+    <p class="meta">Sources and advertised USD prices checked <time datetime="2026-10-15">October 15, 2026</time>. Manufacturer case studies are identified below; pricing is a planning reference, not a Thril sales quote.</p>
+    <nav class="jump-links" aria-label="On this page"><a href="#case-study">Videos &amp; case study</a><a href="#equipment">Equipment pricing</a><a href="#comparison">Compare quotes</a><a href="#precision">Precision &amp; purchasing</a></nav>
+
+    <section id="case-study">
+      <h2>When recurring production changes the math</h2>
+      <p>Formlabs describes Tesla’s glass-handling shim application at roughly 10,000–20,000 parts per month over a six-month need. Its account says the lower printing cost with Fuse X1 could remove the reason to invest in an injection mold for that part. This is a specific manufacturer-reported example, rather than a universal volume threshold.</p>
+      <p class="source">Source: <a href="https://formlabs.com/blog/announcing-fuse-x1-industrial-sls/">Formlabs’ launch article and shim example</a>.</p>
+      <div class="notice"><strong>Keep the capacity figures separate.</strong> The cited 10,000–30,000 parts per week describes Tesla Giga Nevada’s additive manufacturing department across equipment. It is not a demonstrated weekly output rating for one Fuse X1. The verified customer in these videos is Tesla Giga Nevada.</div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag">Official video · Formlabs</span>
+          <h3>Tesla builds FASTER with Formlabs Fuse X1!</h3>
+          <p>The customer story behind the discussion: production tooling, large parts, and turnaround at Tesla Giga Nevada.</p>
+          <a class="button" href="https://www.youtube.com/watch?v=V_wf6FxB-nc" target="_blank" rel="noopener noreferrer">Watch Tesla case study ↗</a>
+          <p class="source"><a href="https://formlabs.com/blog/fuse-x1-tesla-giga-nevada/">Read the official written case study</a>.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Official video · Formlabs</span>
+          <h3>Fuse X1 &amp; Flexible 80A Resin | Product Launch Event</h3>
+          <p>The broader product announcement. Use this for the vendor’s system overview and the launch context behind the pricing.</p>
+          <a class="button" href="https://www.youtube.com/watch?v=yhmRURZKdA8" target="_blank" rel="noopener noreferrer">Watch product launch ↗</a>
+          <p class="source"><a href="https://formlabs.com/company/press/formlabs-unveils-fuse-x1-large-format-sls-3d-printing/">Read the official launch announcement</a>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="equipment">
+      <h2>Equipment pricing to start a budget</h2>
+      <div class="table-wrap"><table>
+        <caption>Advertised starting printer prices in USD, checked October 15, 2026. Request itemized quotes for the complete installation.</caption>
+        <thead><tr><th scope="col">System</th><th scope="col">Starting printer price</th><th scope="col">Published build volume</th><th scope="col">Reference</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Formlabs Fuse X1</th><td><span class="price">$84,999</span></td><td>330 × 330 × 565 mm</td><td>Large-format SLS. <a href="https://formlabs.com/3d-printers/fuse-x1/">Product details</a></td></tr>
+          <tr><th scope="row">Formlabs Fuse 1+ 30W</th><td><span class="price">$24,999</span></td><td>165 × 165 × 300 mm</td><td>Compact SLS. <a href="https://formlabs.com/3d-printers/fuse-1/">Product details</a></td></tr>
+          <tr><th scope="row">Outsourced printing or molding</th><td>Part-specific quote</td><td>Supplier and process dependent</td><td>Compare delivered, accepted parts at the same quantity, material requirements, and inspection level.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="source">Pricing and dimensions: <a href="https://formlabs.com/3d-printers/sls/">official Formlabs SLS comparison</a>. Fuse X1 was announced June 9, 2026, with deliveries scheduled to begin Q4 2026 in the <a href="https://formlabs.com/company/press/formlabs-unveils-fuse-x1-large-format-sls-3d-printing/">launch announcement</a>; confirm current lead time with the supplier.</p>
+      <div class="notice"><strong>A starting printer price is not an installed-system budget.</strong> Confirm powder recovery and finishing equipment, build units, powder transport, material, service, installation, freight, tax, utilities, and operator training. Quote the equipment configuration you will actually use.</div>
+    </section>
+
+    <section id="comparison">
+      <h2>Compare quotes over the production run</h2>
+      <p>Enter costs for the same accepted part and monthly delivery requirement. For outsourced printing, use supplier setup and delivered unit prices. For in-house printing, allocate equipment, labor, material, finishing, inspection, rejects, and overhead to this job before entering values.</p>
+      <form id="quote-form">
+        <div class="quote-grid">
+          <label for="mold-fixed">Molding tooling &amp; setup (USD)<input id="mold-fixed" type="number" min="0" step="any" placeholder="From your quote" required></label>
+          <label for="print-fixed">Printing fixed cost allocated to job (USD)<input id="print-fixed" type="number" min="0" step="any" placeholder="Enter 0 if none" required></label>
+          <label for="mold-unit">Molded cost per accepted part (USD)<input id="mold-unit" type="number" min="0" step="any" placeholder="From your quote" required></label>
+          <label for="print-unit">Printed cost per accepted part (USD)<input id="print-unit" type="number" min="0" step="any" placeholder="Fully allocated cost" required></label>
+          <label for="monthly-qty">Accepted parts per month<input id="monthly-qty" type="number" min="1" step="1" placeholder="Your demand" required></label>
+          <label for="run-months">Production run (whole months)<input id="run-months" type="number" min="1" step="1" placeholder="Expected duration" required></label>
+        </div>
+        <div class="actions"><button type="submit" class="button">Compare costs</button><button type="button" id="example" class="button secondary">Load illustrative example</button><button type="reset" class="button secondary">Clear</button><button type="button" id="print" class="button secondary">Print worksheet</button></div>
+      </form>
+      <div id="comparison-results" role="status" aria-live="polite">
+        <p id="result-note">Enter quote values to compare costs. The example button uses invented numbers to explain the calculation; it is not a vendor quote.</p>
+        <div id="cost-summary" hidden><div><span class="cost-label">Molding total</span><span class="cost" id="mold-total"></span></div><div><span class="cost-label">Printing total</span><span class="cost" id="print-total"></span></div></div>
+        <p id="crossover" hidden></p>
+      </div>
+      <p class="source">Worksheet model: total cost = fixed cost + accepted quantity × cost per accepted part. It assumes constant unit costs and demand; it does not predict machine capacity, tooling life, financing, price tiers, or delivery performance. Compare those separately. Method reference: <a href="https://formlabs.com/global/white-papers/sls-3d-printing-vs-injection-molding-when-to-replace-molded-part/">SLS and injection molding economics</a>.</p>
+    </section>
+
+    <section id="precision">
+      <h2>Precision comes from the part and process evidence</h2>
+      <p>Define the critical dimensions, datum scheme, material, surface finish, fit, loading, and operating environment. Request representative sample parts and inspection results before treating a process as interchangeable with molding.</p>
+      <p>Formlabs’ dimensional study evaluates Nylon 12 on the Fuse 1+ 30W, including part position and repeated builds. That evidence is useful context, but it is not a tolerance guarantee for every Fuse X1 part, material, or build arrangement. Review accuracy against nominal dimensions separately from repeatability.</p>
+      <p class="source">Technical reference: <a href="https://formlabs.com/white-papers/measuring-sls-dimensional-accuracy-and-print-repeatability/">Measuring SLS dimensional accuracy and print repeatability</a>.</p>
+      <div class="grid">
+        <article class="card"><h3>Ask for comparable production quotes</h3><ul><li>Same drawing revision, material requirements, quantity, and delivery cadence.</li><li>Tooling ownership, design-change costs, minimum orders, and replacement tooling.</li><li>Finishing, inspection, packing, freight, rejects, and acceptance criteria.</li><li>Actual available capacity, lead time, service support, and recovery plan.</li></ul></article>
+        <article class="card"><h3>Choose the process for the job</h3><p>Evaluate printing for changing designs, mixed batches, bridge production, and shorter runs. Evaluate molding when the design and demand are stable enough to spread tooling costs across the required volume. Let quotes and measured samples decide the crossover.</p><p class="source">Further reading: <a href="https://formlabs.com/global/white-papers/sls-3d-printing-vs-injection-molding-when-to-replace-molded-part/">Formlabs process comparison</a>.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><a href="index.html">Thril QMS Wiki</a> · <a href="ccs-stocks.html#ccs-stock-fixes-v1">CCS Stock Fixes V1</a> · Manufacturing reference checked October 15, 2026</footer>
+  <script>
+    const ids = ['mold-fixed','print-fixed','mold-unit','print-unit','monthly-qty','run-months'];
+    const form = document.getElementById('quote-form');
+    const note = document.getElementById('result-note');
+    const summary = document.getElementById('cost-summary');
+    const crossover = document.getElementById('crossover');
+    const money = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'});
+    const number = new Intl.NumberFormat('en-US',{maximumFractionDigits:2});
+    let example = false;
+    function calculate() {
+      if (!form.reportValidity()) return;
+      const values = ids.map(id => Number(document.getElementById(id).value));
+      if (values.some(value => !Number.isFinite(value))) return;
+      const [mf,pf,mu,pu,monthly,months] = values;
+      const qty = monthly * months, molding = mf + mu * qty, printing = pf + pu * qty;
+      if (![qty,molding,printing].every(Number.isFinite)) { note.textContent='These values are too large. Enter realistic quote amounts.'; summary.hidden=true; crossover.hidden=true; return; }
+      document.getElementById('mold-total').textContent = money.format(molding);
+      document.getElementById('print-total').textContent = money.format(printing);
+      note.textContent = `${example ? 'Example-based inputs (illustrative costs, not a quote). ' : ''}${number.format(qty)} accepted parts over ${number.format(months)} months. ${Math.abs(molding-printing)<0.005 ? 'The quoted totals are equal.' : `${molding<printing ? 'Molding' : 'Printing'} has the lower modeled total by ${money.format(Math.abs(molding-printing))}.`}`;
+      const delta = pu-mu, fixed = mf-pf;
+      if (delta === 0) {
+        crossover.textContent = fixed === 0 ? 'Costs are equal at every quantity under these assumptions.' : 'There is no quantity crossover: unit costs are equal, so the lower fixed-cost option stays cheaper.';
+      } else {
+        const at = fixed/delta;
+        crossover.textContent = at>0 && Number.isFinite(at) ? `Modeled equal-cost quantity: ${number.format(at)} parts (about ${number.format(at/monthly)} months of demand). Above that quantity, ${delta>0 ? 'molding' : 'printing'} has the lower modeled cost. Fractional months describe cumulative demand, not a delivery schedule.` : 'There is no positive-quantity crossover: one option has equal or lower fixed and unit costs.';
+      }
+      summary.hidden=false; crossover.hidden=false;
+    }
+    form.addEventListener('submit',event=>{event.preventDefault();calculate();});
+    form.addEventListener('input',()=>{summary.hidden=true;crossover.hidden=true;note.textContent='Values changed. Select Compare costs to update the result.';});
+    form.addEventListener('reset',()=>{example=false;summary.hidden=true;crossover.hidden=true;note.textContent='Enter quote values to compare costs. The example button uses invented numbers to explain the calculation; it is not a vendor quote.';});
+    document.getElementById('example').addEventListener('click',()=>{[15000,0,0.75,3.50,2000,6].forEach((value,index)=>{document.getElementById(ids[index]).value=value;});example=true;calculate();});
+    document.getElementById('print').addEventListener('click',()=>window.print());
+  </script>
+</body>
+</html>
