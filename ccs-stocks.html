@@ -176,6 +176,7 @@
     }
 
     @media (min-width: 1024px) { .sidebar.visible { display: block; } }
+    @media (max-width: 1023px) { .sidebar.visible { display: none; } }
     @media (max-width: 768px) {
       .nav-links { gap: 12px; }
       .nav-links a { font-size: 11px; }
@@ -183,6 +184,7 @@
       section { padding: 24px 0; }
       .page-wrap { padding: 0 16px; gap: 0; }
       .device-grid { grid-template-columns: 1fr; }
+      .device-body { overflow-x: auto; }
     }
   </style>
 </head>
