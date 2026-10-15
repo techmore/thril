@@ -1,7 +1,7 @@
 /*
   Production two-button station with CSV release logging
   Original production date: 2026-09-15
-  Last updated / verification recorded: 2026-10-15 07:57:17 EDT (-0400)
+  Last updated / verification recorded: 2026-10-15 09:02:55 EDT (-0400)
   Time zone: America/New_York
 
   Verification status:
@@ -9,7 +9,12 @@
     - Production firmware uploaded successfully to /dev/cu.usbmodem101.
     - Left button wiring repaired; independent D7/D8 diagnostic checks passed.
     - Each button changed only its own input; both read HIGH when released.
-    - Powered single-button checks and complete actuator cycle remain pending.
+    - V1 COMPLETE: operator confirmed powered functional checks passed.
+    - LEFT alone and RIGHT alone caused no movement during 2-second holds.
+    - With both held for 8 seconds, lever support, stock support/servo, and
+      pin placement operated in order; actuators released and servo returned home.
+    - One cycle completed; no repeat occurred while both buttons remained held.
+    - Completion records the observed checks above; control logic is unchanged.
 
   CSV timestamp note:
     - Timestamp values are milliseconds since controller startup, not wall time.

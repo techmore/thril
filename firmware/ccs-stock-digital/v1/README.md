@@ -4,7 +4,7 @@ Version: V1
 
 Repair and verification date: October 15, 2026
 
-Source verification record: 2026-10-15 07:57:17 EDT (America/New_York)
+Validation completed: 2026-10-15 09:02:55 EDT (-0400) (America/New_York)
 
 This package contains the CCS digital stock fixture's production Arduino sketch,
 `Digital_Universal_5v_2button_PRODUCTION_9-15-26.ino`. V1 identifies this
@@ -29,9 +29,25 @@ The production sketch compiled and uploaded successfully to an Arduino Nano R4
 after the diagnostic. The subsequent source update changed documentation
 comments only. The source in this package matches that updated production file.
 
-**Pending:** powered single-button checks and one complete actuator cycle have
-not yet been confirmed. Compilation, upload, and input checks passed; this
-record does not claim the complete machine has passed its powered cycle check.
+## V1 complete — powered functional validation
+
+Completion recorded: 2026-10-15 09:02:55 EDT (-0400) (America/New_York).
+The operator reported the following physical results after restoring actuator
+power and air, with the fixture clear:
+
+| Check | Observed result | Status |
+| --- | --- | --- |
+| LEFT held alone for 2 seconds | No movement | PASS |
+| RIGHT held alone for 2 seconds | No movement | PASS |
+| Both held continuously for 8 seconds | Lever support, stock support/servo, and pin placement operated in order | PASS |
+| Cycle reset | Actuators released and servo returned home | PASS |
+| Both buttons kept held after completion | One cycle only; no repeat while held | PASS |
+
+V1 is complete for these commissioning checks. This records one operator-observed
+full cycle and the individual button checks; it does not claim endurance testing
+or validation of every fault/recovery condition. The input and logging limitations
+below still apply. This completion update changes documentation comments only;
+the validated control behavior is unchanged.
 
 ## Open and upload
 

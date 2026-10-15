@@ -130,6 +130,7 @@
 
     .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
     .callout.info { background: #e8edf0; border-left: 4px solid var(--steel-blue); color: #003049; }
+    .callout.success { background: #e1f5ee; border-left: 4px solid #1d7a5a; color: #14573e; }
     .callout.warn { background: #fff3d6; border-left: 4px solid #ffc107; color: #856404; }
 
     .quick-links {
@@ -264,10 +265,10 @@
 
         <div class="firmware-release">
           <div>
-            <span class="release-badge">V1 · Digital firmware</span>
+            <span class="release-badge">V1 complete · Digital firmware</span>
             <h3>Production sketch for Arduino Nano R4</h3>
             <p>Two-button control for the stock support, lever support, pin-placement mechanism, and servo. Download the ZIP to keep the sketch in the folder Arduino IDE expects.</p>
-            <p class="release-date">Source verification record: <time datetime="2026-10-15T07:57:17-04:00">October 15, 2026 · 7:57:17 AM EDT</time> (America/New_York).</p>
+            <p class="release-date">Validation completed: <time datetime="2026-10-15T09:02:55-04:00">October 15, 2026 · 9:02:55 AM EDT</time> (America/New_York).</p>
           </div>
           <div class="release-downloads">
             <a class="firmware-download" href="firmware/ccs-stock-digital/v1/ccs-stock-digital-v1.zip" download>Download V1 firmware ZIP</a>
@@ -278,13 +279,28 @@
         </div>
 
         <div class="callout info"><strong>Verified:</strong> production compilation and upload passed. After the left button wiring repair, both released inputs read HIGH, LEFT changed only D7, RIGHT changed only D8, and both returned to HIGH.</div>
-        <div class="callout warn"><strong>Commissioning still open:</strong> powered single-button checks and a complete actuator cycle have not yet been confirmed. Keep actuator power and compressed air isolated during wiring work and firmware upload.</div>
+        <div class="callout success" data-validation-status="complete"><strong>V1 complete:</strong> the operator confirmed powered single-button checks and one full actuator cycle passed. Completion recorded <time datetime="2026-10-15T09:02:55-04:00">October 15, 2026 · 9:02:55 AM EDT</time>.</div>
+        <h3 class="firmware-subtitle">Powered validation results</h3>
+        <div class="firmware-table-wrap">
+          <table class="build-tbl">
+            <caption>Operator-observed results after the left button wiring repair</caption>
+            <thead><tr><th scope="col">Check</th><th scope="col">Observed result</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">LEFT alone · 2 s</th><td>No movement</td><td>PASS</td></tr>
+              <tr><th scope="row">RIGHT alone · 2 s</th><td>No movement</td><td>PASS</td></tr>
+              <tr><th scope="row">Both held · 8 s</th><td>Lever support → stock support and servo → pin placement, in order</td><td>PASS</td></tr>
+              <tr><th scope="row">Reset</th><td>Actuators released; servo returned home</td><td>PASS</td></tr>
+              <tr><th scope="row">Continued two-button hold</th><td>One cycle only; no repeat while held</td><td>PASS</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="firmware-detail">V1 completion covers these commissioning checks and one operator-observed full cycle. Endurance testing and other fault/recovery conditions were not assessed in this check; the known input behavior below still applies.</p>
 
         <div class="fix-notes-grid">
           <article>
             <h3>What was fixed</h3>
             <p>The fixture did not respond as expected to a two-button hold, then moved when RIGHT alone was pressed. The input diagnostic showed LEFT reading PRESSED (LOW). The operator repaired the left button wiring; independent button checks then passed, and production firmware was restored.</p>
-            <p>V1 labels this published digital firmware package and repair record. The original production sketch name is retained. The final source update recorded the verification timestamp and corrected comments; it did not change control behavior.</p>
+            <p>V1 labels this published digital firmware package and repair record. The original production sketch name is retained. The final source update records the completed powered checks and timestamp in comments; it does not change control behavior.</p>
           </article>
           <article>
             <h3>Button wiring &amp; known behavior</h3>
@@ -315,7 +331,7 @@
           <li>Extract the ZIP and open the <code>.ino</code> inside its matching <code>Digital_Universal_5v_2button_PRODUCTION_9-15-26</code> folder.</li>
           <li>Select <strong>Arduino Nano R4</strong> and its connected USB port. The verified installation used Arduino Renesas UNO Boards core 1.6.0 and the Servo library.</li>
           <li>Verify and upload. Set Serial Monitor to <strong>9600 baud</strong>. The servo is commanded home on startup.</li>
-          <li>Before production use, complete the remaining checks with the fixture clear: neither button alone may cause movement; both held together should complete one cycle.</li>
+          <li>After installation or wiring changes, repeat the checks with the fixture clear: neither button alone may cause movement; both held together should complete one cycle.</li>
         </ol>
         <p class="firmware-detail"><strong>Cycle timing:</strong> hold both inputs LOW for 1 s → D11 ON → wait 300 ms → D12 ON and servo to 140° → settle 500 ms → D10 ON for 500 ms → outputs OFF → wait 600 ms → servo home. Releasing either button before placement aborts; a release during servo movement is handled after the sweep. Once placement starts, placement and reset finish automatically.</p>
         <p class="firmware-detail"><strong>CSV logging:</strong> timestamps are milliseconds since controller startup. A release row prints on that button’s next press; its duration is the released interval, not the time held. Servo position and insertion completion are not sensor verified.</p>
