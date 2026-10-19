@@ -664,6 +664,21 @@
         <p class="section-sub">One-time Mac configuration to connect the Zebra printer, plus the daily workflow for printing UPC barcode labels from .docx source files.</p>
 
         <div class="poly-sub">
+          <div class="callout info">
+            <strong>Install the TI-1000Z printer:</strong> enter code <strong>1005</strong> when prompted during printer installation.
+          </div>
+
+          <h3 style="margin-top:18px;">TI-1000Z quick settings</h3>
+          <table class="poly-tbl" style="max-width:520px;">
+            <thead><tr><th>Setting</th><th>Starting value</th></tr></thead>
+            <tbody>
+              <tr><td>Darkness</td><td><strong>25</strong></td></tr>
+              <tr><td>Heater</td><td><strong>30</strong></td></tr>
+              <tr><td>Blower</td><td><strong>20</strong></td></tr>
+              <tr><td>Reverse speed</td><td><strong>About 23</strong></td></tr>
+            </tbody>
+          </table>
+
           <h3>Printer connection (one-time Mac setup)</h3>
           <p class="desc">These steps only need to be done once per Mac workstation:</p>
 
@@ -1144,7 +1159,7 @@
           <div class="callout warn">
             <strong>Setup mode overrides temperature entirely</strong> &mdash; it cycles even when the bar is stone cold. Useful for setup tests, but a machine left in Setup will seal cold and hide a failing heater. Production should never sit in Setup.
           </div>
-          <p class="desc"><strong>Measure the real offset</strong> (Tech Assist, passcode <strong>1001</strong> by default): Main Menu &rarr; <em>Technical Assistance</em> &rarr; <em>Bagger Factory</em> &rarr; <em>Temp Calib</em> (yellow button, right side). The screen shows the bar's current reading; compare it to a known-good external probe on the bar and enter the variance in the <em>Adjustment</em> field so the Read Out reflects reality.</p>
+          <p class="desc"><strong>Technical Assistant access code: <strong>1001</strong>.</strong> To measure the real temperature offset, go to Main Menu &rarr; <em>Technical Assistance</em> &rarr; <em>Bagger Factory</em> &rarr; <em>Temp Calib</em> (yellow button, right side). The screen shows the bar's current reading; compare it to a known-good external probe on the bar and enter the variance in the <em>Adjustment</em> field so the Read Out reflects reality.</p>
           <p class="desc"><strong>Check <em>TempRange</em> on the same screen</strong> &mdash; this is the answer to &ldquo;how far out of range before the machine Waits&rdquo;: the acceptable band is <strong>setpoint &plusmn; TempRange</strong> (360&deg;F + range 20&deg; = Ready anywhere in 350&ndash;370&deg;; outside &rarr; Waiting). Manual's suggested setting is <strong>20&deg;</strong>. If yours is much wider, someone widened it to silence Waiting while the real fault (thermocouple/cartridge) grew &mdash; restore 20&deg; and fix the part. If it's much narrower, an aging heater Waits constantly. Note the current value before changing anything.</p>
           <p class="desc">Also in Bagger Factory, two settings that matter for the 24/7 habit: <strong>Heat Off</strong> (minutes of inactivity before the heater bar auto-turns-off &mdash; set ~20&ndash;30 so an idling machine stops heating overnight) and <strong>Blower OFF</strong> (air-knife auto-off, typical 3&ndash;5 min).</p>
           <p class="desc"><strong>PLC IO Status</strong> (same Tech Assist menu) shows two counters that can't be reset: <strong>Hours</strong> (total powered-on time &mdash; proof of the 24/7 habit) and <strong>Cycles</strong> (total cycles &mdash; the maintenance charts are per 1M cycles, so log it). Every other Tech Assist item (APPI Factory, Scale Factory, Option Passcode, License Status) is factory/tech territory &mdash; look, don't touch.</p>
@@ -1336,7 +1351,7 @@
               <tr>
                 <td><strong>PLC backup battery</strong> (3V coin, FP Sigma PLC) &mdash; keeps settings through power-off; a dead one = "settings lost when machine is off"</td>
                 <td><a href="https://ecom.advancedpoly.com/en/product/product-menu-parts-all-parts/battery-3v-coin-for-grey-plc--TP-214111" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">TP-214111 &rarr;</a></td>
-                <td>Settings evaporate when powered off &mdash; swap with machine powered ON so memory holds (generic: Panasonic AFPG804)</td>
+                <td>Settings evaporate when powered off &mdash; replace the PLC backup battery. Verify the PLC label/model and connector before ordering a substitute; the AFPG804 is a wired 3V coin battery, not a bare CR2032 cell.</td>
                 <td><span style="color:var(--molten-lava);font-weight:600;">(shop rec)</span> ~every 3&ndash;5 years; replace immediately if settings don't survive a power cycle</td>
               </tr>
               <tr>
@@ -1351,6 +1366,15 @@
           <div class="callout tip">
             <strong>One-click whole kit:</strong> the <a href="https://ecom.advancedpoly.com/en/product/product-menu-parts/spare-parts-kit-level-1-for-t-1000-s14--TO-T1-SP10-S14" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">Level&nbsp;1 Spare Parts Kit (TO-T1-SP10-S14)</a> bundles the strap, heater cartridge, thermocouple, PTFE sheet, rubber strip, springs, filter, bushings, fuses, tubing, and drive belt in one order &mdash; 110V. A <a href="https://ecom.advancedpoly.com/en/product/product-menu-parts/spare-parts-kit-level-1-220v-t-1000-s14--TO-T1-SP10-S14-220V" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">220V variant</a> exists; our machine is <strong>110V</strong> &mdash; order accordingly. Browsing everything else: <a href="https://ecom.advancedpoly.com/en/catalog/node/product-menu-parts" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">full parts catalog</a> (1,600+ items; can't find it &rarr; Parts@advancedpoly.com).
           </div>
+
+          <h3 style="margin-top:28px;">PLC backup battery identification &amp; sources</h3>
+          <p class="desc">The grey PLC uses a <strong>3V coin-style lithium backup battery with a two-wire connector</strong>. Advanced Poly's OEM part number is <strong>TP-214111</strong>, listed as &ldquo;Battery, 3V Coin for Grey PLC.&rdquo; The Panasonic alternative is <strong>AFPG804 (FP Sigma)</strong>; DigiKey lists it as a 20.0&nbsp;mm, 3V lithium coin battery with wire leads and connector. This is a wired PLC battery assembly, not a loose CR2032 coin cell.</p>
+          <ul class="poly-steps">
+            <li><a href="https://ecom.advancedpoly.com/en/product/product-menu-parts-all-parts/battery-3v-coin-for-grey-plc--TP-214111" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;"><strong>OEM:</strong> Advanced Poly TP-214111 &mdash; 3V coin battery for grey PLC</a></li>
+            <li><a href="https://www.digikey.com/en/products/detail/panasonic-industry/AFPG804/4771512" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;"><strong>Alternative:</strong> Panasonic AFPG804 from DigiKey</a></li>
+            <li><a href="https://www.amazon.com/gp/product/B0DNTRB89C" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;"><strong>Alternative:</strong> AFPG804-compatible listing on Amazon</a></li>
+          </ul>
+          <div class="callout warn"><strong>Before ordering or replacing:</strong> confirm the PLC is the grey FP Sigma model and match the battery connector, lead length, and polarity to the installed battery. Do not substitute a bare CR2032. Back up or record machine settings first, and follow the machine/PLC service procedure for replacement.</div>
 
           <h3 style="margin-top:28px;">Daily / weekly / monthly maintenance rhythm</h3>
           <p class="desc">From the manual's Preventative Maintenance Checklist (&sect;4.16), matched to who does it:</p>
