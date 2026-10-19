@@ -738,7 +738,22 @@
         </div>
 
         <div class="poly-sub" id="label-save-restore">
-          <h3 style="margin-top:0;">Save &amp; restore the label on the printer (survives power-off)</h3>
+          <h3 style="margin-top:0;">Download the CCS Black label files (works from a phone at the bagger)</h3>
+          <p class="desc">Every ZPL source file for the <strong>CCS Black</strong> UPC label, live on this site &mdash; tap to download, no repo access needed. Bookmark this page. Full label library lives in <a href="https://github.com/techmore/thril/tree/main/poly-bagger/UPC%20Labels" target="_blank" rel="noreferrer" style="color:var(--steel-blue);text-decoration:underline;">poly-bagger/UPC Labels/ on GitHub</a>.</p>
+          <table class="poly-tbl" style="max-width:760px;">
+            <thead><tr><th style="width:44%;">File</th><th style="width:30%;">What it does</th><th style="width:26%;">Download</th></tr></thead>
+            <tbody>
+              <tr><td><code>ccs_black_label.zpl</code></td><td>Prints one CCS Black label right now (straight send, nothing stored)</td><td><a class="btn-primary" style="padding:6px 14px;font-size:12px;display:inline-block;" href="poly-bagger/UPC%20Labels/ccs_black_label.zpl" download>Download .zpl</a></td></tr>
+              <tr><td><code>CCSBLACK_store_flash.zpl</code></td><td>Stores the label in printer <strong>flash</strong> (survives power-off) &mdash; run once per printer</td><td><a class="btn-primary" style="padding:6px 14px;font-size:12px;display:inline-block;" href="poly-bagger/UPC%20Labels/CCSBLACK_store_flash.zpl" download>Download .zpl</a></td></tr>
+              <tr><td><code>CCSBLACK_recall_flash.zpl</code></td><td>Recalls the stored label and prints it &mdash; use after any reboot/power cut</td><td><a class="btn-primary" style="padding:6px 14px;font-size:12px;display:inline-block;" href="poly-bagger/UPC%20Labels/CCSBLACK_recall_flash.zpl" download>Download .zpl</a></td></tr>
+            </tbody>
+          </table>
+          <p class="desc">Straight from a Mac terminal (no browser):<br><code>curl -LO https://techmore.github.io/thril/poly-bagger/UPC%20Labels/ccs_black_label.zpl &amp;&amp; lp -d Zebra -o raw ccs_black_label.zpl</code></p>
+          <div class="callout warn">
+            <strong>Ignore the older copies in ~/Downloads</strong> (<code>ccs_black_label_STORE.zpl</code>, <code>ccs_black_label_STORE_FLASH.zpl</code> and friends, dated Sept&nbsp;4). They use the comma form <code>^DFE,NAME</code>, which this printer rejects &mdash; the repo copies above use the correct <code>^DFE:NAME.ZPL</code> colon form.
+          </div>
+
+          <h3 style="margin-top:28px;">Save &amp; restore the label on the printer (survives power-off)</h3>
           <p class="desc">The label lives in the Zebra printer's <strong>flash memory</strong>, not the bagger. Save it once. After any power outage or printer reboot, recall it with one command &mdash; verified working after a full Zebra power cut (Sept 2026).</p>
 
           <h3 style="margin-top:28px;">Save the label to flash (one time)</h3>
