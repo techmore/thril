@@ -53,3 +53,5 @@ icons load from Google Fonts and jsDelivr).
 
 In active use as an internal reference. Content is updated as equipment
 procedures change; there are no tests or CI.
+
+Part of [Techmore](https://techmore.github.io/pages/repos/).
